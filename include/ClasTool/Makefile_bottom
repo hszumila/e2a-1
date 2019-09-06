@@ -1,0 +1,122 @@
+#
+# Bottom part of the makefiles.
+#
+#
+help:
+	@echo '#############################################'
+	@echo '#   Makefile to Create '$(CREATED_SHLIB)'   #'
+	@echo '#############################################'
+	@echo 'Did you setup ROOT (at jlab: use root )?'
+	@echo 'Are you using the correct compiler ?      '
+	@echo 'See also the README.'   
+	@echo '  type : make shlib - to make shared library'
+	@echo '  type : make lib  - to make static library'
+	@echo '  type : make docs - to make Html documentation.'
+	@echo 'Resulting shared library will be put in '${localslib}
+	@echo 'Resulting static library will be put in '${locallib} 
+	@echo ''
+	@echo 'EXE_NAME     :'$(EXE_NAME)
+	@echo 'PROGRAMS     :'$(PROGRAMS)
+	@echo 'CREATED_SHLIB:'$(CREATED_SHLIB)
+	@echo 'CREATED_LIB  : '$(CREATED_LIB)
+	@echo 'SRC_FILES    :'$(SRC_FILES)
+	@echo 'SRC_CLASS    :'$(SRC_CLASS)
+	@echo 'DICTS_SOURCE :'$(DICTS_SOURCE)
+	@echo 'DICTS_INCLUD :'$(DICTS_INCLUDE)
+	@echo 'INC_FILES    :'$(INC_FILES)
+	@echo 'OBJ_CLASS    :'$(OBJ_CLASS)
+	@echo 'OBJ_DICTS    :'$(OBJ_DICTS)
+	@echo 'OBJ_SHLIB    :'$(OBJ_SHLIB)
+	@echo 'CXX          :'$(CXX)
+	@echo 'CXXFLAGS     :'$(CXXFLAGS)
+	@echo 'CXXINCLUDES  :'$(CXXINCLUDES)
+	@echo 'INCLUDES     :'$(INCLUDES)
+	@echo 'LDFLAGS      :'$(LDFLAGS)
+	@echo 'SOFLAGS      :'$(SOFLAGS)
+
+shlib: Makefile_depends $(localslib)/$(CREATED_SHLIB) 
+
+#
+# Note: adding $(DICTS_*) here insures that make will not consider the dictionaries
+# as intermediate files, and so will not erase them when done.
+#
+$(localslib)/$(CREATED_SHLIB): $(OBJ_SHLIB) $(DICTS_SOURCE) $(DICTS_INCLUDE)
+	@test -d $(localslib) || mkdir -p $(localslib)
+	$(LD) $(SOFLAGS) $(LDFLAGS)  $(OBJ_SHLIB) -o $(localslib)/$(CREATED_SHLIB) $(OTHERLOADLIBS)
+	$(POST_LINK_COMMAND)
+
+lib: Makefile_depends $(localslib)/$(CREATED_LIB)
+
+$(locallib)/$(CREATED_LIB):  $(OBJ_SHLIB)
+	@test -d $(locallib) || mkdir -p $(locallib)
+	ar r $(locallib)/$(CREATED_LIB) $(OBJ_SHLIB) 
+
+#
+# Add the correct path to all the executables made here.
+# 
+
+ifdef CREATED_EXE
+exe: $(localbin)/$(CREATED_EXE)
+
+else
+exe:
+	@echo "No executable defined."
+
+endif
+
+$(localbin)/$(CREATED_EXE): $(OBJ_SHLIB) $(DICTS_SOURCE) $(DICTS_INCLUDE)
+	@test -d $(localbin) || mkdir -p $(localbin)
+	$(LD) $(LDFLAGS) -o $@ $(OBJ_SHLIB) $(OTHERLOADLIBS)
+
+#
+# We try to limit the amount of dependencies that makedepend uses by limiting
+# the include search path ( -Y means don't search standard paths.) 
+# In addition, the "link" directory for includes will not do us any good, since these files are 
+
+DEP_INCLUDES=$(filter-out -I$(MYSQL_INCLUDE) -I../include,$(INCLUDES))
+DEP_CXXFLAGS=$(filter-out -I$(ROOTSYS)/include, $(CXXFLAGS))
+
+dep: Makefile_depends
+
+Makefile_depends: Makefile $(SRC_CLASS) $(SRC_FILES) $(INC_FILES)
+	@test -r Makefile_depends || echo "### Automatically generated dependencies. Update with 'make dep'" > Makefile_depends 
+	@echo "(Re) Making the dependency file "
+	@makedepend -f Makefile_depends -p$(localobjs)/ -Y -- $(DEP_CXXFLAGS) $(DEP_INCLUDES) $(CXXINCLUDES) -- $(SRC_CLASS)  $(SRC_FILES) >& /dev/null
+	@rm -f Makefile_depends.bak
+
+docs: $(SRC_CLASS) $(INC_FILES)
+	@root.exe Make_HTML.C
+
+clean:
+	@rm -rf $(OBJ_FILES) $(OBJ_SHLIB) $(DICTS_SOURCE) $(DICTS_INCLUDE)
+
+distclean: clean
+	@rm -f Makefile_depends 
+	@test -z $(CREATED_LIB)   || rm -f $(locallib)/$(CREATED_LIB) 
+	@test -z $(CREATED_SHLIB) || rm -f $(localslib)/$(CREATED_SHLIB)
+	@test -z $(CREATED_EXE)   || rm -f $(localbin)/$(CREATED_EXE)
+#
+#
+#_______________________________________________________
+
+$(localdicts)/%Dict.cc $(localdicts)/%Dict.h: %.h
+	@test -d $(localdicts) || mkdir -p $(localdicts)
+	$(ROOTSYS)/bin/rootcint -f $@ -c -p $(INCLUDES) $< $(<:.h=LinkDef.h)
+
+$(localobjs)/%Dict.o: $(localdicts)/%Dict.cc
+	@test -d $(localobjs) || mkdir -p $(localobjs)
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+$(localobjs)/%.o:%.cc %.h
+	@test -d $(localobjs) || mkdir -p $(localobjs)
+	@echo Compiling Class $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+$(localobjs)/%.o:%.cc
+	@test -d $(localobjs) || mkdir -p $(localobjs)
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+Makefile_depends: Makefile
+

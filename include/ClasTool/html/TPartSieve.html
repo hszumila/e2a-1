@@ -1,0 +1,910 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TPartSieve</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<a name="TopOfPage"></a>
+<script type="text/javascript">WriteFollowPageBox('class TPartSieve','','TPartSieve.h');</script>
+<div id="toplinks">
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Quick Links:</span>
+<a class="descrheadentry" href="http://www.physics.unh.edu/~maurik/ClasTool">(UNKNOWN PRODUCT)</a>
+<a class="descrheadentry" href="http://root.cern.ch">ROOT Homepage</a>
+<a class="descrheadentry" href="./ClassIndex.html">Class Index</a>
+<a class="descrheadentry" href="./ClassHierarchy.html">Class Hierarchy</a></div>
+<script type="text/javascript">
+function onSearch() {
+var s='http://www.google.com/search?q=%s+site%3A%u+-site%3A%u%2Fsrc%2F+-site%3A%u%2Fexamples%2F';
+var ref=String(document.location.href).replace(/https?:\/\//,'').replace(/\/[^\/]*$/,'').replace(/\//g,'%2F');
+window.location.href=s.replace(/%u/ig,ref).replace(/%s/ig,escape(document.searchform.t.value));
+return false;}
+</script>
+<form id="searchform" name="searchform" onsubmit="return onSearch()" action="javascript:onSearch();" method="post">
+<input name="t" size="30" value="Search documentation..." onfocus="if (document.searchform.t.value=='Search documentation...') document.searchform.t.value='';"></input>
+<a id="searchlink"  title="www.google.com"  href="javascript:onSearch();" onclick="return onSearch()">Search</a></form>
+</div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Source:</span>
+<a class="descrheadentry" href="src/TPartSieve.h.html">header file</a>
+<a class="descrheadentry" href="src/TPartSieve.cxx.html">source file</a>
+<a class="descrheadentry" href="TPartSieve_Tree.pdf">inheritance tree (.pdf)</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TPartSieve.h?view=log">viewVC header</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TPartSieve.cc?view=log">viewVC source</a> 
+</div></div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Sections:</span>
+<a class="descrheadentry" href="#TPartSieve:description">class description</a> 
+<a class="descrheadentry" href="#TPartSieve:Function_Members">function members</a>
+<a class="descrheadentry" href="#TPartSieve:Data_Members">data members</a>
+<a class="descrheadentry" href="#TPartSieve:Class_Charts">class charts</a>
+</div></div>
+</div>
+<div class="location">
+<a class="locationlevel" href="index.html">(UNKNOWN PRODUCT)</a>
+ &#187; <a class="locationlevel" href="./PARTSIEVE_Index.html">PARTSIEVE</a>
+ &#187; <a class="locationlevel" href="#TopOfPage">TPartSieve</a>
+</div>
+<div class="dropshadow"><div class="withshadow"><h1><a name="TPartSieve:description"></a>class TPartSieve: public TObject</h1>
+<div class="classdescr">
+<pre>
+
+</pre><!-- TDocHtmlDirective start --> <!--
+/* -->
+</pre><H1> TPartSieve </H1>
+<H2>Particle ID cleanup and improvement for ClasTool</H2>
+<p>Created at UNH by Will Morrison and <b><i><a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></b></i></p>
+<p>TPartSieve is part of the CLASTOOL analysis framework. 
+It is designed to facilitate physics analysis by providing a structure
+that can be customized to a specific analysis with custom cuts, etc., without changing the details of how the
+functions are used in an analysis program. These customizations are easy to make, and TPartSieve is designed for
+easy use and easy comprehension.</p>
+<p>The Sieve can be run over an entire event in one of three modes, either Sort, Confidence or Refine.
+Sort mode is useful for preliminary looks at data. It is also useful in code that already has Sieve mechanisms 
+in place but no longer needs to use the Confidence or Refinement. This mode makes looking at specific particles 
+very easy; one can for example loop through all pions in an event using only two lines of code.</p>
+<p>Confidence mode assigns a confidence level to each particles ID, and throws away particles below an ajustable
+confidence level. The confidence level is determined using a set of particle specific functions. See the 
+function GetConfidence() for an explanation of the confidence level setting scheme.</p>
+<p>Refine mode looks through particles and find ones with less than adequate confidence. It then 
+determines what the id should be using a set of particle specific functions. These are NOT CURRENTLY
+IMPLEMENTED.</p>
+<H3>Benchmarking</H3>
+<p>Running over one run and using this class's sort function and filling a histogram with the number of each 
+particle took 34.5 seconds. A comparable program using only TClasTool took 31.6 seconds.
+<p>
+Additional information about this package, including an overview, can be found at the
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">ClasTool Documentation</a> web pages.
+<pre> 
+<!-- */ 
+ --> 
+<!-- TDocHtmlDirective end --><pre>
+
+</pre></div>
+</div></div>
+
+<div id="functions">
+<h2><a id="TPartSieve:Function_Members"></a>Function Members (Methods)</h2>
+<div class="access" id="funcpubl"><b>public:</b>
+<table class="func" id="tabfuncpubl" cellspacing="0">
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TPartSieve:TPartSieve">TPartSieve</a>()</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TPartSieve:TPartSieve@2">TPartSieve</a>(<span class="keyword">const</span> <a href="./TPartSieve.html">TPartSieve</a>&amp;)</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TPartSieve:TPartSieve@1">TPartSieve</a>(<a href="./TClasTool.html">TClasTool</a>* clastool, <a href="./ListOfTypes.html#Int_t">Int_t</a> runnum = 0)</td></tr>
+<tr class="func"><td class="funcret"> virtual</td><td class="funcname"><a class="funcname" href="#TPartSieve:_TPartSieve">~TPartSieve</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AbstractMethod"><span class="baseclass">TObject::</span>AbstractMethod</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AppendPad"><span class="baseclass">TObject::</span>AppendPad</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:BetaBetaCut">BetaBetaCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> mass, <a href="./ListOfTypes.html#Float_t">Float_t</a> Wieght, <a href="./ListOfTypes.html#Float_t">Float_t</a> MaxDiff)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Browse"><span class="baseclass">TObject::</span>Browse</a>(TBrowser* b)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CC_Phe_Cut">CC_Phe_Cut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CC_Phe_Cut@1">CC_Phe_Cut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:ChangeID">ChangeID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Int_t">Int_t</a> ID)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CheckSCPaddle">CheckSCPaddle</a>(<a href="./TSCPBClass.html">TSCPBClass</a>* sc)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CheckSCPaddle@1">CheckSCPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> secidcode)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CheckSCPaddle@2">CheckSCPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> sector, <a href="./ListOfTypes.html#Int_t">Int_t</a> paddle)</td></tr>
+<tr class="func"><td class="funcret">static TClass*</td><td class="funcname"><a class="funcname" href="#TPartSieve:Class">Class</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:ClassName"><span class="baseclass">TObject::</span>ClassName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Clear"><span class="baseclass">TObject::</span>Clear</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:Clone"><span class="baseclass">TObject::</span>Clone</a>(<span class="keyword">const</span> <span class="keyword">char</span>* newname = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Compare"><span class="baseclass">TObject::</span>Compare</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfDeut">ConfDeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfEl">ConfEl</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> W = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfHe3">ConfHe3</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfHe4">ConfHe4</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfidenceOff">ConfidenceOff</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfidenceOn">ConfidenceOn</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfKm">ConfKm</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfKp">ConfKp</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfNeut">ConfNeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfPhot">ConfPhot</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfPim">ConfPim</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfPip">ConfPip</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfPos">ConfPos</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfProt">ConfProt</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ConfUnknown">ConfUnknown</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Copy"><span class="baseclass">TObject::</span>Copy</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>&amp; object) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CutConfMax">CutConfMax</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> x, <a href="./ListOfTypes.html#Float_t">Float_t</a> cut, <a href="./ListOfTypes.html#Float_t">Float_t</a> width)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:CutConfMin">CutConfMin</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> x, <a href="./ListOfTypes.html#Float_t">Float_t</a> cut, <a href="./ListOfTypes.html#Float_t">Float_t</a> width)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Delete"><span class="baseclass">TObject::</span>Delete</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:DistancetoPrimitive"><span class="baseclass">TObject::</span>DistancetoPrimitive</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Draw"><span class="baseclass">TObject::</span>Draw</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DrawClass"><span class="baseclass">TObject::</span>DrawClass</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:DrawClone"><span class="baseclass">TObject::</span>DrawClone</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Dump"><span class="baseclass">TObject::</span>Dump</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:EC_Eio_Cut">EC_Eio_Cut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:EC_Eio_Cut@1">EC_Eio_Cut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ECUVWCut">ECUVWCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:ECUVWCut@1">ECUVWCut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Error"><span class="baseclass">TObject::</span>Error</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute"><span class="baseclass">TObject::</span>Execute</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute@1"><span class="baseclass">TObject::</span>Execute</a>(TMethod* method, TObjArray* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ExecuteEvent"><span class="baseclass">TObject::</span>ExecuteEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Fatal"><span class="baseclass">TObject::</span>Fatal</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject@1"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:Get_DC_Qual">Get_DC_Qual</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Chi2, <a href="./ListOfTypes.html#Float_t">Float_t</a> Width = 0.5)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetBetaP">GetBetaP</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetConfFast">GetConfFast</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetDeltaT">GetDeltaT</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetDeltaT@1">GetDeltaT</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetDeltaT@2">GetDeltaT</a>(<a href="./TSCPBClass.html">TSCPBClass</a>* sc, <a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetDeltaT_EC">GetDeltaT_EC</a>(<a href="./TECPBClass.html">TECPBClass</a>* ec, <a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetDrawOption"><span class="baseclass">TObject::</span>GetDrawOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Long_t">Long_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetDtorOnly"><span class="baseclass">TObject::</span>GetDtorOnly</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TEVNTClass.html">TEVNTClass</a>*</td><td class="funcname"><a class="funcname" href="#TPartSieve:GetEVNTIdx">GetEVNTIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TEVNTClass.html">TEVNTClass</a>*</td><td class="funcname"><a class="funcname" href="#TPartSieve:GetEVNTPid">GetEVNTPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetIconName"><span class="baseclass">TObject::</span>GetIconName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetIndexIdx">GetIndexIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetIndexPid">GetIndexPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetName"><span class="baseclass">TObject::</span>GetName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetNIdx">GetNIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetNPid">GetNPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetObjectInfo"><span class="baseclass">TObject::</span>GetObjectInfo</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetObjectStat"><span class="baseclass">TObject::</span>GetObjectStat</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetOption"><span class="baseclass">TObject::</span>GetOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:GetPartConf">GetPartConf</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetTitle"><span class="baseclass">TObject::</span>GetTitle</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#UInt_t">UInt_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetUniqueID"><span class="baseclass">TObject::</span>GetUniqueID</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./TVERTClass.html">TVERTClass</a>*</td><td class="funcname"><a class="funcname" href="#TPartSieve:GetVert">GetVert</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> PID1, <a href="./ListOfTypes.html#Int_t">Int_t</a> num1, <a href="./ListOfTypes.html#Int_t">Int_t</a> PID2, <a href="./ListOfTypes.html#Int_t">Int_t</a> num2)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:HandleTimer"><span class="baseclass">TObject::</span>HandleTimer</a>(TTimer* timer)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#ULong_t">ULong_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Hash"><span class="baseclass">TObject::</span>Hash</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:IDtoInd">IDtoInd</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> PartId)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:IDtoIndQuick">IDtoIndQuick</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:IndexConf">IndexConf</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf, <a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:IndexPart">IndexPart</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> confidence = 1)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:IndtoID">IndtoID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Info"><span class="baseclass">TObject::</span>Info</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> <span class="keyword">char</span>* classname) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom@1"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> TClass* cl) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Inspect"><span class="baseclass">TObject::</span>Inspect</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:InvertBit"><span class="baseclass">TObject::</span>InvertBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="func"><td class="funcret">virtual TClass*</td><td class="funcname"><a class="funcname" href="#TPartSieve:IsA">IsA</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsEqual"><span class="baseclass">TObject::</span>IsEqual</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsFolder"><span class="baseclass">TObject::</span>IsFolder</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsOnHeap"><span class="baseclass">TObject::</span>IsOnHeap</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsSortable"><span class="baseclass">TObject::</span>IsSortable</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsZombie"><span class="baseclass">TObject::</span>IsZombie</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ls"><span class="baseclass">TObject::</span>ls</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MayNotUse"><span class="baseclass">TObject::</span>MayNotUse</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:NoCCCut">NoCCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:NoDCCut">NoDCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:NoECCut">NoECCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:NoSCCut">NoSCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Notify"><span class="baseclass">TObject::</span>Notify</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Obsolete"><span class="baseclass">TObject::</span>Obsolete</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* asOfVers, <span class="keyword">const</span> <span class="keyword">char</span>* removedFromVers) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete@1"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]@1"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new@1"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]@1"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TPartSieve.html">TPartSieve</a>&amp;</td><td class="funcname"><a class="funcname" href="#TPartSieve:operator_">operator=</a>(<span class="keyword">const</span> <a href="./TPartSieve.html">TPartSieve</a>&amp;)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Paint"><span class="baseclass">TObject::</span>Paint</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Pop"><span class="baseclass">TObject::</span>Pop</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:Print">Print</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Read"><span class="baseclass">TObject::</span>Read</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:RecursiveRemove"><span class="baseclass">TObject::</span>RecursiveRemove</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdDeut">RefineIdDeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdEl">RefineIdEl</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdHe3">RefineIdHe3</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdHe4">RefineIdHe4</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdKm">RefineIdKm</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdKp">RefineIdKp</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdNeut">RefineIdNeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdOff">RefineIdOff</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdOn">RefineIdOn</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdPhot">RefineIdPhot</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdPim">RefineIdPim</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdPip">RefineIdPip</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdPos">RefineIdPos</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdProt">RefineIdProt</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefineIdUnknown">RefineIdUnknown</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:RefinePartId">RefinePartId</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ResetBit"><span class="baseclass">TObject::</span>ResetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SaveAs"><span class="baseclass">TObject::</span>SaveAs</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename = <span class="string">""</span>, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SavePrimitive"><span class="baseclass">TObject::</span>SavePrimitive</a>(<a href="./ListOfTypes.html#ostream">ostream</a>&amp; out, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:SetBadPaddle">SetBadPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> sector, <a href="./ListOfTypes.html#Int_t">Int_t</a> paddle)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit@1"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f, <a href="./ListOfTypes.html#Bool_t">Bool_t</a> set)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:SetConfidenceCut">SetConfidenceCut</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:SetDebugMode">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Mode)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDrawOption"><span class="baseclass">TObject::</span>SetDrawOption</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDtorOnly"><span class="baseclass">TObject::</span>SetDtorOnly</a>(<span class="keyword">void</span>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetObjectStat"><span class="baseclass">TObject::</span>SetObjectStat</a>(<a href="./ListOfTypes.html#Bool_t">Bool_t</a> stat)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:SetRefConfidenceCut">SetRefConfidenceCut</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetUniqueID"><span class="baseclass">TObject::</span>SetUniqueID</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> uid)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:ShowMembers">ShowMembers</a>(TMemberInspector&amp;)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TPartSieve:SieveEvent">SieveEvent</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:SortOff">SortOff</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:SortOn">SortOn</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:Streamer">Streamer</a>(TBuffer&amp;)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TPartSieve:StreamerNVirtual">StreamerNVirtual</a>(TBuffer&amp; ClassDef_StreamerNVirtual_b)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SysError"><span class="baseclass">TObject::</span>SysError</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBit"><span class="baseclass">TObject::</span>TestBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBits"><span class="baseclass">TObject::</span>TestBits</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:UseCurrentStyle"><span class="baseclass">TObject::</span>UseCurrentStyle</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TVERTClass.html">TVERTClass</a>*</td><td class="funcname"><a class="funcname" href="#TPartSieve:Vert_Error_Handler">Vert_Error_Handler</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> NRows, <a href="./ListOfTypes.html#Int_t">Int_t</a> track1, <a href="./ListOfTypes.html#Int_t">Int_t</a> track2)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Warning"><span class="baseclass">TObject::</span>Warning</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write@1"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0) <span class="keyword">const</span></td></tr>
+
+</table></div>
+<div class="access" id="funcprot"><b>protected:</b>
+<table class="func" id="tabfuncprot" cellspacing="0">
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DoError"><span class="baseclass">TObject::</span>DoError</a>(<span class="keyword">int</span> level, <span class="keyword">const</span> <span class="keyword">char</span>* location, <span class="keyword">const</span> <span class="keyword">char</span>* fmt, va_list va) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MakeZombie"><span class="baseclass">TObject::</span>MakeZombie</a>()</td></tr>
+
+</table></div>
+</div>
+
+<div id="datamembers">
+<h2><a name="TPartSieve:Data_Members"></a>Data Members</h2>
+<div class="access" id="enumpubl"><b>public:</b>
+<table class="data" id="tabenumpubl" cellspacing="0">
+<tr class="data"><td class="datatype">enum E_SortFlag_state { </td><td class="dataname"><a name="TPartSieve:kSortFlag_SortOn"></a>kSortFlag_SortOn</td><td></td></tr>
+<tr class="data"><td class="datatype"></td><td class="dataname"><a name="TPartSieve:kSortFlag_ConfidenceOn"></a>kSortFlag_ConfidenceOn</td><td></td></tr>
+<tr class="data"><td class="datatype"></td><td class="dataname"><a name="TPartSieve:kSortFlag_RefineIdOn"></a>kSortFlag_RefineIdOn</td><td></td></tr>
+<tr class="data"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span>EStatusBits { </td><td class="dataname"><a href="#TObject:kCanDelete">kCanDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kMustCleanup">kMustCleanup</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kObjInCanvas">kObjInCanvas</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kIsReferenced">kIsReferenced</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kHasUUID">kHasUUID</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kCannotPick">kCannotPick</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNoContextMenu">kNoContextMenu</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kInvalidObject">kInvalidObject</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span><i>[unnamed]</i> { </td><td class="dataname"><a href="#TObject:kIsOnHeap">kIsOnHeap</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNotDeleted">kNotDeleted</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kZombie">kZombie</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kBitMask">kBitMask</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kSingleKey">kSingleKey</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kOverwrite">kOverwrite</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kWriteDelete">kWriteDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+
+</table></div>
+<div class="access" id="datapubl"><b>public:</b>
+<table class="data" id="tabdatapubl" cellspacing="0">
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fCC_Phe_cut"></a>fCC_Phe_cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fCC_Phe_width"></a>fCC_Phe_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./TClasTool.html">TClasTool</a>*</td><td class="dataname"><a name="TPartSieve:fCT"></a>fCT</td><td class="datadesc">This is a pointer to the actual reader used.</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Deut_DC_chi2"></a>fConf_Deut_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Deut_DC_chi2_width"></a>fConf_Deut_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Deut_DT_max"></a>fConf_Deut_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Deut_DT_min"></a>fConf_Deut_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_El_DC_chi2"></a>fConf_El_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_El_DC_chi2_width"></a>fConf_El_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He3_DC_chi2"></a>fConf_He3_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He3_DC_chi2_width"></a>fConf_He3_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He3_DT_max"></a>fConf_He3_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He3_DT_min"></a>fConf_He3_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He4_DC_chi2"></a>fConf_He4_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He4_DC_chi2_width"></a>fConf_He4_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He4_DT_max"></a>fConf_He4_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_He4_DT_min"></a>fConf_He4_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Km_DC_chi2"></a>fConf_Km_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Km_DC_chi2_width"></a>fConf_Km_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Km_DT_max"></a>fConf_Km_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Km_DT_min"></a>fConf_Km_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Kp_DC_chi2"></a>fConf_Kp_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Kp_DC_chi2_width"></a>fConf_Kp_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Kp_DT_max"></a>fConf_Kp_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Kp_DT_min"></a>fConf_Kp_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Neut_DT_max"></a>fConf_Neut_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Neut_DT_min"></a>fConf_Neut_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pim_DC_chi2"></a>fConf_Pim_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pim_DC_chi2_width"></a>fConf_Pim_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pim_DT_max"></a>fConf_Pim_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pim_DT_min"></a>fConf_Pim_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pip_DC_chi2"></a>fConf_Pip_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pip_DC_chi2_width"></a>fConf_Pip_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pip_DT_max"></a>fConf_Pip_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Pip_DT_min"></a>fConf_Pip_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Prot_DC_chi2"></a>fConf_Prot_DC_chi2</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Prot_DC_chi2_width"></a>fConf_Prot_DC_chi2_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Prot_DT_max"></a>fConf_Prot_DT_max</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConf_Prot_DT_min"></a>fConf_Prot_DT_min</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConfidence"></a>fConfidence[13][10]</td><td class="datadesc">Confidence level in particle id</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fConfidenceCut"></a>fConfidenceCut</td><td class="datadesc">Minimum confidence for Sieve to store a particle</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TPartSieve:fDebug_Mode"></a>fDebug_Mode</td><td class="datadesc">Sets the verbosity of the code. </td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_Ein_cut"></a>fEC_Ein_cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_Eio_off"></a>fEC_Eio_off</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_Eio_slope"></a>fEC_Eio_slope</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_Eout_cut"></a>fEC_Eout_cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_U_Cut"></a>fEC_U_Cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_U_Cut_width"></a>fEC_U_Cut_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_V_Cut"></a>fEC_V_Cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_V_Cut_width"></a>fEC_V_Cut_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_W_Cut"></a>fEC_W_Cut</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fEC_W_Cut_width"></a>fEC_W_Cut_width</td><td></td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TPartSieve:fIndex"></a>fIndex[13][10]</td><td class="datadesc">Stores the particle index in the EVNT bank</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TPartSieve:fIndexSave"></a>fIndexSave</td><td class="datadesc">used by IDtoInd and IDtoIndQuick for faster use</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TPartSieve:fNPart"></a>fNPart[13]</td><td class="datadesc">Stores the numbers of each type of particle in an event</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TPartSieve:fRefConfidenceCut"></a>fRefConfidenceCut</td><td class="datadesc">when Refining Id's parts with less than this confidence will be refined</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#UShort_t">UShort_t</a></td><td class="dataname"><a name="TPartSieve:fSortFlag"></a>fSortFlag</td><td class="datadesc">This flag controls the mode of the Sieve</td></tr>
+<tr class="data"><td class="datatype">vector&lt;<span class="keyword">int</span>&gt;</td><td class="dataname"><a name="TPartSieve:fvBadPaddles"></a>fvBadPaddles</td><td></td></tr>
+
+</table></div>
+</div>
+<h2><a id="TPartSieve:Class_Charts"></a>Class Charts</h2>
+<!--INHERITANCE TREE-->
+<table><tr><td width="10%"></td><td width="70%"><a href="ClassHierarchy.html">Inheritance Chart</a>:</td></tr><tr class="inhtree"><td width="10%"></td><td width="70%"><table class="inhtree"><tr><td>
+<table width="100%" border="0" cellpadding ="0" cellspacing="2"><tr>
+<td><table><tr>
+<td bgcolor="#f7f7f7" align="right">
+<tt>TObject</tt></td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><big><b><tt><a name="TPartSieve" href="./TPartSieve.html">TPartSieve</a></tt></b></big></center>
+</td>
+<td><table><tr>
+<td></td>
+</tr></table></td>
+</tr></table>
+</td></tr></table></td></tr></table>
+<h2>Function documentation</h2>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TPartSieve:TPartSieve" href="src/TPartSieve.cxx.html#qDvgrC">TPartSieve</a>()</span><br />
+<div class="funccomm"><pre>
+ <a href="./TPartSieve.html#TPartSieve:Class" title="TClass* TPartSieve::Class()">Class</a> default constructor.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TPartSieve:TPartSieve@1" href="src/TPartSieve.cxx.html#uzbbb">TPartSieve</a>(<a href="./TClasTool.html">TClasTool</a>* clastool, <a href="./ListOfTypes.html#Int_t">Int_t</a> runnum = 0)</span><br />
+<div class="funccomm"><pre>
+ <a href="./TPartSieve.html#TPartSieve:Class" title="TClass* TPartSieve::Class()">Class</a> Constructor, setting up PartSieve properly with a <a href="./TClasTool.html">TClasTool</a>
+
+ The runnum argument may be used later when we couple to a database
+ to get constants for cuts for a specific run. It is not used now.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TPartSieve:_TPartSieve" href="src/TPartSieve.cxx.html#Ipos2D">~TPartSieve</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TPartSieve.html#TPartSieve:Class" title="TClass* TPartSieve::Class()">Class</a> default destructor.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:SortOn" href="src/TPartSieve.cxx.html#dwXv3C">SortOn</a>()</span><br />
+<div class="funccomm"><pre>Calling this function turns on a flag that causes <a href="./TPartSieve.html#TPartSieve:SieveEvent" title="Int_t TPartSieve::SieveEvent()">SieveEvent</a>() to
+<a href="./TCounter.html">count</a> and store the number of each particle and store each particle's
+index into the EVNT bank.
+
+This is useful for getting how many of a certain particle are in
+an event. It is also useful because it is easy to tell it to get,
+for example, the second kaon+, using GetEVNT. This should also be used
+in combination with the other two modes, in order for one to look at the
+particles he has just analyzed.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:ConfidenceOn" href="src/TPartSieve.cxx.html#yZpy8B">ConfidenceOn</a>()</span><br />
+<div class="funccomm"><pre>Calling this function turns on a flag that causes <a href="./TPartSieve.html#TPartSieve:SieveEvent" title="Int_t TPartSieve::SieveEvent()">SieveEvent</a>() to
+calculate and store a confidence level in each particle's id.
+
+Use this to measure the confidence level in each particle's RECSIS
+id. For example if a particle's RECSIS id is proton and this function
+assigns a confidence of .65, there is a 65% chance that it is actually
+a proton.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:RefineIdOn" href="src/TPartSieve.cxx.html#TXZjoC">RefineIdOn</a>()</span><br />
+<div class="funccomm"><pre>Calling this function turns on a flag that causes <a href="./TPartSieve.html#TPartSieve:SieveEvent" title="Int_t TPartSieve::SieveEvent()">SieveEvent</a>() to
+recalculate the id of each particle in the event.
+
+This mode will actually change the particle id's that were assigned
+in RECSIS. Make sure you understand what the refinements are actually
+doing before you use this mode!
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:SortOff" href="src/TPartSieve.cxx.html#E6VvnB">SortOff</a>()</span><br />
+<div class="funccomm"><pre>Turns of particle sorting capability
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:ConfidenceOff" href="src/TPartSieve.cxx.html#BKNtdB">ConfidenceOff</a>()</span><br />
+<div class="funccomm"><pre>Turn off confidence setting capability
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:RefineIdOff" href="src/TPartSieve.cxx.html#qv9AbB">RefineIdOff</a>()</span><br />
+<div class="funccomm"><pre>Turn off Id refining capability
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:SetDebugMode" href="src/TPartSieve.cxx.html#rxiBM">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Mode)</span><br />
+<div class="funccomm"><pre>Set verbosity of code
+Debug Mode = -1 : Absolutely no output
+Debug Mode =  0 : <a href="./#TObject:Warning" title="void TObject::Warning(const char* method,const char* msgfmt)">Warning</a> Messages only.
+Debug Mode =  1 : Helpful non-warning messages and warning for too many particles in event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:SieveEvent" href="src/TPartSieve.cxx.html#WWYT5E">SieveEvent</a>()</span><br />
+<div class="funccomm"><pre> This function looks over each particle in the event. It can do the
+ following in any combination:
+ 1. Count and save the number of each type of particle in the event,
+ as well as the EVNT index of each particle. These particles can then be
+ accessed by telling the Sieve to get the 0th, 1st, 2nd etc. of such
+ and such a particle.
+ 2. Calculate the confidence that the RECSIS particle id is correct,
+ however this is only useful if you then save this info using option 1.
+ 3. Recalculate the particle id and save this new id.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:IndexPart" href="src/TPartSieve.cxx.html#PuOFJD">IndexPart</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> confidence = 1)</span><br />
+<div class="funccomm"><pre>THIS FUNCTION HAS BEEN WRITTEN FOR INTERNAL USE ONLY AND IS NOT ACCESSIBLE TO THE USER.
+
+This will properly save a particle's index into the EVNT bank. It will
+also incremement its counter. This routine saves the particle confidence
+if in the SetConfidence mode.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetPartConf" href="src/TPartSieve.cxx.html#s3ohFC">GetPartConf</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> This function returns the confidence level that the particle with EVNT
+ index Ind's RECSIS id is correct. For example if a particle's RECSIS id
+ is proton and this function /returns a confidence of .65, there is a 65%
+ chance that it is actually a proton.
+
+ The confidence level is set using a two-tiered system. The first tier consists
+ of the Conf### functions, where ### is the particle name.
+ In these functions the cuts that are to be used on the specific particle
+ are selected. These functions also may contain code for a cut that
+ is specific to a certain particle, however this should be very limited.
+
+ The second tier of the system is the Cut functions themselves. The
+ general idea for these functions is that there is an ideal value of
+ quantity that a particle may have. The experimental value will differ
+ from this ideal value. The user inputs the maximum difference between
+ ideal and experimental and the weight of this cut into the functions
+ as arguements. These functions are meant to be general and may require
+ additional arguements such as the mass of the particle in question.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:RefinePartId" href="src/TPartSieve.cxx.html#GJSiBE">RefinePartId</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>
+ THIS IS CURRENTLY TOTALLY NON FUNCTIONAL.
+
+ The thought behind it may even be flawed....
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:GetNPid" href="src/TPartSieve.cxx.html#Ajg1SB">GetNPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid)</span><br />
+<div class="funccomm"><pre>Get the number of particles with PartId in last sorted event.
+Returns negative on error.
+
+See <a href="./TPartSieve.html#TPartSieve:GetNIdx" title="Int_t TPartSieve::GetNIdx(Int_t idx)">GetNIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx) (inlined function) for doing the same from an index.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:GetIndexPid" href="src/TPartSieve.cxx.html#fQ1TCB">GetIndexPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>Get the index into the EVNT bank for the numth PartId. Indexes start at 0.
+Returns negative on error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:GetIndexIdx" href="src/TPartSieve.cxx.html#axs4SE">GetIndexIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>Get the index into the EVNT bank for the numth Idx. Indexes start at 0.
+Returns negative on error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEVNTClass.html">TEVNTClass</a>* <a class="funcname" name="TPartSieve:GetEVNTIdx" href="src/TPartSieve.cxx.html#THHk9">GetEVNTIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>Returns a pointer to the <a href="./TEVNTClass.html">TEVNTClass</a> for the numth INDEX, starting at index 0.
+Returns NULL on error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEVNTClass.html">TEVNTClass</a>* <a class="funcname" name="TPartSieve:GetEVNTPid" href="src/TPartSieve.cxx.html#VTo0GC">GetEVNTPid</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>Returns a pointer to the <a href="./TEVNTClass.html">TEVNTClass</a> for the numth PartID, starting at index 0.
+Returns NULL on error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:IndexConf" href="src/TPartSieve.cxx.html#KNtdT">IndexConf</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf, <a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>If you wish to save a particle confidence you have got independently of <a href="./TPartSieve.html#TPartSieve:SieveEvent" title="Int_t TPartSieve::SieveEvent()">SieveEvent</a>,
+this will save it in the numth slot of PartId
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:Print" href="src/TPartSieve.cxx.html#eIfSlC">Print</a>()</span><br />
+<div class="funccomm"><pre>Prints the number of each type of particle in the event and the SortFlag value.
+You must call <a href="./TPartSieve.html#TPartSieve:SieveEvent" title="Int_t TPartSieve::SieveEvent()">SieveEvent</a>() first to see anything meaningful.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetConfFast" href="src/TPartSieve.cxx.html#NHnZqC">GetConfFast</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> pid, <a href="./ListOfTypes.html#Int_t">Int_t</a> num)</span><br />
+<div class="funccomm"><pre>Returns the confidence from from the table. This table is constructed if the
+routine is run with <a href="./TPartSieve.html#TPartSieve:ConfidenceOn" title="void TPartSieve::ConfidenceOn()">ConfidenceOn</a>(). Returns negative on error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:IndtoID" href="src/TPartSieve.cxx.html#D7gfCC">IndtoID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>This transforms a particle index to the particle id#.
+This is a passthrough call to <a href="./TClasTool.html">TClasTool</a>::GetPidFromType.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfUnknown" href="src/TPartSieve.cxx.html#BmreTD">ConfUnknown</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>The Conf functions select the cuts that are relevent to their particle.
+There is a seperate function for each particle because it keeps the
+code easy to read and straightforward. It is also the job of these
+functions to select the weight of each cut and how much range the cut
+should have.
+
+Calculate the confidence that particle with EVNT index Ind is an electron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfPip" href="src/TPartSieve.cxx.html#iDDgw">ConfPip</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> Calculate the confidence that particle with EVNT index Ind is a Pi+.
+ Currently this is a hard cut on DeltaT, between
+ <a href="./TPartSieve.html#TPartSieve:fConf_Pim_DT_min" title="Float_t TPartSieve::fConf_Pim_DT_min">fConf_Pim_DT_min</a> and <a href="./TPartSieve.html#TPartSieve:fConf_Pim_DT_max" title="Float_t TPartSieve::fConf_Pim_DT_max">fConf_Pim_DT_max</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfPim" href="src/TPartSieve.cxx.html#slgCOD">ConfPim</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> Calculate the confidence that particle with EVNT index Ind is a Pi-.
+ Currently this is a hard cut on DeltaT, between
+ <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_min" title="Float_t TPartSieve::fConf_Pip_DT_min">fConf_Pip_DT_min</a> and <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_max" title="Float_t TPartSieve::fConf_Pip_DT_max">fConf_Pip_DT_max</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfProt" href="src/TPartSieve.cxx.html#JMeG6">ConfProt</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a proton.
+ Currently this is a hard cut on DeltaT, between
+ <a href="./TPartSieve.html#TPartSieve:fConf_Prot_DT_min" title="Float_t TPartSieve::fConf_Prot_DT_min">fConf_Prot_DT_min</a> and <a href="./TPartSieve.html#TPartSieve:fConf_Prot_DT_max" title="Float_t TPartSieve::fConf_Prot_DT_max">fConf_Prot_DT_max</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfEl" href="src/TPartSieve.cxx.html#LXIFFD">ConfEl</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> W = 0.)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is an electron
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfPos" href="src/TPartSieve.cxx.html#r5MWKD">ConfPos</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a positron.
+This calls the routine for the electron: <a href="./TPartSieve.html#TPartSieve:ConfEl" title="Float_t TPartSieve::ConfEl(Int_t Ind,Float_t W=0.)">ConfEl</a>(Ind,0.)
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfPhot" href="src/TPartSieve.cxx.html#JMeGq">ConfPhot</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a photon.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfNeut" href="src/TPartSieve.cxx.html#cu7Mt">ConfNeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a neutron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfKp" href="src/TPartSieve.cxx.html#HGUhwD">ConfKp</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> Calculate the confidence that particle with EVNT index Ind is a K+.
+ Currently this is a hard cut on DeltaT, between
+ <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_min" title="Float_t TPartSieve::fConf_Pip_DT_min">fConf_Pip_DT_min</a> and <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_max" title="Float_t TPartSieve::fConf_Pip_DT_max">fConf_Pip_DT_max</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfKm" href="src/TPartSieve.cxx.html#LBZc9D">ConfKm</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> Calculate the confidence that particle with EVNT index Ind is a K-.
+ Currently this is a hard cut on DeltaT, between
+ <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_min" title="Float_t TPartSieve::fConf_Pip_DT_min">fConf_Pip_DT_min</a> and <a href="./TPartSieve.html#TPartSieve:fConf_Pip_DT_max" title="Float_t TPartSieve::fConf_Pip_DT_max">fConf_Pip_DT_max</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfDeut" href="src/TPartSieve.cxx.html#EMeOt">ConfDeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a deuteron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfHe3" href="src/TPartSieve.cxx.html#jbqoGD">ConfHe3</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a Helium 3.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ConfHe4" href="src/TPartSieve.cxx.html#I5MGp">ConfHe4</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Calculate the confidence that particle with EVNT index Ind is a Helium 4.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdUnknown" href="src/TPartSieve.cxx.html#enA_BE">RefineIdUnknown</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre> right now.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdPip" href="src/TPartSieve.cxx.html#Uvts2D">RefineIdPip</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a Pi+.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdProt" href="src/TPartSieve.cxx.html#dTwSVD">RefineIdProt</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a proton.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdEl" href="src/TPartSieve.cxx.html#j3kuHE">RefineIdEl</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of an electron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdPhot" href="src/TPartSieve.cxx.html#Js3SVD">RefineIdPhot</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a photon.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdPim" href="src/TPartSieve.cxx.html#oWqs2D">RefineIdPim</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a Pi-.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdNeut" href="src/TPartSieve.cxx.html#NP7OVD">RefineIdNeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a neutron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdKp" href="src/TPartSieve.cxx.html#gyjuHE">RefineIdKp</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a kaon+.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdDeut" href="src/TPartSieve.cxx.html#RS7OVD">RefineIdDeut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a deuteron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdKm" href="src/TPartSieve.cxx.html#A6kuHE">RefineIdKm</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a kaon-.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdHe3" href="src/TPartSieve.cxx.html#sgas2D">RefineIdHe3</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a helium 3.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdHe4" href="src/TPartSieve.cxx.html#U_Ys2D">RefineIdHe4</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a helium 4.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:RefineIdPos" href="src/TPartSieve.cxx.html#clus2D">RefineIdPos</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>Refine the Id of a positron.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:ChangeID" href="src/TPartSieve.cxx.html#S6tdeB">ChangeID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Int_t">Int_t</a> ID)</span><br />
+<div class="funccomm"><pre>This function changes the id of the particle in the <a href="./ClasTool.html">ClasTool</a> bank with
+index Ind to the ID in the arguement.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:SetConfidenceCut" href="src/TPartSieve.cxx.html#LO0t1D">SetConfidenceCut</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf)</span><br />
+<div class="funccomm"><pre>Set the minimum confidence a particle may have and be saved in the Sieve
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TPartSieve:SetRefConfidenceCut" href="src/TPartSieve.cxx.html#g2VetD">SetRefConfidenceCut</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> conf)</span><br />
+<div class="funccomm"><pre>Set the minimum confidence a particle may have if it is not to be refined
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:BetaBetaCut" href="src/TPartSieve.cxx.html#QlzvIC">BetaBetaCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> mass, <a href="./ListOfTypes.html#Float_t">Float_t</a> Wieght, <a href="./ListOfTypes.html#Float_t">Float_t</a> MaxDiff)</span><br />
+<div class="funccomm"><pre> In these Cut functions the difference between an ideal value and the
+ experimental value is calculated. The difference is scaled so that a
+ difference of MaxDiff is scaled to 1, values less are less than 1 and
+ values greater than MaxDiff are greater than 1. The scaled difference is
+ then multiplied by Weight and returned. The returned value is meant to
+ be subtracted from the confidence.
+
+ Compares the Beta from EVNT class with betta found using the formula
+ B= p/sqrt(p^2 + m^2).m is the input parameter mass. Use the accepted value.
+ Weight is a measure of how severe the cut is. Returns the
+ reduction in confidence.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:CutConfMax" href="src/TPartSieve.cxx.html#kivYE">CutConfMax</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> x, <a href="./ListOfTypes.html#Float_t">Float_t</a> cut, <a href="./ListOfTypes.html#Float_t">Float_t</a> width)</span><br />
+<div class="funccomm"><pre>
+ Helper function.
+ This function return 1 if x is below cut-width/2.
+ It will return       0 if x is above cut+width/2.
+ Between cut-width/2 and cut+width/2 it returns a value between 1 and 0
+ decreasing linearly.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:CutConfMin" href="src/TPartSieve.cxx.html#od0nB">CutConfMin</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> x, <a href="./ListOfTypes.html#Float_t">Float_t</a> cut, <a href="./ListOfTypes.html#Float_t">Float_t</a> width)</span><br />
+<div class="funccomm"><pre>
+ Helper function.
+ This function return 0 if x is below cut-width/2.
+ It will return       1 if x is above cut+width/2.
+ Between cut-width/2 and cut+width/2 it returns a value between 0 and 1
+ increasing linearly.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ECUVWCut" href="src/TPartSieve.cxx.html#M7HH4B">ECUVWCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre> See <a href="./ListOfTypes.html#Float_t">Float_t</a> <a href="./TPartSieve.html">TPartSieve</a>::<a href="./TPartSieve.html#TPartSieve:ECUVWCut" title="Float_t TPartSieve::ECUVWCut(Int_t Ind,Float_t WidthMultiply=0.) or overloads">ECUVWCut</a>(<a href="./TEVNTClass.html">TEVNTClass</a> *<a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply)
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:ECUVWCut@1" href="src/TPartSieve.cxx.html#gv.QC">ECUVWCut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre> This function cuts on the U,V and W coordinate on the EC plane.
+ These cuts make sure we do not use the events that are too close to the edge
+ where some of the shower could have leaked out of the calorimeter.
+
+ Instead of a hard cut, where the function would return 1 if you are inside
+ and 0 if you are outside, each cut specifies a <span class="string">"width"</span>. The function returns
+ a value of 0 or 1 outside this widht, and inside the width it returns a
+ value bewteen 0 and 1. The <span class="string">"WidthMultiply"</span> parameter allows you to stretch
+ or shrink these widths. So WidthMultiply=0 will give you the standard
+ 1 or 0 behavior.
+
+ Cuts are specified by <a href="./TPartSieve.html#TPartSieve:fEC_U_Cut" title="Float_t TPartSieve::fEC_U_Cut">fEC_U_Cut</a>, <a href="./TPartSieve.html#TPartSieve:fEC_V_Cut" title="Float_t TPartSieve::fEC_V_Cut">fEC_V_Cut</a> and <a href="./TPartSieve.html#TPartSieve:fEC_W_Cut" title="Float_t TPartSieve::fEC_W_Cut">fEC_W_Cut</a>, where the U cut
+ is a cut on minumum U, and the V and W cuts are maxima. The widths for
+ these cuts are set in fEC_?_Cut_width.
+
+ Reasonable defaults are choosen for these cuts, but you probably want to
+ fine tune them for your analysis.
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:EC_Eio_Cut" href="src/TPartSieve.cxx.html#GX16zE">EC_Eio_Cut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre> See <a href="./TPartSieve.html">TPartSieve</a>::<a href="./TPartSieve.html#TPartSieve:EC_Eio_Cut" title="Float_t TPartSieve::EC_Eio_Cut(Int_t Ind,Float_t WidthMultiply=0.) or overloads">EC_Eio_Cut</a>((<a href="./TEVNTClass.html">TEVNTClass</a> *<a href="./TEVNTClass.html">evnt</a>,<a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply)
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:EC_Eio_Cut@1" href="src/TPartSieve.cxx.html#YcF5wD">EC_Eio_Cut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre>
+ This performs a cut on the EC Inner energy versus the EC Outer energy
+ to identify good electrons.
+ The cut is a line: Eout/p &gt;= Off - Slope* Ein/p
+ Where Off=0.156 , Slope=1 is standard.
+
+ Right now this is a hard cut, returning 0 or 1.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetDeltaT" href="src/TPartSieve.cxx.html#QGZ96D">GetDeltaT</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind)</span><br />
+<div class="funccomm"><pre>
+ See <a href="./TPartSieve.html">TPartSieve</a>::<a href="./TPartSieve.html#TPartSieve:GetDeltaT" title="Float_t TPartSieve::GetDeltaT(Int_t Ind) or overloads">GetDeltaT</a>(<a href="./TSCPBClass.html">TSCPBClass</a> *sc,<a href="./ListOfTypes.html#Float_t">Float_t</a> p,<a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetDeltaT@1" href="src/TPartSieve.cxx.html#wAveT">GetDeltaT</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>)</span><br />
+<div class="funccomm"><pre>
+ Get the DeltaT (difference between flight time calculated from
+ sc hit and from momentum, see below) for event *<a href="./TEVNTClass.html">evnt</a>.
+
+ First checks whether there was an SC hit, if not returns -1000.
+ Next, checks whether the SC paddle is on the bad paddle list,
+ if so, returns -999.
+ If neither of the above, it returns the DeltaT by calling the routine below.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetDeltaT@2" href="src/TPartSieve.cxx.html#nE6tFE">GetDeltaT</a>(<a href="./TSCPBClass.html">TSCPBClass</a>* sc, <a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</span><br />
+<div class="funccomm"><pre>
+ Returns the difference between flight time calculated from
+ the scintellator hit time dt_sc=(sc-&gt;Time - <a href="./THEADClass.html">head</a>->STT) and the flight time
+ calculated from the momentum: dt_p=sc-&gt;Path/(29.9*betap), where
+ betap = p/(p*p+m*m) , with m the guessed at particle mass.
+ This should thus be zero if the mass is guessed correctly and resolution
+ is perfect.
+
+ No checking is done for the validity of the *sc pointer!
+ Returns the DeltaT.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetDeltaT_EC" href="src/TPartSieve.cxx.html#RYVotD">GetDeltaT_EC</a>(<a href="./TECPBClass.html">TECPBClass</a>* ec, <a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</span><br />
+<div class="funccomm"><pre>
+ Same at <a href="./TPartSieve.html#TPartSieve:GetDeltaT" title="Float_t TPartSieve::GetDeltaT(Int_t Ind) or overloads">GetDeltaT</a>, but for the flight path to the EC.
+ Returns the difference between flight time calculated from
+ the EC hit time dt_ec=(ec-&gt;Time - <a href="./THEADClass.html">head</a>->STT) and the flight time
+ calculated from the momentum: dt_p=ec-&gt;Path/(29.9*betap), where
+ betap = p/(p*p+m*m) , with m the guessed at particle mass.
+ This should thus be zero if the mass is guessed correctly and resolution
+ is perfect.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:Get_DC_Qual" href="src/TPartSieve.cxx.html#v.eNNB">Get_DC_Qual</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Chi2, <a href="./ListOfTypes.html#Float_t">Float_t</a> Width = 0.5)</span><br />
+<div class="funccomm"><pre>
+ Check the quality of the track.
+ If no DC at all or <a href="./TEVNTClass.html">TEVNTClass</a>::<a href="./TVirtualData.html#TVirtualData:GetDCStat" title="Char_t TVirtualData::GetDCStat()">GetDCStat</a>&lt;=0 return 0.
+ Also return 0. if the <a href="./TEVNTClass.html">TEVNTClass</a>:GetStat()&lt;=0;
+ This filters out the hit based only tracks.
+ Else, compare the Chi2 requested with the Chi2 of the track.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:CC_Phe_Cut" href="src/TPartSieve.cxx.html#GXxf1E">CC_Phe_Cut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre>
+ Cut on the number of CC photons, given an index.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:CC_Phe_Cut@1" href="src/TPartSieve.cxx.html#dcF5HD">CC_Phe_Cut</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* <a href="./TEVNTClass.html">evnt</a>, <a href="./ListOfTypes.html#Float_t">Float_t</a> WidthMultiply = 0.)</span><br />
+<div class="funccomm"><pre>
+ Cut on the number of CC photons.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:NoCCCut" href="src/TPartSieve.cxx.html#H.uSeE">NoCCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</span><br />
+<div class="funccomm"><pre>Cut For particles missing a CC bank
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:NoECCut" href="src/TPartSieve.cxx.html#nXWrlE">NoECCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</span><br />
+<div class="funccomm"><pre>Cut For particles missing an EC bank
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:NoDCCut" href="src/TPartSieve.cxx.html#LSZOAB">NoDCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</span><br />
+<div class="funccomm"><pre>Cut For particles missing a DC bank
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:NoSCCut" href="src/TPartSieve.cxx.html#HXUTr">NoSCCut</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> Ind, <a href="./ListOfTypes.html#Float_t">Float_t</a> Weight)</span><br />
+<div class="funccomm"><pre>Cut For particles missing an SC bank
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Bool_t">Bool_t</a> <a class="funcname" name="TPartSieve:CheckSCPaddle" href="src/TPartSieve.cxx.html#OUdzlB">CheckSCPaddle</a>(<a href="./TSCPBClass.html">TSCPBClass</a>* sc)</span><br />
+<div class="funccomm"><pre> Check is sc is on the bad paddle list.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Bool_t">Bool_t</a> <a class="funcname" name="TPartSieve:CheckSCPaddle@1" href="src/TPartSieve.cxx.html#EPF_4B">CheckSCPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> secidcode)</span><br />
+<div class="funccomm"><pre> Check is sccode is on the bad paddle list.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Bool_t">Bool_t</a> <a class="funcname" name="TPartSieve:CheckSCPaddle@2" href="src/TPartSieve.cxx.html#iVW.8B">CheckSCPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> sector, <a href="./ListOfTypes.html#Int_t">Int_t</a> paddle)</span><br />
+<div class="funccomm"><pre> Check if {sec,paddle} is on the bad baddle list.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:SetBadPaddle" href="src/TPartSieve.cxx.html#FmOJXD">SetBadPaddle</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> sector, <a href="./ListOfTypes.html#Int_t">Int_t</a> paddle)</span><br />
+<div class="funccomm"><pre> Set a paddle as bad in bad paddle list.
+ Returns the new number of bad paddles;
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TPartSieve:GetBetaP" href="src/TPartSieve.h.html#nnhdaC">GetBetaP</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> p, <a href="./ListOfTypes.html#Int_t">Int_t</a> ipart)</span><br />
+<div class="funccomm"><pre> return beta from momentum and mass (index).
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:IDtoInd" href="src/TPartSieve.h.html#JfRtzC">IDtoInd</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> PartId)</span><br />
+<div class="funccomm"><pre>
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:IDtoIndQuick" href="src/TPartSieve.h.html#msDb9B">IDtoIndQuick</a>()</span><br />
+<div class="funccomm"><pre>
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TPartSieve:TPartSieve" href="src/TPartSieve.h.html#jGZIy">TPartSieve</a>()</span><br />
+<div class="funccomm"><pre> into the correct array
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TPartSieve:GetNIdx" href="src/TPartSieve.h.html#wNfEgB">GetNIdx</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> idx)</span><br />
+<div class="funccomm"><pre>Utilities for use during analysis
+</pre></div>
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span> <a href="./TPartSieve.html#TPartSieve:fNPart" title="Int_t TPartSieve::fNPart">fNPart</a>[idx];}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TVERTClass.html">TVERTClass</a>* <a class="funcname" name="TPartSieve:GetVert" href="src/TPartSieve.h.html#RDtZiD">GetVert</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> PID1, <a href="./ListOfTypes.html#Int_t">Int_t</a> num1, <a href="./ListOfTypes.html#Int_t">Int_t</a> PID2, <a href="./ListOfTypes.html#Int_t">Int_t</a> num2)</span><br />
+<div class="funccomm"><pre>This function should be somewhere else (ie. the vertex class, but I
+need it for an analysis and this was the simplest place to put it.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TVERTClass.html">TVERTClass</a>* <a class="funcname" name="TPartSieve:Vert_Error_Handler" href="src/TPartSieve.h.html#MRTxD">Vert_Error_Handler</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> NRows, <a href="./ListOfTypes.html#Int_t">Int_t</a> track1, <a href="./ListOfTypes.html#Int_t">Int_t</a> track2)</span><br />
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: Fri Feb 24 17:40:12 2017</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

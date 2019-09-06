@@ -1,0 +1,69 @@
+#  Map TOOLS Package
+#  
+#   Author :  Gagik Gavalian (UNH)
+#   Date   :  03/12/2000
+#
+
+Description
+-----------
+
+This package is in development stage and does not contain
+all functionality that it needs. 
+Only function implemented is GetBeamEnergy.
+In the future will be extended to get any calibration constants 
+from mySQL maps.
+
+
+Requirements
+------------
+
+-  mySQL database
+-  ROOT (version 2.23 or higher)
+-  TMySQL library which can be downloaded separately from 
+   ROOT home page 
+
+Note: TMySQL does not come with ROOT you need to download it
+      and compile.
+
+
+Instalation
+-----------
+
+In order to compile this package You need to have
+mySQL installed on your system and enviromental variables set up
+to point "lib" and "include" directories where mysql include files
+and libraries can be found.
+
+example:
+on JLAB CUE machines use
+
+>setenv MYSQL_LIBS     /apps/mysql/lib/mysql
+>setenv MYSQL_INCLUDE  /apps/mysql/include/mysql
+
+if You have all this set up just type make from 
+prompt and libMapTools.so will appear in your
+$TOP_DIR/slib/$OS_NAME directory.
+
+
+------------
+If you have any comments and suggestions please contact me at gavalian@jlab.org
+
+******************************************************************************
+WARNING:
+
+This class needs the MYSQL package version 3.23 installed.
+This package can be reteived for Linux from www.mysql.org,
+you will notice that this is an ALPHA release.
+
+If you are unhappy about the fact that all CLAS Maps are 
+stored in an ALPHA release of MySQL, please complain to
+Riad Suleiman or Mark Ito, not the author of this 
+package. This package will compile fine with older 
+versions of MySQL, however, the database requires
+release 3.23
+
+TMySQL>mysql --version
+mysql  Ver 10.4 Distrib 3.23.14-alpha, for pc-linux-gnu (i686)
+
+Is the current version in use.
+******************************************************************************

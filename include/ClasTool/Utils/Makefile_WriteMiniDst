@@ -1,0 +1,35 @@
+#
+# Notice:
+#
+# At CEBAF you must execute the following before this will compile and link.
+#
+# SETUP YOUR CLAS ENVIRONMENT (setclas LATEST    )
+# SETUP YOUR ROOT ENVIRONMENT (use root/2.22     )
+# LINUX: SETUP EGCS 1.1.1     (use egcs/1.1.1    )
+#
+#
+#
+#
+SRC_FILES=Write_MiniDST.cc
+
+include ../Makefile_top
+#
+# BOS
+#
+BOSINC    = -I$(CLAS_PACK)/bosio -I$(CLAS_PACK)/include -I$(CLAS_PACK)/inc_derived
+BOSLIB    = -L$(TOP_DIR)/lib/$(OS_NAME) -L$(CLAS_LIB) -lbosio -lbankdefs
+#
+INCLUDES += $(BOSINC)
+OTHERLOADLIBS= $(ROOTLIBS) -lHbook -lminicern $(BOSLIB) -L$(localslib) -lClasBanks -lVirtualReader -lDSTReader -lFillBanks $(BOSLIB)
+#
+ifeq ($(findstring LinuxRHFC8,$(OS_NAME)),LinuxRHFC8)
+OTHERLOADLIBS += -lgfortran
+endif
+#
+CREATED_EXE = WriteMiniDst
+#
+all: exe
+#
+include ../Makefile_bottom
+include Makefile_depends
+

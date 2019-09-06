@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TInterrupt - source file</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<div id="codeAndLineNumbers"><pre class="listing">
+
+<span class="cpp">#ifndef __TInterrupt__</span>
+<span class="cpp">#define __TInterrupt__</span>
+
+<span class="cpp">#include &lt;iostream&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+<span class="cpp">#include "TSystem.h"</span>
+<span class="cpp">#include "TSysEvtHandler.h"</span>
+
+<span class="keyword">class</span> <a href="../TInterrupt.html">TInterrupt</a>: <span class="keyword">public</span> <a href="../#TSignalHandler:TSignalHandler" title="TSignalHandler TSignalHandler::TSignalHandler() or overloads">TSignalHandler</a> {
+
+ <span class="keyword">public</span>:
+  <a href="../ListOfTypes.html#Int_t">Int_t</a> <a href="../TInterrupt.html#TInterrupt:NumSig" title="Int_t TInterrupt::NumSig">NumSig</a>;
+  <span class="keyword">static</span> <a href="../ListOfTypes.html#Int_t">Int_t</a> <a href="../TInterrupt.html#TInterrupt:fgInterrupted" title="Int_t TInterrupt::fgInterrupted">fgInterrupted</a>;
+
+ <span class="keyword">public</span>:
+<a name="IP0vME"></a>  <a href="../TInterrupt.html">TInterrupt</a>(): <a href="../#TSignalHandler:TSignalHandler" title="TSignalHandler TSignalHandler::TSignalHandler() or overloads">TSignalHandler</a>(kSigInterrupt, <a href="../ListOfTypes.html#Bool_t">kFALSE</a>){<a href="../TInterrupt.html#TInterrupt:NumSig" title="Int_t TInterrupt::NumSig">NumSig</a>=0;};
+<a name="tBfgrB"></a>  <a href="../TInterrupt.html#TInterrupt:_TInterrupt" title="void TInterrupt::~TInterrupt()">~TInterrupt</a>(){};
+  <a href="../ListOfTypes.html#Bool_t">Bool_t</a> <a href="../TInterrupt.html#TInterrupt:Notify" title="Bool_t TInterrupt::Notify()">Notify</a>();  <span class="comment">//   Override.</span>
+<a name="egyF_D"></a>  <a href="../ListOfTypes.html#Bool_t">Bool_t</a> <a href="../TInterrupt.html#TInterrupt:IsInterrupted" title="Bool_t TInterrupt::IsInterrupted()">IsInterrupted</a>(){ <span class="keyword">return</span>( <a href="../TInterrupt.html#TInterrupt:fgInterrupted" title="Int_t TInterrupt::fgInterrupted">fgInterrupted</a>&gt;0);};
+<a name="VnDtDC"></a>  <a href="../ListOfTypes.html#Bool_t">Bool_t</a> <a href="../TInterrupt.html#TInterrupt:IsNotInterrupted" title="Bool_t TInterrupt::IsNotInterrupted()">IsNotInterrupted</a>(){ <span class="keyword">return</span>( <a href="../TInterrupt.html#TInterrupt:fgInterrupted" title="Int_t TInterrupt::fgInterrupted">fgInterrupted</a>==0);};
+  
+
+  ClassDef(<a href="../TInterrupt.html">TInterrupt</a>,1) <span class="comment">// <a href="../TInterrupt.html">TInterrupt</a></span>
+};
+
+<span class="cpp">#endif</span>
+</pre>
+<div id="linenums"><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="1" href="#1" class="ln">1</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="2" href="#2" class="ln">2</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="3" href="#3" class="ln">3</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="4" href="#4" class="ln">4</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="5" href="#5" class="ln">5</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="6" href="#6" class="ln">6</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="7" href="#7" class="ln">7</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="8" href="#8" class="ln">8</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="9" href="#9" class="ln">9</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="10" href="#10" class="ln">10</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="11" href="#11" class="ln">11</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="12" href="#12" class="ln">12</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="13" href="#13" class="ln">13</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="14" href="#14" class="ln">14</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="15" href="#15" class="ln">15</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="16" href="#16" class="ln">16</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="17" href="#17" class="ln">17</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="18" href="#18" class="ln">18</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="19" href="#19" class="ln">19</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="20" href="#20" class="ln">20</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="21" href="#21" class="ln">21</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="22" href="#22" class="ln">22</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="23" href="#23" class="ln">23</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="24" href="#24" class="ln">24</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="25" href="#25" class="ln">25</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="26" href="#26" class="ln">26</a></div><div class="ln">&nbsp;<span class="lnfile">TInterrupt.h:</span><a name="27" href="#27" class="ln">27</a></div></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: 2017-02-24 17:40</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TTAGRClass - source file</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<div id="codeAndLineNumbers"><pre class="listing">
+<span class="comment">////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">// File TTAGRBank.h  </span>
+<span class="comment">//</span>
+<span class="comment">// Initial Author: Maurik Holtrop 9/2004</span>
+<span class="comment">//</span>
+<span class="comment">////////////////////////////////////////////////////////////////////////</span>
+<span class="cpp">#ifndef _TTAGRClass_ </span>
+<span class="cpp">#define _TTAGRClass_ </span>
+<span class="cpp">#include &lt;iostream&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+
+
+<span class="cpp">#include "TObject.h"</span>
+<span class="cpp">#include "TString.h"</span>
+
+<span class="keyword">class</span> <a href="../TTAGRClass.html">TTAGRClass</a>: <span class="keyword">public</span> <a href="../#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>{
+  
+ <span class="keyword">public</span>:
+  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:ERG" title="Float_t TTAGRClass::ERG">ERG</a>;  <span class="comment">// Energy of the photon in GeV</span>
+  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:TTAG" title="Float_t TTAGRClass::TTAG">TTAG</a>; <span class="comment">// Time of the photon has reconstructed in the Tagger</span>
+  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:TPHO" title="Float_t TTAGRClass::TPHO">TPHO</a>; <span class="comment">// Time of the photon after RF correction</span>
+  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:STAT" title="Int_t TTAGRClass::STAT">STAT</a>; <span class="comment">// Status ( 7 or 15 are Good) other values have problems (see tag_process_TAGR.F) </span>
+  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:T_id" title="Int_t TTAGRClass::T_id">T_id</a>; <span class="comment">// T counter Id</span>
+  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:E_id" title="Int_t TTAGRClass::E_id">E_id</a>; <span class="comment">// E counter Id</span>
+ <span class="keyword">public</span>:
+<a name="fzrFNB"></a>  <a href="../TTAGRClass.html">TTAGRClass</a>(){};
+<a name="OspD5E"></a>  <a href="../TTAGRClass.html">TTAGRClass</a>(<a href="../TTAGRClass.html">TTAGRClass</a> *TmpSTPB);
+<a name="diF2fE"></a>  <span class="keyword">virtual</span> <a href="../TTAGRClass.html#TTAGRClass:_TTAGRClass" title="void TTAGRClass::~TTAGRClass()">~TTAGRClass</a>(){};
+
+<a name="e0j6fB"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:GetEnergy" title="Float_t TTAGRClass::GetEnergy()">GetEnergy</a>()   { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:ERG" title="Float_t TTAGRClass::ERG">ERG</a> ; }
+<a name="E3owlB"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:GetTagTime" title="Float_t TTAGRClass::GetTagTime()">GetTagTime</a>()  { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:TTAG" title="Float_t TTAGRClass::TTAG">TTAG</a> ; }
+<a name="w24DDE"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Float_t">Float_t</a> <a href="../TTAGRClass.html#TTAGRClass:GetTagRF" title="Float_t TTAGRClass::GetTagRF()">GetTagRF</a>()    { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:TPHO" title="Float_t TTAGRClass::TPHO">TPHO</a> ; }
+<a name="c1HSjC"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:GetStat" title="Int_t TTAGRClass::GetStat()">GetStat</a>()     { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:STAT" title="Int_t TTAGRClass::STAT">STAT</a> ; } 
+<a name="T6CveE"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:GetTid" title="Int_t TTAGRClass::GetTid()">GetTid</a>()      { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:T_id" title="Int_t TTAGRClass::T_id">T_id</a> ; }
+<a name="fgbW3B"></a>  <span class="keyword">inline</span>  <a href="../ListOfTypes.html#Int_t">Int_t</a>   <a href="../TTAGRClass.html#TTAGRClass:GetEid" title="Int_t TTAGRClass::GetEid()">GetEid</a>()      { <span class="keyword">return</span> <a href="../TTAGRClass.html#TTAGRClass:E_id" title="Int_t TTAGRClass::E_id">E_id</a> ; }
+
+  <span class="keyword">void</span> 	 <a href="../TTAGRClass.html#TTAGRClass:Print" title="void TTAGRClass::Print()">Print</a>();
+  <span class="comment">//</span>
+  ClassDef(<a href="../TTAGRClass.html">TTAGRClass</a>,1) <span class="comment">// <a href="../TTAGRClass.html#TTAGRClass:Class" title="TClass* TTAGRClass::Class()">Class</a> for accessing the TGPB bank: Tagger</span>
+    };
+<span class="cpp">#endif</span>
+
+
+</pre>
+<div id="linenums"><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="1" href="#1" class="ln">1</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="2" href="#2" class="ln">2</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="3" href="#3" class="ln">3</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="4" href="#4" class="ln">4</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="5" href="#5" class="ln">5</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="6" href="#6" class="ln">6</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="7" href="#7" class="ln">7</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="8" href="#8" class="ln">8</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="9" href="#9" class="ln">9</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="10" href="#10" class="ln">10</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="11" href="#11" class="ln">11</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="12" href="#12" class="ln">12</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="13" href="#13" class="ln">13</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="14" href="#14" class="ln">14</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="15" href="#15" class="ln">15</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="16" href="#16" class="ln">16</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="17" href="#17" class="ln">17</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="18" href="#18" class="ln">18</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="19" href="#19" class="ln">19</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="20" href="#20" class="ln">20</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="21" href="#21" class="ln">21</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="22" href="#22" class="ln">22</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="23" href="#23" class="ln">23</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="24" href="#24" class="ln">24</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="25" href="#25" class="ln">25</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="26" href="#26" class="ln">26</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="27" href="#27" class="ln">27</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="28" href="#28" class="ln">28</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="29" href="#29" class="ln">29</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="30" href="#30" class="ln">30</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="31" href="#31" class="ln">31</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="32" href="#32" class="ln">32</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="33" href="#33" class="ln">33</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="34" href="#34" class="ln">34</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="35" href="#35" class="ln">35</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="36" href="#36" class="ln">36</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="37" href="#37" class="ln">37</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="38" href="#38" class="ln">38</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="39" href="#39" class="ln">39</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="40" href="#40" class="ln">40</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="41" href="#41" class="ln">41</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="42" href="#42" class="ln">42</a></div><div class="ln">&nbsp;<span class="lnfile">TTAGRClass.h:</span><a name="43" href="#43" class="ln">43</a></div></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: 2017-02-24 17:40</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

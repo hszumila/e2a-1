@@ -1,0 +1,7 @@
+#
+# for HTML generation.
+#
+Root.Html.Homepage: http://www.physics.unh.edu/~maurik/ClasTool
+Root.Html.Header: Header
+Root.Html.Footer: Footer
+Root.Html.Description:	//____________________ 

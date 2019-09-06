@@ -1,0 +1,586 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TDSTReader</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<a name="TopOfPage"></a>
+<script type="text/javascript">WriteFollowPageBox('class TDSTReader','','TDSTReader.h');</script>
+<div id="toplinks">
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Quick Links:</span>
+<a class="descrheadentry" href="http://www.physics.unh.edu/~maurik/ClasTool">(UNKNOWN PRODUCT)</a>
+<a class="descrheadentry" href="http://root.cern.ch">ROOT Homepage</a>
+<a class="descrheadentry" href="./ClassIndex.html">Class Index</a>
+<a class="descrheadentry" href="./ClassHierarchy.html">Class Hierarchy</a></div>
+<script type="text/javascript">
+function onSearch() {
+var s='http://www.google.com/search?q=%s+site%3A%u+-site%3A%u%2Fsrc%2F+-site%3A%u%2Fexamples%2F';
+var ref=String(document.location.href).replace(/https?:\/\//,'').replace(/\/[^\/]*$/,'').replace(/\//g,'%2F');
+window.location.href=s.replace(/%u/ig,ref).replace(/%s/ig,escape(document.searchform.t.value));
+return false;}
+</script>
+<form id="searchform" name="searchform" onsubmit="return onSearch()" action="javascript:onSearch();" method="post">
+<input name="t" size="30" value="Search documentation..." onfocus="if (document.searchform.t.value=='Search documentation...') document.searchform.t.value='';"></input>
+<a id="searchlink"  title="www.google.com"  href="javascript:onSearch();" onclick="return onSearch()">Search</a></form>
+</div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Source:</span>
+<a class="descrheadentry" href="src/TDSTReader.h.html">header file</a>
+<a class="descrheadentry" href="src/TDSTReader.cxx.html">source file</a>
+<a class="descrheadentry" href="TDSTReader_Tree.pdf">inheritance tree (.pdf)</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TDSTReader.h?view=log">viewVC header</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TDSTReader.cc?view=log">viewVC source</a> 
+</div></div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Sections:</span>
+<a class="descrheadentry" href="#TDSTReader:description">class description</a> 
+<a class="descrheadentry" href="#TDSTReader:Function_Members">function members</a>
+<a class="descrheadentry" href="#TDSTReader:Data_Members">data members</a>
+<a class="descrheadentry" href="#TDSTReader:Class_Charts">class charts</a>
+</div></div>
+</div>
+<div class="location">
+<a class="locationlevel" href="index.html">(UNKNOWN PRODUCT)</a>
+ &#187; <a class="locationlevel" href="./DSTREADER_Index.html">DSTREADER</a>
+ &#187; <a class="locationlevel" href="#TopOfPage">TDSTReader</a>
+</div>
+<div class="dropshadow"><div class="withshadow"><h1><a name="TDSTReader:description"></a>class TDSTReader: public <a href="./TVirtualReader.html">TVirtualReader</a></h1>
+<div class="classdescr">
+<pre>
+
+</pre><!-- TDocHtmlDirective start --> <!--
+/* -->
+<h1>TDSTReader</h1>
+<pre>
+   Modified:   6/2005   Maurik Holtrop UNH
+             Add in the PHOTON functionality.
+</pre>
+<p>
+This class is a sub-class of TClasTool. It implements an interface to the ROOT 
+based DST that is created by the WriteRootDST program. It can be used directly
+for analysis, but <b><emph>I highly recommend</emph></b> that you use TClasTool
+for your analysis instead. This will give you all the power of this class and more
+and in addition provide you with more flexibility. </p>
+<p>
+The class implements two chains, one for the data events and one for the scaler events.
+The scaler events are optional, and can be turned off. 
+The actual scaler event implementation is minimal and does not seem to be used much. </p>
+<p>
+More detailed documentation would be useful.</p>
+<pre> 
+<!-- */ 
+ --> 
+<!-- TDocHtmlDirective end --><pre>
+
+</pre></div>
+</div></div>
+
+<div id="functions">
+<h2><a id="TDSTReader:Function_Members"></a>Function Members (Methods)</h2>
+<div class="access" id="funcpubl"><b>public:</b>
+<table class="func" id="tabfuncpubl" cellspacing="0">
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TDSTReader:TDSTReader">TDSTReader</a>()</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TDSTReader:TDSTReader@1">TDSTReader</a>(<span class="keyword">const</span> <a href="./TDSTReader.html">TDSTReader</a>&amp; reader)</td></tr>
+<tr class="func"><td class="funcret"> virtual</td><td class="funcname"><a class="funcname" href="#TDSTReader:_TDSTReader">~TDSTReader</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AbstractMethod"><span class="baseclass">TObject::</span>AbstractMethod</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:Add">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:AddEPICFile">AddEPICFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:AddFile">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:AddFile@1">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AppendPad"><span class="baseclass">TObject::</span>AppendPad</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:Browse"><span class="baseclass">TVirtualReader::</span>Browse</a>(TBrowser* b)</td></tr>
+<tr class="func"><td class="funcret">static TClass*</td><td class="funcname"><a class="funcname" href="#TDSTReader:Class">Class</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:ClassName"><span class="baseclass">TObject::</span>ClassName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:CleanEventClones">CleanEventClones</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:CleanScalerClones">CleanScalerClones</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Clear"><span class="baseclass">TObject::</span>Clear</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:Clone"><span class="baseclass">TObject::</span>Clone</a>(<span class="keyword">const</span> <span class="keyword">char</span>* newname = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Compare"><span class="baseclass">TObject::</span>Compare</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Copy"><span class="baseclass">TObject::</span>Copy</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>&amp; object) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Delete"><span class="baseclass">TObject::</span>Delete</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:DistancetoPrimitive"><span class="baseclass">TObject::</span>DistancetoPrimitive</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:Draw"><span class="baseclass">TVirtualReader::</span>Draw</a>(<span class="keyword">const</span> <span class="keyword">char</span>* varexp, <span class="keyword">const</span> <span class="keyword">char</span>* selection, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries = 1234567890, <a href="./ListOfTypes.html#Int_t">Int_t</a> firstentry = 0)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DrawClass"><span class="baseclass">TObject::</span>DrawClass</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:DrawClone"><span class="baseclass">TObject::</span>DrawClone</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Dump"><span class="baseclass">TObject::</span>Dump</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Error"><span class="baseclass">TObject::</span>Error</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute"><span class="baseclass">TObject::</span>Execute</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute@1"><span class="baseclass">TObject::</span>Execute</a>(TMethod* method, TObjArray* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ExecuteEvent"><span class="baseclass">TObject::</span>ExecuteEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Fatal"><span class="baseclass">TObject::</span>Fatal</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject@1"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetBankRow">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</td></tr>
+<tr class="func"><td class="funcret">TChain*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetChain">GetChain</a>(<span class="keyword">char</span>* which = <span class="string">"Event"</span>)</td></tr>
+<tr class="func"><td class="funcret">TClonesArray*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetClone">GetClone</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetCurrentEvent">GetCurrentEvent</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetDrawOption"><span class="baseclass">TObject::</span>GetDrawOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Long_t">Long_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetDtorOnly"><span class="baseclass">TObject::</span>GetDtorOnly</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Long64_t">Long64_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEntries">GetEntries</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Long64_t">Long64_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEntriesFast">GetEntriesFast</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEntry">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./TEPICClass.html">TEPICClass</a>*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEPICClass">GetEPICClass</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEPICValue">GetEPICValue</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fName)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetEventNumber">GetEventNumber</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual TObjArray*</td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:GetFiles"><span class="baseclass">TVirtualReader::</span>GetFiles</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./THEADERClass.html">THEADERClass</a>*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetHEADER">GetHEADER</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetHelicity">GetHelicity</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetIconName"><span class="baseclass">TObject::</span>GetIconName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetName"><span class="baseclass">TObject::</span>GetName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetNFiles">GetNFiles</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:GetNotify"><span class="baseclass">TVirtualReader::</span>GetNotify</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetNPart">GetNPart</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetNRows">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:GetNtrees"><span class="baseclass">TVirtualReader::</span>GetNtrees</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetObjectInfo"><span class="baseclass">TObject::</span>GetObjectInfo</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetObjectStat"><span class="baseclass">TObject::</span>GetObjectStat</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetOption"><span class="baseclass">TObject::</span>GetOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual TVector3</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetPart3Vector">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetPartCharge">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetPartID">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual TVector3</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetPartVertex">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual TString</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetReaderType">GetReaderType</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetRunNumber">GetRunNumber</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TStoreClone.html">TStoreClone</a>*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetStoreClone">GetStoreClone</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetTitle"><span class="baseclass">TObject::</span>GetTitle</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual TChain*</td><td class="funcname"><a class="funcname" href="#TDSTReader:GetTree">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVNT"</span>)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:GetTreeNumber">GetTreeNumber</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#UInt_t">UInt_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetUniqueID"><span class="baseclass">TObject::</span>GetUniqueID</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:HandleTimer"><span class="baseclass">TObject::</span>HandleTimer</a>(TTimer* timer)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#ULong_t">ULong_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Hash"><span class="baseclass">TObject::</span>Hash</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Info"><span class="baseclass">TObject::</span>Info</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> <span class="keyword">char</span>* classname) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom@1"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> TClass* cl) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:InitBranches">InitBranches</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:InitClones">InitClones</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:InitEPICBranch">InitEPICBranch</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Inspect"><span class="baseclass">TObject::</span>Inspect</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:InvertBit"><span class="baseclass">TObject::</span>InvertBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="func"><td class="funcret">virtual TClass*</td><td class="funcname"><a class="funcname" href="#TDSTReader:IsA">IsA</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsEqual"><span class="baseclass">TObject::</span>IsEqual</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsFolder"><span class="baseclass">TObject::</span>IsFolder</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsOnHeap"><span class="baseclass">TObject::</span>IsOnHeap</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsSortable"><span class="baseclass">TObject::</span>IsSortable</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsZombie"><span class="baseclass">TObject::</span>IsZombie</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ls"><span class="baseclass">TObject::</span>ls</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:MakeEPICTable">MakeEPICTable</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MayNotUse"><span class="baseclass">TObject::</span>MayNotUse</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:Next">Next</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TDSTReader:Notify">Notify</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Obsolete"><span class="baseclass">TObject::</span>Obsolete</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* asOfVers, <span class="keyword">const</span> <span class="keyword">char</span>* removedFromVers) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete@1"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]@1"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new@1"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]@1"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./TVirtualReader.html">TVirtualReader</a>&amp;</td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:operator_"><span class="baseclass">TVirtualReader::</span>operator=</a>(<span class="keyword">const</span> <a href="./TVirtualReader.html">TVirtualReader</a>&amp;)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Paint"><span class="baseclass">TObject::</span>Paint</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Pop"><span class="baseclass">TObject::</span>Pop</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:Print">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:PrintEPICPosition">PrintEPICPosition</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:PrintEventStatus">PrintEventStatus</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Read"><span class="baseclass">TObject::</span>Read</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:ReadEvent"><span class="baseclass">TVirtualReader::</span>ReadEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> runnum = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:RecursiveRemove"><span class="baseclass">TObject::</span>RecursiveRemove</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:Reset">Reset</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ResetBit"><span class="baseclass">TObject::</span>ResetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SaveAs"><span class="baseclass">TObject::</span>SaveAs</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename = <span class="string">""</span>, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SavePrimitive"><span class="baseclass">TObject::</span>SavePrimitive</a>(<a href="./ListOfTypes.html#ostream">ostream</a>&amp; out, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit@1"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f, <a href="./ListOfTypes.html#Bool_t">Bool_t</a> set)</td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:SetDebugMode"><span class="baseclass">TVirtualReader::</span>SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> mode)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDrawOption"><span class="baseclass">TObject::</span>SetDrawOption</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDtorOnly"><span class="baseclass">TObject::</span>SetDtorOnly</a>(<span class="keyword">void</span>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="./TVirtualReader.html#TVirtualReader:SetNotify"><span class="baseclass">TVirtualReader::</span>SetNotify</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetObjectStat"><span class="baseclass">TObject::</span>SetObjectStat</a>(<a href="./ListOfTypes.html#Bool_t">Bool_t</a> stat)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetUniqueID"><span class="baseclass">TObject::</span>SetUniqueID</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> uid)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:ShowMembers">ShowMembers</a>(TMemberInspector&amp;)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:Streamer">Streamer</a>(TBuffer&amp;)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TDSTReader:StreamerNVirtual">StreamerNVirtual</a>(TBuffer&amp; ClassDef_StreamerNVirtual_b)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SysError"><span class="baseclass">TObject::</span>SysError</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBit"><span class="baseclass">TObject::</span>TestBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBits"><span class="baseclass">TObject::</span>TestBits</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:UseCurrentStyle"><span class="baseclass">TObject::</span>UseCurrentStyle</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Warning"><span class="baseclass">TObject::</span>Warning</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write@1"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0) <span class="keyword">const</span></td></tr>
+
+</table></div>
+<div class="access" id="funcprot"><b>protected:</b>
+<table class="func" id="tabfuncprot" cellspacing="0">
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DoError"><span class="baseclass">TObject::</span>DoError</a>(<span class="keyword">int</span> level, <span class="keyword">const</span> <span class="keyword">char</span>* location, <span class="keyword">const</span> <span class="keyword">char</span>* fmt, va_list va) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MakeZombie"><span class="baseclass">TObject::</span>MakeZombie</a>()</td></tr>
+
+</table></div>
+</div>
+
+<div id="datamembers">
+<h2><a name="TDSTReader:Data_Members"></a>Data Members</h2>
+<div class="access" id="enumpubl"><b>public:</b>
+<table class="data" id="tabenumpubl" cellspacing="0">
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span>EStatusBits { </td><td class="dataname"><a href="#TObject:kCanDelete">kCanDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kMustCleanup">kMustCleanup</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kObjInCanvas">kObjInCanvas</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kIsReferenced">kIsReferenced</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kHasUUID">kHasUUID</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kCannotPick">kCannotPick</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNoContextMenu">kNoContextMenu</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kInvalidObject">kInvalidObject</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span><i>[unnamed]</i> { </td><td class="dataname"><a href="#TObject:kIsOnHeap">kIsOnHeap</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNotDeleted">kNotDeleted</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kZombie">kZombie</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kBitMask">kBitMask</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kSingleKey">kSingleKey</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kOverwrite">kOverwrite</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kWriteDelete">kWriteDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+
+</table></div>
+<div class="access" id="datapubl"><b>public:</b>
+<table class="data" id="tabdatapubl" cellspacing="0">
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fCurrentEvent"><span class="baseclass">TVirtualReader::</span>fCurrentEvent</a></td><td class="datadesc">Current Data Event (for use with Next() )</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fCurrentScaler"><span class="baseclass">TVirtualReader::</span>fCurrentScaler</a></td><td class="datadesc">Current Scaler Event (for use with NextScaler() )</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fDebug_Mode"><span class="baseclass">TVirtualReader::</span>fDebug_Mode</a></td><td class="datadesc">Defines printout, Bit 0 = STD Messages, Bit 1 = Errors, Higherbits = Debug</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fReadGSIM"><span class="baseclass">TVirtualReader::</span>fReadGSIM</a></td><td class="datadesc">Turn on or off the reading of the GSIM bank.</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fReadMCHD"><span class="baseclass">TVirtualReader::</span>fReadMCHD</a></td><td class="datadesc">Turn on or off the reading of the MCHD bank.</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fReadScaler"><span class="baseclass">TVirtualReader::</span>fReadScaler</a></td><td class="datadesc">Turn on or off the automatic reading of scaler branch. Default is on.</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fScalerLastEvt"><span class="baseclass">TVirtualReader::</span>fScalerLastEvt</a></td><td class="datadesc">to synchronize Event tree and Scaler tree this contain the event number of the last Physics Event. Set by SetBranchAddress</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fThisInstance"><span class="baseclass">TVirtualReader::</span>fThisInstance</a></td><td class="datadesc">Instance count of this instance.</td></tr>
+<tr class="datainh"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fUseGSIM"><span class="baseclass">TVirtualReader::</span>fUseGSIM</a></td><td class="datadesc">When set true, read the GSIM bank INSTEAD of the EVNT bank.</td></tr>
+<tr class="datainh"><td class="datatype">static <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a href="./TVirtualReader.html#TVirtualReader:fgInstanceCount"><span class="baseclass">TVirtualReader::</span>fgInstanceCount</a></td><td class="datadesc">Total instance count.</td></tr>
+
+</table></div>
+<div class="access" id="datapriv"><b>private:</b>
+<table class="data" id="tabdatapriv" cellspacing="0">
+<tr class="data"><td class="datatype">TArrayI*</td><td class="dataname"><a name="TDSTReader:EPICTable"></a>EPICTable</td><td class="datadesc">Table storing the last physics event before each EPIC. Used in GetEPICValue</td></tr>
+<tr class="data"><td class="datatype">THashList</td><td class="dataname"><a name="TDSTReader:fClones"></a>fClones</td><td class="datadesc">Store pointers to TClonesArray of main data</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TDSTReader:fCurrentEPIC"></a>fCurrentEPIC</td><td class="datadesc">Keeps track of position in EPIC bank.Perhaps should be in TVirtualReader?</td></tr>
+<tr class="data"><td class="datatype"><a href="./TEPICClass.html">TEPICClass</a>*</td><td class="dataname"><a name="TDSTReader:fEPIC"></a>fEPIC</td><td class="datadesc">EPICClass pointer</td></tr>
+<tr class="data"><td class="datatype">TChain*</td><td class="dataname"><a name="TDSTReader:fEPICChain"></a>fEPICChain</td><td class="datadesc">Chain of files with data. TTree points to CLASEPIC</td></tr>
+<tr class="data"><td class="datatype">TChain*</td><td class="dataname"><a name="TDSTReader:fEventChain"></a>fEventChain</td><td class="datadesc">Chain of files with data. TTree points to CLASEVENT </td></tr>
+<tr class="data"><td class="datatype"><a href="./THEADERClass.html">THEADERClass</a>*</td><td class="dataname"><a name="TDSTReader:fEvntHeader"></a>fEvntHeader</td><td class="datadesc">Event Header pointer</td></tr>
+<tr class="data"><td class="datatype">TChain*</td><td class="dataname"><a name="TDSTReader:fScalerChain"></a>fScalerChain</td><td class="datadesc">Chain of files with data. TTree points to SCALER</td></tr>
+<tr class="data"><td class="datatype">THashList</td><td class="dataname"><a name="TDSTReader:fScalerClones"></a>fScalerClones</td><td class="datadesc">Store pointers to TClonesArray of scalers.</td></tr>
+<tr class="data"><td class="datatype"><a href="./THEADClass.html">THEADClass</a>*</td><td class="dataname"><a name="TDSTReader:fScalerHead"></a>fScalerHead</td><td class="datadesc">Scaler Event Header pointer</td></tr>
+
+</table></div>
+</div>
+<h2><a id="TDSTReader:Class_Charts"></a>Class Charts</h2>
+<!--INHERITANCE TREE-->
+<table><tr><td width="10%"></td><td width="70%"><a href="ClassHierarchy.html">Inheritance Chart</a>:</td></tr><tr class="inhtree"><td width="10%"></td><td width="70%"><table class="inhtree"><tr><td>
+<table width="100%" border="0" cellpadding ="0" cellspacing="2"><tr>
+<td><table><tr>
+<td bgcolor="#f7f7f7" align="right">
+<table><tr><td><table><tr>
+<td bgcolor="#efefef" align="right">
+<tt>TObject</tt></td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><tt><a name="TVirtualReader" href="./TVirtualReader.html">TVirtualReader</a></tt></center>
+</td>
+</tr></table>
+</td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><big><b><tt><a name="TDSTReader" href="./TDSTReader.html">TDSTReader</a></tt></b></big></center>
+</td>
+<td><table><tr>
+<td></td>
+</tr></table></td>
+</tr></table>
+</td></tr></table></td></tr></table>
+<h2>Function documentation</h2>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TDSTReader:TDSTReader" href="src/TDSTReader.cxx.html#x.I_2">TDSTReader</a>()</span><br />
+<div class="funccomm"><pre>  Default Constructor.
+  Default Debug mode is 1
+  To change it use <a href="./TVirtualReader.html#TVirtualReader:SetDebugMode" title="Int_t TVirtualReader::SetDebugMode(Int_t mode)">SetDebugMode</a>(debugmode)
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TDSTReader:_TDSTReader" href="src/TDSTReader.cxx.html#TyCpv">~TDSTReader</a>()</span><br />
+<div class="funccomm"><pre> Default Destructor
+  Destroys Chains
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TDSTReader:TDSTReader@1" href="src/TDSTReader.cxx.html#N_YkiB">TDSTReader</a>(<span class="keyword">const</span> <a href="./TDSTReader.html">TDSTReader</a>&amp; reader)</span><br />
+<div class="funccomm"><pre> <a href="./#TObject:Copy" title="void TObject::Copy(TObject&amp; object)">Copy</a> Constructor. Note that this should not be used, since it is not reliable and
+ does not necessairily do what you think it should.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:Add" href="src/TDSTReader.cxx.html#vpPQb">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</span><br />
+<div class="funccomm"><pre> <a href="./TDSTReader.html#TDSTReader:Add" title="Int_t TDSTReader::Add(const Char_t* filename)">Add</a> new files to the reader.
+
+ The file name may use the wildcarding notation, eg <span class="string">"xxx*.root"</span> means all files
+ starting with xxx in the current file system directory.
+
+ This method will return with the number of files that were actually added to
+ the list of files. So 0 (zero) means the files were not found.
+
+ case with one single file
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:AddFile" href="src/TDSTReader.cxx.html#P5wreB">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:AddFile@1" href="src/TDSTReader.cxx.html#ArrClE">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</span><br />
+<div class="funccomm"><pre>  This method adds a single new file into list of files
+  to be analysed. This list is stored in the TChain *<a href="./TDSTReader.html#TDSTReader:fEventChain" title="TChain* TDSTReader::fEventChain">fEventChain</a>
+  and separately in TChain *<a href="./TDSTReader.html#TDSTReader:fScalerChain" title="TChain* TDSTReader::fScalerChain">fScalerChain</a> (for the scalers.)
+  (These chains can be accessed directly with the <a href="./TDSTReader.html#TDSTReader:GetChain" title="TChain* TDSTReader::GetChain(char* which=&quot;Event&quot;)">GetChain</a>(<a href="./ListOfTypes.html#char">char</a> *which) )
+
+  The <a href="./TDSTReader.html#TDSTReader:AddFile" title="Int_t TDSTReader::AddFile(const Char_t* filename) or overloads">AddFile</a> method checks if the file requested can actually be read
+  (unlike TChain::<a href="./TDSTReader.html#TDSTReader:AddFile" title="Int_t TDSTReader::AddFile(const Char_t* filename) or overloads">AddFile</a>) and will return kERR_File_Not_Found on error.
+
+  If the branches on the chain are not yet initialized, a call to <a href="./TDSTReader.html#TDSTReader:AddFile" title="Int_t TDSTReader::AddFile(const Char_t* filename) or overloads">AddFile</a>
+  will call <a href="./TDSTReader.html#TDSTReader:InitBranches" title="void TDSTReader::InitBranches()">InitBranches</a>().
+
+  Use the <a href="./TDSTReader.html">TDSTReader</a>::<a href="./TDSTReader.html#TDSTReader:Add" title="Int_t TDSTReader::Add(const Char_t* filename)">Add</a>() or <a href="./TDSTReader.html">TDSTReader</a>::AddListOfFiles() to add
+  multiple files at once.
+
+  For nentries see the TChain::<a href="./TDSTReader.html#TDSTReader:Add" title="Int_t TDSTReader::Add(const Char_t* filename)">Add</a>() method. (default works fine, so don't specify.)
+
+  Returns a negative number when there was a problem adding the file,
+  returns 0 (zero) if the file was added succesfully.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:AddEPICFile" href="src/TDSTReader.cxx.html#Xz.lfB">AddEPICFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</span><br />
+<div class="funccomm"><pre> This adds a single EPIC file into the <a href="./TDSTReader.html#TDSTReader:fEPICChain" title="TChain* TDSTReader::fEPICChain">fEPICChain</a>. If the function fails
+ to add the filename, or if it contains no trees, then the function returns
+ kERR_File_Not_Found. If InitEPICBranches has not yet been called the function
+ calls InitEPICBranches. On a successful add the function returns kNOERR.
+
+ The run numbers must be added in order, otherwise if <a href="./TDSTReader.html#TDSTReader:GetEPICValue" title="Float_t TDSTReader::GetEPICValue(const char* fName)">GetEPICValue</a> is called
+ it will most likely become confused and bounce back and forth between the
+ out of order runs and never return a value.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetEntry" href="src/TDSTReader.cxx.html#OlRz4D">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</span><br />
+<div class="funccomm"><pre>
+ Get an event entry from the file(s) and load it.
+ Returns the number of bytes read.
+
+ NOTE: This WILL affect the fCurrentEvent which is set to entry.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:Next" href="src/TDSTReader.cxx.html#GYJfpB">Next</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TDSTReader.html#TDSTReader:Next" title="Int_t TDSTReader::Next()">Next</a>() reads next available Entry in TREE into
+ <a href="./#TObject:Clone" title="TObject* TObject::Clone(const char* newname=&quot;&quot;)">Clone</a> Arrays. On success returns 0 otherwise -1 will
+ be returned..
+  fCurrentEvent = 17;
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Bool_t">Bool_t</a> <a class="funcname" name="TDSTReader:Notify" href="src/TDSTReader.cxx.html#GbHIdC">Notify</a>()</span><br />
+<div class="funccomm"><pre> This is a virtual stub. The code does nothing, but is intended to be
+ replaced by your own code. You point to your own code with the <a href="./TVirtualReader.html#TVirtualReader:SetNotify" title="void TVirtualReader::SetNotify(TObject* obj)">SetNotify</a>() method.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:InitClones" href="src/TDSTReader.cxx.html#RbTCmB">InitClones</a>()</span><br />
+<div class="funccomm"><pre>  <a href="./TDSTReader.html#TDSTReader:InitClones" title="void TDSTReader::InitClones()">InitClones</a> Initializes <a href="./#TObject:Clone" title="TObject* TObject::Clone(const char* newname=&quot;&quot;)">Clone</a> Arrays for all Banks.
+  This should only be called once.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:CleanEventClones" href="src/TDSTReader.cxx.html#tACxFD">CleanEventClones</a>()</span><br />
+<div class="funccomm"><pre>  CleanClones Cleans <a href="./#TObject:Clone" title="TObject* TObject::Clone(const char* newname=&quot;&quot;)">Clone</a> arrays to <a href="./#TObject:Read" title="Int_t TObject::Read(const char* name)">Read</a> new
+  Entry from the tree.
+  Calls <a href="./#TObject:Clear" title="void TObject::Clear(Option_t* =&quot;&quot;)">Clear</a>() which is faster than <a href="./#TObject:Delete" title="void TObject::Delete(Option_t* option=&quot;&quot;)">Delete</a>(),
+  according to TClonesArray documentation <a href="./#TObject:Clear" title="void TObject::Clear(Option_t* =&quot;&quot;)">Clear</a>() should be faster.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:CleanScalerClones" href="src/TDSTReader.cxx.html#Bwt_AE">CleanScalerClones</a>()</span><br />
+<div class="funccomm"><pre>delete all scaler clone arrays
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:InitBranches" href="src/TDSTReader.cxx.html#sqnqqE">InitBranches</a>()</span><br />
+<div class="funccomm"><pre>  <a href="./TDSTReader.html#TDSTReader:InitBranches" title="void TDSTReader::InitBranches()">InitBranches</a> Initialize Branches
+
+ Setup Event Branches and set branch addresses
+ to  ClonesArrays
+
+ Not every file is always going to contain all branches.
+ We test the presence of the branch before setting the BranchAddress,
+ since setting the address on a branch that is not in the file causes a fault.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:Print" href="src/TDSTReader.cxx.html#D3p3fE">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</span><br />
+<div class="funccomm"><pre> <a href="./TDSTReader.html#TDSTReader:Print" title="void TDSTReader::Print(Int_t full=0)">Print</a> information about this reader.
+ With argument full=1 print even more information.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:InitEPICBranch" href="src/TDSTReader.cxx.html#k2ycqB">InitEPICBranch</a>()</span><br />
+<div class="funccomm"><pre>
+ Set the Branch Address for the <a href="./TDSTReader.html#TDSTReader:fEPIC" title="TEPICClass* TDSTReader::fEPIC">fEPIC</a> pointer.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:MakeEPICTable" href="src/TDSTReader.cxx.html#INcAdB">MakeEPICTable</a>()</span><br />
+<div class="funccomm"><pre>
+ Makes a table containing the last physics event number before each
+ Epic. The table is used in GetValue to search for the EPIC entry
+ corresponding to the current physics event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:PrintEventStatus" href="src/TDSTReader.cxx.html#SbflDD">PrintEventStatus</a>()</span><br />
+<div class="funccomm"><pre>
+ For Debugging ETC, print usefull information on this event.
+ (To be extended )
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:PrintEPICPosition" href="src/TDSTReader.cxx.html#oeS3rC">PrintEPICPosition</a>()</span><br />
+<div class="funccomm"><pre><a href="./TDSTReader.html#TDSTReader:Print" title="void TDSTReader::Print(Int_t full=0)">Print</a> out the run number and the range of event numbers for the
+current EPIC. Useful for debugging purposes.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TDSTReader:GetEPICValue" href="src/TDSTReader.cxx.html#uZc6.D">GetEPICValue</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fName)</span><br />
+<div class="funccomm"><pre>
+ Return the EPIC value corresponding to name for the current EPIC event
+ Changes <a href="./TDSTReader.html#TDSTReader:fCurrentEPIC" title="Int_t TDSTReader::fCurrentEPIC">fCurrentEPIC</a> to the Entry corresponding to the current physics
+ event#. Leave this as a sequential search because it is unlikely that
+ the relevant EPIC will change rapidly enough in between calls to make
+ a binary search more effiecient. Right now this is done the <span class="string">"safe"</span> way,
+ that is <a href="./TDSTReader.html#TDSTReader:GetEntry" title="Int_t TDSTReader::GetEntry(Int_t entry=-1,Int_t getall=0)">GetEntry</a> is called each time <a href="./TDSTReader.html#TDSTReader:fCurrentEPIC" title="Int_t TDSTReader::fCurrentEPIC">fCurrentEPIC</a> is updated. The table
+ could allow you to find the right event without this call but using this
+ call allows us to check the run number each time.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetNRows" href="src/TDSTReader.cxx.html#V30izB">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</span><br />
+<div class="funccomm"><pre>   This Function returns number of rows (number of
+ entries) of specified Bank (Clones Array). The string
+ argument passed to function is the name of bank.
+ EVNT,ECPB,SCPB,DCPB,CCPB or LCPB.
+ Any other string passed to function will return -1
+ indicating that there is no bank with that name...
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetCurrentEvent" href="src/TDSTReader.cxx.html#h8df7C">GetCurrentEvent</a>()</span><br />
+<div class="funccomm"><pre> Returns the number of the current event in the <a href="./TDSTReader.html#TDSTReader:Next" title="Int_t TDSTReader::Next()">Next</a>() sequence.
+ This is not the <span class="string">"Physics event"</span> number, which you get from the <a href="./THEADERClass.html">header</a> class.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetEventNumber" href="src/TDSTReader.cxx.html#cr6X2B">GetEventNumber</a>()</span><br />
+<div class="funccomm"><pre> Return the current event number.
+ This is the <span class="string">"Physics event"</span> number, which you get from the <a href="./THEADERClass.html">header</a> class.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetRunNumber" href="src/TDSTReader.cxx.html#axBcR">GetRunNumber</a>()</span><br />
+<div class="funccomm"><pre> Return the current run number.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>  * <a class="funcname" name="TDSTReader:GetBankRow" href="src/TDSTReader.cxx.html#fRD8iE">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</span><br />
+<div class="funccomm"><pre>
+ Get a specific bank given the bankname at a specific row given the row name
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">GetEntries_return_t <a class="funcname" name="TDSTReader:GetEntries" href="src/TDSTReader.cxx.html#msnCOB">GetEntries</a>() const</span><br />
+<div class="funccomm"><pre> Return the number of entries in the total chain.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">GetEntries_return_t <a class="funcname" name="TDSTReader:GetEntriesFast" href="src/TDSTReader.cxx.html#aX.QqC">GetEntriesFast</a>() const</span><br />
+<div class="funccomm"><pre> Return the number of entries faster. Not always
+ correct, if a call to <a href="./TDSTReader.html#TDSTReader:GetEntries" title="Long64_t TDSTReader::GetEntries()">GetEntries</a>() has not been
+ done since the last file was added.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TDSTReader:GetPart3Vector" href="src/TDSTReader.cxx.html#y_NaQB">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TDSTReader:GetPartVertex" href="src/TDSTReader.cxx.html#WQD9yC">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetPartID" href="src/TDSTReader.cxx.html#hN3UkD">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetPartCharge" href="src/TDSTReader.cxx.html#AzpgNC">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname">TString <a class="funcname" name="TDSTReader:GetReaderType" href="src/TDSTReader.cxx.html#yf0bh">GetReaderType</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname">TChain * <a class="funcname" name="TDSTReader:GetTree" href="src/TDSTReader.cxx.html#erCvAD">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVNT"</span>)</span><br />
+<div class="funccomm"><pre> Returns the TTree opened by this reader.
+ For the SCALER TTree the argument must start with an S
+ Note that this actually passes a TChain * (a type of TTree *).
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetHelicity" href="src/TDSTReader.cxx.html#Bj7MC">GetHelicity</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TStoreClone.html">TStoreClone</a> * <a class="funcname" name="TDSTReader:GetStoreClone" href="src/TDSTReader.h.html#ZLn4tD">GetStoreClone</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname)</span><br />
+<div class="funccomm"><pre> Return a pointer to the requested <a href="./TStoreClone.html">TStoreClone</a> object.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TClonesArray * <a class="funcname" name="TDSTReader:GetClone" href="src/TDSTReader.h.html#qvuhX">GetClone</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname)</span><br />
+<div class="funccomm"><pre> Return a pointer to the requested TClonesArray object.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetNFiles" href="src/TDSTReader.h.html#w0h1zD">GetNFiles</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TDSTReader:Reset" href="src/TDSTReader.h.html#WAv_wD">Reset</a>()</span><br />
+<div class="funccomm"><pre> Set the fCurrentEvent and the fCurrentScaler to 0.
+ Thus the next <a href="./TDSTReader.html#TDSTReader:Next" title="Int_t TDSTReader::Next()">Next</a>() call will start reading at the beginning of the
+ current Chain of data files.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TChain * <a class="funcname" name="TDSTReader:GetChain" href="src/TDSTReader.h.html#mHcL.">GetChain</a>(<span class="keyword">char</span>* which = <span class="string">"Event"</span>)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEPICClass.html">TEPICClass</a> * <a class="funcname" name="TDSTReader:GetEPICClass" href="src/TDSTReader.h.html#bBcO4B">GetEPICClass</a>()</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span>(<a href="./TDSTReader.html#TDSTReader:fEPIC" title="TEPICClass* TDSTReader::fEPIC">fEPIC</a>);}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./THEADERClass.html">THEADERClass</a> * <a class="funcname" name="TDSTReader:GetHEADER" href="src/TDSTReader.h.html#xCHIpB">GetHEADER</a>()</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span>(<a href="./TDSTReader.html#TDSTReader:fEvntHeader" title="THEADERClass* TDSTReader::fEvntHeader">fEvntHeader</a>);}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetNPart" href="src/TDSTReader.h.html#NZbEgC">GetNPart</a>()</span><br />
+
+<div class="code"><code class="inlinecode">{ <span class="keyword">return</span> ( <a href="./TDSTReader.html#TDSTReader:fEvntHeader" title="THEADERClass* TDSTReader::fEvntHeader">fEvntHeader</a>-><a href="./THEADERClass.html#THEADERClass:GetNPGP" title="Int_t THEADERClass::GetNPGP()">GetNPGP</a>() % 100 ); }</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TDSTReader:GetTreeNumber" href="src/TDSTReader.h.html#HKLbNB">GetTreeNumber</a>(<span class="keyword">void</span>)</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span>(<a href="./TDSTReader.html#TDSTReader:fEventChain" title="TChain* TDSTReader::fEventChain">fEventChain</a>-&gt;<a href="./TDSTReader.html#TDSTReader:GetTreeNumber" title="Int_t TDSTReader::GetTreeNumber()">GetTreeNumber</a>());}</code></div>
+<div style="clear:both;"></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: Fri Feb 24 17:40:12 2017</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TVirtualReader</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<a name="TopOfPage"></a>
+<script type="text/javascript">WriteFollowPageBox('class TVirtualReader','','TVirtualReader.h');</script>
+<div id="toplinks">
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Quick Links:</span>
+<a class="descrheadentry" href="http://www.physics.unh.edu/~maurik/ClasTool">(UNKNOWN PRODUCT)</a>
+<a class="descrheadentry" href="http://root.cern.ch">ROOT Homepage</a>
+<a class="descrheadentry" href="./ClassIndex.html">Class Index</a>
+<a class="descrheadentry" href="./ClassHierarchy.html">Class Hierarchy</a></div>
+<script type="text/javascript">
+function onSearch() {
+var s='http://www.google.com/search?q=%s+site%3A%u+-site%3A%u%2Fsrc%2F+-site%3A%u%2Fexamples%2F';
+var ref=String(document.location.href).replace(/https?:\/\//,'').replace(/\/[^\/]*$/,'').replace(/\//g,'%2F');
+window.location.href=s.replace(/%u/ig,ref).replace(/%s/ig,escape(document.searchform.t.value));
+return false;}
+</script>
+<form id="searchform" name="searchform" onsubmit="return onSearch()" action="javascript:onSearch();" method="post">
+<input name="t" size="30" value="Search documentation..." onfocus="if (document.searchform.t.value=='Search documentation...') document.searchform.t.value='';"></input>
+<a id="searchlink"  title="www.google.com"  href="javascript:onSearch();" onclick="return onSearch()">Search</a></form>
+</div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Source:</span>
+<a class="descrheadentry" href="src/TVirtualReader.h.html">header file</a>
+<a class="descrheadentry" href="src/TVirtualReader.cxx.html">source file</a>
+<a class="descrheadentry" href="TVirtualReader_Tree.pdf">inheritance tree (.pdf)</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TVirtualReader.h?view=log">viewVC header</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TVirtualReader.cc?view=log">viewVC source</a> 
+</div></div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Sections:</span>
+<a class="descrheadentry" href="#TVirtualReader:description">class description</a> 
+<a class="descrheadentry" href="#TVirtualReader:Function_Members">function members</a>
+<a class="descrheadentry" href="#TVirtualReader:Data_Members">data members</a>
+<a class="descrheadentry" href="#TVirtualReader:Class_Charts">class charts</a>
+</div></div>
+</div>
+<div class="location">
+<a class="locationlevel" href="index.html">(UNKNOWN PRODUCT)</a>
+ &#187; <a class="locationlevel" href="./VIRTUALREADER_Index.html">VIRTUALREADER</a>
+ &#187; <a class="locationlevel" href="#TopOfPage">TVirtualReader</a>
+</div>
+<div class="dropshadow"><div class="withshadow"><h1><a name="TVirtualReader:description"></a>class TVirtualReader: public TObject</h1>
+<div class="classdescr">
+<pre>
+
+</pre><!-- TDocHtmlDirective start --> <!--
+/* -->
+<h1>TVirtualReader</h1>
+<p>
+TVirtualReader is the underlying class from which all reader implementations
+in ClasTool must inherit. 
+Many of the methods of this class are dummies that must be overridden by the
+real function of the reader class that inherits from TVirtualReader.
+</p><p>
+Some functions will be implemented in this class rather than in TClasTool if they
+are "closer to the data", in other words, these functions would be useful for 
+different readers (general enough) yet are specific enough that some DST formats
+would need an alternate implementation.
+</p><p>
+Note that to be useful, each method that is relevant for physics analysis (i.e. all 
+the public methods) must have a call implementation in TClasTool. Otherwise calls to 
+that method must be done on the pointer to the reader, which is highly in elegant. 
+That is the "price we pay" for a design that allows different readers using a pointer
+to the reader instead of inheriting from the reader.
+</p>
+<pre> 
+<!-- */ 
+ --> 
+<!-- TDocHtmlDirective end --><pre>
+
+</pre></div>
+</div></div>
+
+<div id="functions">
+<h2><a id="TVirtualReader:Function_Members"></a>Function Members (Methods)</h2>
+<div class="access" id="funcpubl"><b>public:</b>
+<table class="func" id="tabfuncpubl" cellspacing="0">
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TVirtualReader:TVirtualReader">TVirtualReader</a>()</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TVirtualReader:TVirtualReader@1">TVirtualReader</a>(<span class="keyword">const</span> <a href="./TVirtualReader.html">TVirtualReader</a>&amp;)</td></tr>
+<tr class="func"><td class="funcret"> virtual</td><td class="funcname"><a class="funcname" href="#TVirtualReader:_TVirtualReader">~TVirtualReader</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AbstractMethod"><span class="baseclass">TObject::</span>AbstractMethod</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Add">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:AddEPICFile">AddEPICFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:AddFile">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries = TChain::kBigNumber)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AppendPad"><span class="baseclass">TObject::</span>AppendPad</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Browse">Browse</a>(TBrowser* b)</td></tr>
+<tr class="func"><td class="funcret">static TClass*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:Class">Class</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:ClassName"><span class="baseclass">TObject::</span>ClassName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Clear"><span class="baseclass">TObject::</span>Clear</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:Clone"><span class="baseclass">TObject::</span>Clone</a>(<span class="keyword">const</span> <span class="keyword">char</span>* newname = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Compare"><span class="baseclass">TObject::</span>Compare</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Copy"><span class="baseclass">TObject::</span>Copy</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>&amp; object) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Delete"><span class="baseclass">TObject::</span>Delete</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:DistancetoPrimitive"><span class="baseclass">TObject::</span>DistancetoPrimitive</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Draw">Draw</a>(<span class="keyword">const</span> <span class="keyword">char</span>* varexp, <span class="keyword">const</span> <span class="keyword">char</span>* selection, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries = 1234567890, <a href="./ListOfTypes.html#Int_t">Int_t</a> firstentry = 0)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DrawClass"><span class="baseclass">TObject::</span>DrawClass</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:DrawClone"><span class="baseclass">TObject::</span>DrawClone</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Dump"><span class="baseclass">TObject::</span>Dump</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Error"><span class="baseclass">TObject::</span>Error</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute"><span class="baseclass">TObject::</span>Execute</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute@1"><span class="baseclass">TObject::</span>Execute</a>(TMethod* method, TObjArray* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ExecuteEvent"><span class="baseclass">TObject::</span>ExecuteEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Fatal"><span class="baseclass">TObject::</span>Fatal</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject@1"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetBankRow">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetCurrentEvent">GetCurrentEvent</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetDrawOption"><span class="baseclass">TObject::</span>GetDrawOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Long_t">Long_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetDtorOnly"><span class="baseclass">TObject::</span>GetDtorOnly</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Long64_t">Long64_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEntries">GetEntries</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Long64_t">Long64_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEntriesFast">GetEntriesFast</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEntry">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./TEPICClass.html">TEPICClass</a>*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEPICClass">GetEPICClass</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEPICValue">GetEPICValue</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* fName)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetEventNumber">GetEventNumber</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual TObjArray*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetFiles">GetFiles</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./THEADERClass.html">THEADERClass</a>*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetHEADER">GetHEADER</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetHelicity">GetHelicity</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetIconName"><span class="baseclass">TObject::</span>GetIconName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetName"><span class="baseclass">TObject::</span>GetName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetNFiles">GetNFiles</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetNotify">GetNotify</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetNPart">GetNPart</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetNRows">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetNtrees">GetNtrees</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetObjectInfo"><span class="baseclass">TObject::</span>GetObjectInfo</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetObjectStat"><span class="baseclass">TObject::</span>GetObjectStat</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetOption"><span class="baseclass">TObject::</span>GetOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual TVector3</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetPart3Vector">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetPartCharge">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetPartID">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual TVector3</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetPartVertex">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">virtual TString</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetReaderType">GetReaderType</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetRunNumber">GetRunNumber</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetTitle"><span class="baseclass">TObject::</span>GetTitle</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual TChain*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetTree">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVENT"</span>)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:GetTreeNumber">GetTreeNumber</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#UInt_t">UInt_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetUniqueID"><span class="baseclass">TObject::</span>GetUniqueID</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:HandleTimer"><span class="baseclass">TObject::</span>HandleTimer</a>(TTimer* timer)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#ULong_t">ULong_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Hash"><span class="baseclass">TObject::</span>Hash</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Info"><span class="baseclass">TObject::</span>Info</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> <span class="keyword">char</span>* classname) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom@1"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> TClass* cl) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Inspect"><span class="baseclass">TObject::</span>Inspect</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:InvertBit"><span class="baseclass">TObject::</span>InvertBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="func"><td class="funcret">virtual TClass*</td><td class="funcname"><a class="funcname" href="#TVirtualReader:IsA">IsA</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsEqual"><span class="baseclass">TObject::</span>IsEqual</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsFolder"><span class="baseclass">TObject::</span>IsFolder</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsOnHeap"><span class="baseclass">TObject::</span>IsOnHeap</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsSortable"><span class="baseclass">TObject::</span>IsSortable</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsZombie"><span class="baseclass">TObject::</span>IsZombie</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ls"><span class="baseclass">TObject::</span>ls</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MayNotUse"><span class="baseclass">TObject::</span>MayNotUse</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Next">Next</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Notify">Notify</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Obsolete"><span class="baseclass">TObject::</span>Obsolete</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* asOfVers, <span class="keyword">const</span> <span class="keyword">char</span>* removedFromVers) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete@1"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]@1"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new@1"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]@1"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TVirtualReader.html">TVirtualReader</a>&amp;</td><td class="funcname"><a class="funcname" href="#TVirtualReader:operator_">operator=</a>(<span class="keyword">const</span> <a href="./TVirtualReader.html">TVirtualReader</a>&amp;)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Paint"><span class="baseclass">TObject::</span>Paint</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Pop"><span class="baseclass">TObject::</span>Pop</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Print">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:PrintEPICPosition">PrintEPICPosition</a>()</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:PrintEventStatus">PrintEventStatus</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Read"><span class="baseclass">TObject::</span>Read</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name)</td></tr>
+<tr class="func"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:ReadEvent">ReadEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> runnum = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:RecursiveRemove"><span class="baseclass">TObject::</span>RecursiveRemove</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Reset">Reset</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ResetBit"><span class="baseclass">TObject::</span>ResetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SaveAs"><span class="baseclass">TObject::</span>SaveAs</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename = <span class="string">""</span>, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SavePrimitive"><span class="baseclass">TObject::</span>SavePrimitive</a>(<a href="./ListOfTypes.html#ostream">ostream</a>&amp; out, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit@1"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f, <a href="./ListOfTypes.html#Bool_t">Bool_t</a> set)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TVirtualReader:SetDebugMode">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> mode)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDrawOption"><span class="baseclass">TObject::</span>SetDrawOption</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDtorOnly"><span class="baseclass">TObject::</span>SetDtorOnly</a>(<span class="keyword">void</span>* obj)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:SetNotify">SetNotify</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetObjectStat"><span class="baseclass">TObject::</span>SetObjectStat</a>(<a href="./ListOfTypes.html#Bool_t">Bool_t</a> stat)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetUniqueID"><span class="baseclass">TObject::</span>SetUniqueID</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> uid)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:ShowMembers">ShowMembers</a>(TMemberInspector&amp;)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:Streamer">Streamer</a>(TBuffer&amp;)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TVirtualReader:StreamerNVirtual">StreamerNVirtual</a>(TBuffer&amp; ClassDef_StreamerNVirtual_b)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SysError"><span class="baseclass">TObject::</span>SysError</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBit"><span class="baseclass">TObject::</span>TestBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBits"><span class="baseclass">TObject::</span>TestBits</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:UseCurrentStyle"><span class="baseclass">TObject::</span>UseCurrentStyle</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Warning"><span class="baseclass">TObject::</span>Warning</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write@1"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0) <span class="keyword">const</span></td></tr>
+
+</table></div>
+<div class="access" id="funcprot"><b>protected:</b>
+<table class="func" id="tabfuncprot" cellspacing="0">
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DoError"><span class="baseclass">TObject::</span>DoError</a>(<span class="keyword">int</span> level, <span class="keyword">const</span> <span class="keyword">char</span>* location, <span class="keyword">const</span> <span class="keyword">char</span>* fmt, va_list va) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MakeZombie"><span class="baseclass">TObject::</span>MakeZombie</a>()</td></tr>
+
+</table></div>
+</div>
+
+<div id="datamembers">
+<h2><a name="TVirtualReader:Data_Members"></a>Data Members</h2>
+<div class="access" id="enumpubl"><b>public:</b>
+<table class="data" id="tabenumpubl" cellspacing="0">
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span>EStatusBits { </td><td class="dataname"><a href="#TObject:kCanDelete">kCanDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kMustCleanup">kMustCleanup</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kObjInCanvas">kObjInCanvas</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kIsReferenced">kIsReferenced</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kHasUUID">kHasUUID</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kCannotPick">kCannotPick</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNoContextMenu">kNoContextMenu</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kInvalidObject">kInvalidObject</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span><i>[unnamed]</i> { </td><td class="dataname"><a href="#TObject:kIsOnHeap">kIsOnHeap</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNotDeleted">kNotDeleted</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kZombie">kZombie</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kBitMask">kBitMask</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kSingleKey">kSingleKey</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kOverwrite">kOverwrite</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kWriteDelete">kWriteDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+
+</table></div>
+<div class="access" id="datapubl"><b>public:</b>
+<table class="data" id="tabdatapubl" cellspacing="0">
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fCurrentEvent"></a>fCurrentEvent</td><td class="datadesc">Current Data Event (for use with Next() )</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fCurrentScaler"></a>fCurrentScaler</td><td class="datadesc">Current Scaler Event (for use with NextScaler() )</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fDebug_Mode"></a>fDebug_Mode</td><td class="datadesc">Defines printout, Bit 0 = STD Messages, Bit 1 = Errors, Higherbits = Debug</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a name="TVirtualReader:fReadGSIM"></a>fReadGSIM</td><td class="datadesc">Turn on or off the reading of the GSIM bank.</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a name="TVirtualReader:fReadMCHD"></a>fReadMCHD</td><td class="datadesc">Turn on or off the reading of the MCHD bank.</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a name="TVirtualReader:fReadScaler"></a>fReadScaler</td><td class="datadesc">Turn on or off the automatic reading of scaler branch. Default is on.</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fScalerLastEvt"></a>fScalerLastEvt</td><td class="datadesc">to synchronize Event tree and Scaler tree this contain the event number of the last Physics Event. Set by SetBranchAddress</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fThisInstance"></a>fThisInstance</td><td class="datadesc">Instance count of this instance.</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="dataname"><a name="TVirtualReader:fUseGSIM"></a>fUseGSIM</td><td class="datadesc">When set true, read the GSIM bank INSTEAD of the EVNT bank.</td></tr>
+<tr class="data"><td class="datatype">static <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TVirtualReader:fgInstanceCount"></a>fgInstanceCount</td><td class="datadesc">Total instance count.</td></tr>
+
+</table></div>
+</div>
+<h2><a id="TVirtualReader:Class_Charts"></a>Class Charts</h2>
+<!--INHERITANCE TREE-->
+<table><tr><td width="10%"></td><td width="70%"><a href="ClassHierarchy.html">Inheritance Chart</a>:</td></tr><tr class="inhtree"><td width="10%"></td><td width="70%"><table class="inhtree"><tr><td>
+<table width="100%" border="0" cellpadding ="0" cellspacing="2"><tr>
+<td><table><tr>
+<td bgcolor="#f7f7f7" align="right">
+<tt>TObject</tt></td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><big><b><tt><a name="TVirtualReader" href="./TVirtualReader.html">TVirtualReader</a></tt></b></big></center>
+</td>
+<td><table><tr>
+<td>&larr;</td><td><table><tr>
+<td bgcolor="#f7f7f7"><table><tr><td>
+<center><tt><a name="TDSTReader" href="./TDSTReader.html">TDSTReader</a></tt></center></td>
+<td></td>
+</tr></table></td>
+</tr><tr>
+<td bgcolor="#f7f7f7"><table><tr><td>
+<center><tt><a name="TMiniDSTReader" href="./TMiniDSTReader.html">TMiniDSTReader</a></tt></center></td>
+<td></td>
+</tr></table></td>
+</tr></table></td>
+</tr></table></td>
+</tr></table>
+</td></tr></table></td></tr></table>
+<h2>Function documentation</h2>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TVirtualReader:TVirtualReader" href="src/TVirtualReader.cxx.html#jCDLv">TVirtualReader</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TVirtualReader:_TVirtualReader" href="src/TVirtualReader.cxx.html#dSAsOB">~TVirtualReader</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:Add" href="src/TVirtualReader.cxx.html#pCNKL">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Add" title="Int_t TVirtualReader::Add(const Char_t* filename)">Add</a> new files to the list of files to be analyzed.
+ The filename may use wildcards to add multiple files all at once.
+ returns the actual number of files added or zero.
+ Actually adds files by repeated calls to <a href="./TVirtualReader.html#TVirtualReader:AddFile" title="Int_t TVirtualReader::AddFile(const Char_t* filename,Int_t nentries=TChain::kBigNumber)">AddFile</a>().
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:AddFile" href="src/TVirtualReader.cxx.html#d7tdTC">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries = TChain::kBigNumber)</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Add" title="Int_t TVirtualReader::Add(const Char_t* filename)">Add</a> a single file to the list of files to be analyzed.
+ Returns a negative number if the files could not be opened.
+ On first file opened, must initialize the reader.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:AddEPICFile" href="src/TVirtualReader.cxx.html#V8bjxB">AddEPICFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Add" title="Int_t TVirtualReader::Add(const Char_t* filename)">Add</a> a single file to the list of <a href="./TEPICClass.html">epic</a> files to be analyzed.
+ Returns a negative number if the files could not be opened.
+ On first file opened, must initialize the reader.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:Next" href="src/TVirtualReader.cxx.html#EaAwoB">Next</a>()</span><br />
+<div class="funccomm"><pre> <a href="./#TObject:Read" title="Int_t TObject::Read(const char* name)">Read</a> the next event and make the contends available.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetNFiles" href="src/TVirtualReader.cxx.html#JK1Z3C">GetNFiles</a>()</span><br />
+<div class="funccomm"><pre> Returns the number of files in the current list of files to be analyzed.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:Reset" href="src/TVirtualReader.cxx.html#A3cEWC">Reset</a>()</span><br />
+<div class="funccomm"><pre> Main reset of class. Clean up and return to reading the very first event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:ReadEvent" href="src/TVirtualReader.cxx.html#qumgR">ReadEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> runnum = 0)</span><br />
+<div class="funccomm"><pre> <a href="./#TObject:Read" title="Int_t TObject::Read(const char* name)">Read</a> a specific event from the run with runnum.
+ THIS IS EXPENSIVE! We need to SEARCH for that specific event.
+ Usually you want to use <a href="./TVirtualReader.html#TVirtualReader:Next" title="Int_t TVirtualReader::Next()">Next</a>() or <a href="./TVirtualReader.html#TVirtualReader:GetEntry" title="Int_t TVirtualReader::GetEntry(Int_t entry=-1,Int_t getall=0)">GetEntry</a>() which are both quite a bit faster.
+
+ Returns the event number of the event actually read. Since it is possible the
+ event is not found
+
+ Specify runnum if you want to search for a runnum other than the current one.
+
+ This is the <span class="string">"generic"</span> version you may which to override.
+ This is currently the stupid way to do this, should be a binary search.
+ It is the user's responsibility to load files with different runnumbers in
+ sequential order.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetEntry" href="src/TVirtualReader.cxx.html#T33WDE">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</span><br />
+<div class="funccomm"><pre> Find a specific event in the list of events. The n-th event is returned,
+ not the event with event_number = entry! For that use the <a href="./TVirtualReader.html#TVirtualReader:ReadEvent" title="Int_t TVirtualReader::ReadEvent(Int_t event,Int_t runnum=0)">ReadEvent</a>() method.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">GetEntries_return_t <a class="funcname" name="TVirtualReader:GetEntries" href="src/TVirtualReader.cxx.html#ZRM1c">GetEntries</a>() const</span><br />
+<div class="funccomm"><pre> Return total number of entries in the chain.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">GetEntries_return_t <a class="funcname" name="TVirtualReader:GetEntriesFast" href="src/TVirtualReader.cxx.html#xKU_ZB">GetEntriesFast</a>() const</span><br />
+<div class="funccomm"><pre> Fast way to return the number of entries in the chain by regurgitating a
+ stored value. This value may not be accurate. (See TChain::<a href="./TVirtualReader.html#TVirtualReader:GetEntriesFast" title="Long64_t TVirtualReader::GetEntriesFast()">GetEntriesFast</a> )
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TVirtualReader:GetEPICValue" href="src/TVirtualReader.cxx.html#h1WGeC">GetEPICValue</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* fName)</span><br />
+<div class="funccomm"><pre>Returns the EPIC value associated with fName
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:Browse" href="src/TVirtualReader.cxx.html#xHLYqC">Browse</a>(TBrowser* b)</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Browse" title="void TVirtualReader::Browse(TBrowser* b)">Browse</a> the class with Browser b.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:Draw" href="src/TVirtualReader.cxx.html#akv6oE">Draw</a>(<span class="keyword">const</span> <span class="keyword">char</span>* varexp, <span class="keyword">const</span> <span class="keyword">char</span>* selection, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries = 1234567890, <a href="./ListOfTypes.html#Int_t">Int_t</a> firstentry = 0)</span><br />
+<div class="funccomm"><pre> Same as the TChain::<a href="./TVirtualReader.html#TVirtualReader:Draw" title="Int_t TVirtualReader::Draw(const char* varexp,const char* selection,Option_t* option=&quot;&quot;,Int_t nentries=1234567890,Int_t firstentry=0)">Draw</a> command, allows you to make instant plots of variables in the
+ files. This is harder to implement and so not all readers will support this!
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TObjArray * <a class="funcname" name="TVirtualReader:GetFiles" href="src/TVirtualReader.cxx.html#tDuGUD">GetFiles</a>(<span class="keyword">void</span>)</span><br />
+<div class="funccomm"><pre> Return a TObjArray containing a list of the currently attached files. See TChain::<a href="./TVirtualReader.html#TVirtualReader:GetFiles" title="TObjArray* TVirtualReader::GetFiles()">GetFiles</a>()
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetNtrees" href="src/TVirtualReader.cxx.html#HQqIK">GetNtrees</a>(<span class="keyword">void</span>)</span><br />
+<div class="funccomm"><pre> Return the number of trees attached. See TChain::<a href="./TVirtualReader.html#TVirtualReader:GetNtrees" title="Int_t TVirtualReader::GetNtrees()">GetNtrees</a>()
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetTreeNumber" href="src/TVirtualReader.cxx.html#UEPaX">GetTreeNumber</a>(<span class="keyword">void</span>)</span><br />
+<div class="funccomm"><pre> Return the number of the current tree being read. See TChain::GetTreeNum()
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Bool_t">Bool_t</a> <a class="funcname" name="TVirtualReader:Notify" href="src/TVirtualReader.cxx.html#iRuODB">Notify</a>()</span><br />
+<div class="funccomm"><pre> Routine that will call the <a href="./TVirtualReader.html#TVirtualReader:Notify" title="Bool_t TVirtualReader::Notify()">Notify</a> set by <a href="./TVirtualReader.html#TVirtualReader:SetNotify" title="void TVirtualReader::SetNotify(TObject* obj)">SetNotify</a>.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:SetNotify" href="src/TVirtualReader.cxx.html#NVlP5B">SetNotify</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</span><br />
+<div class="funccomm"><pre> This cannot be implemented here, it must be implemented in the
+ actual reader.
+ The argument must be a class that is derived from <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a> and has
+ a sensible <a href="./TVirtualReader.html#TVirtualReader:Notify" title="Bool_t TVirtualReader::Notify()">Notify</a>() method.
+ The <a href="./TVirtualReader.html#TVirtualReader:SetNotify" title="void TVirtualReader::SetNotify(TObject* obj)">SetNotify</a> call will set a hook to call the <a href="./TVirtualReader.html#TVirtualReader:Notify" title="Bool_t TVirtualReader::Notify()">Notify</a>() of your
+ class whenever a new file is opened. I.e. the first file, or when
+ you go from the first to the second, etc. This is useful for
+ initializations that depend on the file being there already, and
+ it is useful for detecting runnumber changes.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetNPart" href="src/TVirtualReader.cxx.html#ybojDD">GetNPart</a>()</span><br />
+<div class="funccomm"><pre> Get the number of particles in this event. Calls <a href="./TVirtualReader.html#TVirtualReader:GetNRows" title="Int_t TVirtualReader::GetNRows(const Char_t* bankname=&quot;EVNT&quot;)">GetNRows</a>(<span class="string">"EVNT"</span>)
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TVirtualReader:GetPart3Vector" href="src/TVirtualReader.cxx.html#wVcO_B">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Return the momentum 3 vector for a particle at index indx, for this event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TVirtualReader:GetPartVertex" href="src/TVirtualReader.cxx.html#lpcRKC">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Return the vertex 3 vector for a particle at index indx, for this event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetPartID" href="src/TVirtualReader.cxx.html#L1KAY">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Return the particle ID (SEB style) for the particle at index indx for this event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetPartCharge" href="src/TVirtualReader.cxx.html#QsJjqE">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Return the charge of the particle at index indx for this event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TString <a class="funcname" name="TVirtualReader:GetReaderType" href="src/TVirtualReader.cxx.html#ucz9k">GetReaderType</a>()</span><br />
+<div class="funccomm"><pre> Return the type of the reader that is implemented.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEPICClass.html">TEPICClass</a> * <a class="funcname" name="TVirtualReader:GetEPICClass" href="src/TVirtualReader.cxx.html#rHaAsE">GetEPICClass</a>()</span><br />
+<div class="funccomm"><pre>Return current EPIC
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./THEADERClass.html">THEADERClass</a> * <a class="funcname" name="TVirtualReader:GetHEADER" href="src/TVirtualReader.cxx.html#W3FEcE">GetHEADER</a>()</span><br />
+<div class="funccomm"><pre> Return the HEADER bank for the current event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetHelicity" href="src/TVirtualReader.cxx.html#QNKLOB">GetHelicity</a>()</span><br />
+<div class="funccomm"><pre> Return the helicity of the current event: -1 or 1 for proper helicity, 0 for error.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TChain * <a class="funcname" name="TVirtualReader:GetTree" href="src/TVirtualReader.cxx.html#oFGqRE">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVENT"</span>)</span><br />
+<div class="funccomm"><pre> Return a pointer to the TChain.
+ If reader is not capable of returning a TChain, it will return NULL.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:Print" href="src/TVirtualReader.cxx.html#a.8bOE">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Print" title="void TVirtualReader::Print(Int_t full=0)">Print</a> to the screen a summary of the status for this event. Useful for debugging.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:PrintEventStatus" href="src/TVirtualReader.cxx.html#TsRF6">PrintEventStatus</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TVirtualReader.html#TVirtualReader:Print" title="void TVirtualReader::Print(Int_t full=0)">Print</a> to the screen a summary of the status for this event. Useful for debugging.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TVirtualReader:PrintEPICPosition" href="src/TVirtualReader.cxx.html#Nq_NZD">PrintEPICPosition</a>()</span><br />
+<div class="funccomm"><pre><a href="./TVirtualReader.html#TVirtualReader:Print" title="void TVirtualReader::Print(Int_t full=0)">Print</a> the position of current EPIC
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetNRows" href="src/TVirtualReader.cxx.html#XQmbqD">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</span><br />
+<div class="funccomm"><pre> Return the number of rows for the bank with <span class="string">"bankname"</span> for this event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>  * <a class="funcname" name="TVirtualReader:GetBankRow" href="src/TVirtualReader.cxx.html#IfboYB">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</span><br />
+<div class="funccomm"><pre> Return a pointer to the ClasBank bank object with name <span class="string">"bankname"</span> at row nrow.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetEventNumber" href="src/TVirtualReader.cxx.html#E.k7FB">GetEventNumber</a>()</span><br />
+<div class="funccomm"><pre> Return the current number of the event from the HEADER. I.e. the actual event number.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetRunNumber" href="src/TVirtualReader.cxx.html#PuA3TE">GetRunNumber</a>()</span><br />
+<div class="funccomm"><pre> Return the current run number of the event from the HEADER.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:GetCurrentEvent" href="src/TVirtualReader.cxx.html#Jk4GwD">GetCurrentEvent</a>()</span><br />
+<div class="funccomm"><pre> Return the current number of the event in the sequence, i.e. the n-th event number.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TVirtualReader:TVirtualReader" href="src/TVirtualReader.h.html#ev88yB">TVirtualReader</a>()</span><br />
+<div class="funccomm"><pre>
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>  * <a class="funcname" name="TVirtualReader:GetNotify" href="src/TVirtualReader.h.html#CM4rKD">GetNotify</a>(<span class="keyword">void</span>)</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span> NULL;}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TVirtualReader:SetDebugMode" href="src/TVirtualReader.h.html#Ix.AE">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> mode)</span><br />
+
+<div class="code"><code class="inlinecode">{ <span class="keyword">return</span> ( <a href="./TVirtualReader.html#TVirtualReader:fDebug_Mode" title="Int_t TVirtualReader::fDebug_Mode">fDebug_Mode</a> = mode ); }</code></div>
+<div style="clear:both;"></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: Fri Feb 24 17:40:11 2017</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

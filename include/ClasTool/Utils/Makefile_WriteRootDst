@@ -1,0 +1,48 @@
+#
+# Notice:
+#
+# At CEBAF you must execute the following before this will compile and link.
+#
+# SETUP YOUR CLAS ENVIRONMENT (setclas LATEST    )
+# SETUP YOUR ROOT ENVIRONMENT (use root/2.22     )
+# LINUX: SETUP EGCS 1.1.1     (use egcs/1.1.1    )
+#
+#
+#
+#
+SRC_FILES=Write_ROOT_Tree.cc 
+# Write_MiniDST.cc
+
+include ../Makefile_top
+#
+# BOS
+#
+BOSINC    = -I$(CLAS_PACK)/bosio -I$(CLAS_PACK)/include -I$(CLAS_PACK)/inc_derived
+BOSLIB    = -L$(TOP_DIR)/lib/$(OS_NAME) -L$(CLAS_LIB) -lbosio -lbankdefs
+#
+INCLUDES += $(BOSINC)
+#
+# ADD -lHbook to the list of ROOT libraries to get the uctoh_ and uhtoc_ that are needed for bosio.
+# (Yes, I know it would be nice if we weaned ourselved of those damn CERN libraries....)
+#
+OTHERLOADLIBS= $(ROOTLIBS) -lHbook -lminicern $(BOSLIB) -L$(localslib) -lClasTool -lVirtualReader -lDSTReader -lClasBanks -lFillBanks
+#
+ifeq ($(findstring LinuxRHFC8,$(OS_NAME)),LinuxRHFC8)
+OTHERLOADLIBS += -lgfortran
+endif
+#
+CREATED_EXE = WriteRootDst
+#
+all: exe
+#
+include ../Makefile_bottom
+include Makefile_depends
+#
+# Custom depends:
+#
+$(localbin)/$(CREATED_EXE): $(localslib)/libFillBanks.so
+$(localbin)/$(CREATED_EXE): $(localslib)/libClasTool.so 
+$(localbin)/$(CREATED_EXE): $(localslib)/libVirtualReader.so
+$(localbin)/$(CREATED_EXE): $(localslib)/libDSTReader.so
+$(localbin)/$(CREATED_EXE): $(localslib)/libClasBanks.so
+

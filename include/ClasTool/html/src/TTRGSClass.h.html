@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TTRGSClass - source file</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<div id="codeAndLineNumbers"><pre class="listing">
+<span class="comment">////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">// TTRGSBank</span>
+<span class="comment">//</span>
+<span class="comment">// Initial Author: Gagik Gavalian  UNH  11/13/1999 </span>
+<span class="comment">//</span>
+<span class="comment">// This file is generated automatically by make_bank_class.pl </span>
+<span class="comment">//</span>
+<span class="comment">// Generation DATE : Tue Nov 23 18:20:38 EST 1999</span>
+<span class="comment">//</span>
+<span class="comment">////////////////////////////////////////////////////////////////////////</span>
+<span class="cpp">#ifndef _TTRGSClass_ </span>
+<span class="cpp">#define _TTRGSClass_ </span>
+<span class="cpp">#include &lt;iostream&gt;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> std;
+
+
+<span class="cpp">#include "TObject.h"</span>
+<span class="cpp">#include "TString.h"</span>
+
+<span class="keyword">class</span> <a href="../TTRGSClass.html">TTRGSClass</a>: <span class="keyword">public</span> <a href="../#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>{
+
+<span class="keyword">public</span>:
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_ug" title="UInt_t TTRGSClass::Clock_ug">Clock_ug</a>;       <span class="comment">// Ungated Clock                                         </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_ug" title="UInt_t TTRGSClass::Fcup_ug">Fcup_ug</a>;        <span class="comment">// FCUP UNGATED                                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Microsec" title="UInt_t TTRGSClass::Microsec">Microsec</a>;       <span class="comment">// microsecond clock (will overflow during normal run)   </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_st" title="UInt_t TTRGSClass::Mor_st">Mor_st</a>;         <span class="comment">// MOR.ST                                                </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_pc" title="UInt_t TTRGSClass::Mor_pc">Mor_pc</a>;         <span class="comment">// MOR.PC                                                </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_ps" title="UInt_t TTRGSClass::Mor_ps">Mor_ps</a>;         <span class="comment">// MOR.PS                                                </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_tac" title="UInt_t TTRGSClass::Mor_tac">Mor_tac</a>;        <span class="comment">// MOR.TAC                                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor" title="UInt_t TTRGSClass::Mor">Mor</a>;            <span class="comment">// Master OR                                             </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Pc" title="UInt_t TTRGSClass::Pc">Pc</a>;             <span class="comment">// Pair Counter                                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Ps" title="UInt_t TTRGSClass::Ps">Ps</a>;             <span class="comment">// Pair Spectrometer                                     </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Tac" title="UInt_t TTRGSClass::Tac">Tac</a>;            <span class="comment">// Total Absorption Counter                              </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:St" title="UInt_t TTRGSClass::St">St</a>;             <span class="comment">// ST                                                    </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_ug_2" title="UInt_t TTRGSClass::Clock_ug_2">Clock_ug_2</a>;     <span class="comment">// duplicate of channel 1                                </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_ug_2" title="UInt_t TTRGSClass::Fcup_ug_2">Fcup_ug_2</a>;      <span class="comment">// duplicate of channel 2                                </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_g1" title="UInt_t TTRGSClass::Clock_g1">Clock_g1</a>;       <span class="comment">// Clock with run gatei                                  </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_g1" title="UInt_t TTRGSClass::Fcup_g1">Fcup_g1</a>;        <span class="comment">// FCUP with Run Gate                                    </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_st_rg" title="UInt_t TTRGSClass::Mor_st_rg">Mor_st_rg</a>;      <span class="comment">// MOR.ST  with run gate                                 </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_pc_rg" title="UInt_t TTRGSClass::Mor_pc_rg">Mor_pc_rg</a>;      <span class="comment">// MOR.PC with run gate                                  </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_ps_rg" title="UInt_t TTRGSClass::Mor_ps_rg">Mor_ps_rg</a>;      <span class="comment">// MOR.PS with run gate                                  </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_tac_rg" title="UInt_t TTRGSClass::Mor_tac_rg">Mor_tac_rg</a>;     <span class="comment">// MOR.TAC with run gate                                 </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_rg" title="UInt_t TTRGSClass::Mor_rg">Mor_rg</a>;         <span class="comment">// MASTER_OR with run gate                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Pc_rg" title="UInt_t TTRGSClass::Pc_rg">Pc_rg</a>;          <span class="comment">// PC with run gate                                      </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Ps_rg" title="UInt_t TTRGSClass::Ps_rg">Ps_rg</a>;          <span class="comment">// PS with run gate                                      </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Tac_rg" title="UInt_t TTRGSClass::Tac_rg">Tac_rg</a>;         <span class="comment">// TAC with run gate                                     </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:St_rg" title="UInt_t TTRGSClass::St_rg">St_rg</a>;          <span class="comment">// ST  with run gate                                     </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_g1_2" title="UInt_t TTRGSClass::Clock_g1_2">Clock_g1_2</a>;     <span class="comment">// duplicate of channel 17                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_g1_2" title="UInt_t TTRGSClass::Fcup_g1_2">Fcup_g1_2</a>;      <span class="comment">// duplicate of channel 18                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_g2" title="UInt_t TTRGSClass::Clock_g2">Clock_g2</a>;       <span class="comment">// CLOCK with Live gate                                  </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_g2" title="UInt_t TTRGSClass::Fcup_g2">Fcup_g2</a>;        <span class="comment">// FCUP with Live gate                                   </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Mor_lg" title="UInt_t TTRGSClass::Mor_lg">Mor_lg</a>;         <span class="comment">// MASTER_OR with Live gate                              </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Clock_g2_2" title="UInt_t TTRGSClass::Clock_g2_2">Clock_g2_2</a>;     <span class="comment">// duplicate of channel 33                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Fcup_g2_2" title="UInt_t TTRGSClass::Fcup_g2_2">Fcup_g2_2</a>;      <span class="comment">// duplicate of channel 34                               </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig1_ug" title="UInt_t TTRGSClass::Trig1_ug">Trig1_ug</a>;       <span class="comment">// Trigger 1 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig2_ug" title="UInt_t TTRGSClass::Trig2_ug">Trig2_ug</a>;       <span class="comment">// Trigger 2 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig3_ug" title="UInt_t TTRGSClass::Trig3_ug">Trig3_ug</a>;       <span class="comment">// Trigger 3 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig4_ug" title="UInt_t TTRGSClass::Trig4_ug">Trig4_ug</a>;       <span class="comment">// Trigger 4 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig5_ug" title="UInt_t TTRGSClass::Trig5_ug">Trig5_ug</a>;       <span class="comment">// Trigger 5 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig6_ug" title="UInt_t TTRGSClass::Trig6_ug">Trig6_ug</a>;       <span class="comment">// Trigger 6 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig7_ug" title="UInt_t TTRGSClass::Trig7_ug">Trig7_ug</a>;       <span class="comment">// Trigger 7 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig8_ug" title="UInt_t TTRGSClass::Trig8_ug">Trig8_ug</a>;       <span class="comment">// Trigger 8 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig9_ug" title="UInt_t TTRGSClass::Trig9_ug">Trig9_ug</a>;       <span class="comment">// Trigger 9 ungated, prescaled                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig10_ug" title="UInt_t TTRGSClass::Trig10_ug">Trig10_ug</a>;      <span class="comment">// Trigger 10 ungated, prescaled                         </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig11_ug" title="UInt_t TTRGSClass::Trig11_ug">Trig11_ug</a>;      <span class="comment">// Trigger 11 ungated, prescaled                         </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig12_ug" title="UInt_t TTRGSClass::Trig12_ug">Trig12_ug</a>;      <span class="comment">// Trigger 12 ungated, prescaled                         </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:Trig_or_ug" title="UInt_t TTRGSClass::Trig_or_ug">Trig_or_ug</a>;     <span class="comment">// Trigger OR of 1-12 ungated,                           </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L1accept" title="UInt_t TTRGSClass::L1accept">L1accept</a>;       <span class="comment">// Level 1 accept                                        </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L2fail" title="UInt_t TTRGSClass::L2fail">L2fail</a>;         <span class="comment">// Level2 fail                                           </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L2pass" title="UInt_t TTRGSClass::L2pass">L2pass</a>;         <span class="comment">// Level2 pass                                           </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L2start" title="UInt_t TTRGSClass::L2start">L2start</a>;        <span class="comment">// Level2 start                                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L2clear" title="UInt_t TTRGSClass::L2clear">L2clear</a>;        <span class="comment">// Level2 clear                                          </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L2accept" title="UInt_t TTRGSClass::L2accept">L2accept</a>;       <span class="comment">// Level2 accept                                         </span>
+  <a href="../ListOfTypes.html#UInt_t">UInt_t</a>     <a href="../TTRGSClass.html#TTRGSClass:L3accept" title="UInt_t TTRGSClass::L3accept">L3accept</a>;       <span class="comment">// Level3 accept                                         </span>
+  
+ <span class="keyword">public</span>:
+<a name="epJoqD"></a>  <a href="../TTRGSClass.html">TTRGSClass</a>(){};
+<a name="QOCLgB"></a>  <a href="../TTRGSClass.html">TTRGSClass</a>(<a href="../TTRGSClass.html">TTRGSClass</a> *TmpTRGS);
+<a name="RR20fE"></a>  <span class="keyword">virtual</span> <a href="../TTRGSClass.html#TTRGSClass:_TTRGSClass" title="void TTRGSClass::~TTRGSClass()">~TTRGSClass</a>(){};
+  <span class="keyword">void</span> 	 <a href="../TTRGSClass.html#TTRGSClass:Print" title="void TTRGSClass::Print()">Print</a>();
+  <span class="comment">//</span>
+  ClassDef(<a href="../TTRGSClass.html">TTRGSClass</a>,1)<span class="comment">// Scaler bank TRGS for trigger, MOR and counters.</span>
+    };
+<span class="cpp">#endif</span>
+
+
+</pre>
+<div id="linenums"><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="1" href="#1" class="ln">1</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="2" href="#2" class="ln">2</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="3" href="#3" class="ln">3</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="4" href="#4" class="ln">4</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="5" href="#5" class="ln">5</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="6" href="#6" class="ln">6</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="7" href="#7" class="ln">7</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="8" href="#8" class="ln">8</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="9" href="#9" class="ln">9</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="10" href="#10" class="ln">10</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="11" href="#11" class="ln">11</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="12" href="#12" class="ln">12</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="13" href="#13" class="ln">13</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="14" href="#14" class="ln">14</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="15" href="#15" class="ln">15</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="16" href="#16" class="ln">16</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="17" href="#17" class="ln">17</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="18" href="#18" class="ln">18</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="19" href="#19" class="ln">19</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="20" href="#20" class="ln">20</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="21" href="#21" class="ln">21</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="22" href="#22" class="ln">22</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="23" href="#23" class="ln">23</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="24" href="#24" class="ln">24</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="25" href="#25" class="ln">25</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="26" href="#26" class="ln">26</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="27" href="#27" class="ln">27</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="28" href="#28" class="ln">28</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="29" href="#29" class="ln">29</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="30" href="#30" class="ln">30</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="31" href="#31" class="ln">31</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="32" href="#32" class="ln">32</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="33" href="#33" class="ln">33</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="34" href="#34" class="ln">34</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="35" href="#35" class="ln">35</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="36" href="#36" class="ln">36</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="37" href="#37" class="ln">37</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="38" href="#38" class="ln">38</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="39" href="#39" class="ln">39</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="40" href="#40" class="ln">40</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="41" href="#41" class="ln">41</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="42" href="#42" class="ln">42</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="43" href="#43" class="ln">43</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="44" href="#44" class="ln">44</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="45" href="#45" class="ln">45</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="46" href="#46" class="ln">46</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="47" href="#47" class="ln">47</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="48" href="#48" class="ln">48</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="49" href="#49" class="ln">49</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="50" href="#50" class="ln">50</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="51" href="#51" class="ln">51</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="52" href="#52" class="ln">52</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="53" href="#53" class="ln">53</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="54" href="#54" class="ln">54</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="55" href="#55" class="ln">55</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="56" href="#56" class="ln">56</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="57" href="#57" class="ln">57</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="58" href="#58" class="ln">58</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="59" href="#59" class="ln">59</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="60" href="#60" class="ln">60</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="61" href="#61" class="ln">61</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="62" href="#62" class="ln">62</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="63" href="#63" class="ln">63</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="64" href="#64" class="ln">64</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="65" href="#65" class="ln">65</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="66" href="#66" class="ln">66</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="67" href="#67" class="ln">67</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="68" href="#68" class="ln">68</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="69" href="#69" class="ln">69</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="70" href="#70" class="ln">70</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="71" href="#71" class="ln">71</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="72" href="#72" class="ln">72</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="73" href="#73" class="ln">73</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="74" href="#74" class="ln">74</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="75" href="#75" class="ln">75</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="76" href="#76" class="ln">76</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="77" href="#77" class="ln">77</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="78" href="#78" class="ln">78</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="79" href="#79" class="ln">79</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="80" href="#80" class="ln">80</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="81" href="#81" class="ln">81</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="82" href="#82" class="ln">82</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="83" href="#83" class="ln">83</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="84" href="#84" class="ln">84</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="85" href="#85" class="ln">85</a></div><div class="ln">&nbsp;<span class="lnfile">TTRGSClass.h:</span><a name="86" href="#86" class="ln">86</a></div></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: 2017-02-24 17:40</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

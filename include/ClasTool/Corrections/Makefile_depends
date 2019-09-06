@@ -1,0 +1,18 @@
+### Automatically generated dependencies. Update with 'make dep'
+# DO NOT DELETE
+
+obj/Darwin/TCLASCorrectionBase.o: TCLASCorrectionBase.h
+obj/Darwin/TCLASCorrections.o: TCLASCorrections.h
+obj/Darwin/TCLASCorrectionsG10D.o: TCLASCorrectionsG10D.h
+obj/Darwin/TCLASCorrectionsG10D.o: TCLASCorrectionBase.h
+obj/Darwin/TCLASCorrectionsG10D.o: include/g10_tagger_corrections.h
+obj/Darwin/TCLASCorrectionsG11A.o: TCLASCorrectionsG11A.h
+obj/Darwin/TCLASCorrectionsG11A.o: TCLASCorrectionBase.h
+obj/Darwin/TCLASCorrectionsG11A.o: include/g11a_correction_data.h
+obj/Darwin/TCLASCorrectionsG11A.o: include/g11a_correction_bins.h
+obj/Darwin/TCLASCorrectionsG11A.o: include/g11_taggercorrection.h
+obj/Darwin/TCLASCorrectionsGSIM.o: TCLASCorrectionsGSIM.h
+obj/Darwin/TCLASCorrectionsGSIM.o: TCLASCorrectionBase.h
+obj/Darwin/TEnergyLoss.o: TEnergyLoss.h TFuncIntercept.h TFuncLoss.h
+obj/Darwin/TFuncIntercept.o: TFuncIntercept.h
+obj/Darwin/TFuncLoss.o: TFuncLoss.h

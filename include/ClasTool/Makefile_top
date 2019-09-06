@@ -1,0 +1,146 @@
+# Makefile for ClasTool
+#
+# TOP: Definitions include.
+#
+# All standard definitions needed for building these libraries 
+# are defined here.
+#
+ifndef CLASTOOL
+   $(error "Please set the variable CLASTOOL so that the Makefiles can find needed tools. Usualy setenv CLASTOOL `pwd` does the trick.")
+endif
+
+ifndef OS_NAME
+  $(error "PLEASE set the variable OS_NAME to your OS. The command: setenv OS_NAME `uname` should do. HOWEVER, most likely this means you have not setup your CLAS environment properly.")
+	
+endif
+
+ifndef ROOTSYS
+  $(error "PLEASE setup the ROOT system properly. ROOTSYS is not defined.")
+	
+endif
+
+SHELL=/bin/sh
+
+ifeq "$(ROOTSYS)" ""
+  all: shlib
+
+  shlib:
+	@echo PLEASE SETUP ROOT: execute the command 'use root' at jlab.
+	@echo ALSO read the readme.
+endif
+
+#
+# Find MySQL
+#
+ifeq "$(MYSQL_INCLUDE)" ""
+	MYSQL_INCLUDE=$(shell $(CLASTOOL)/scripts/find_mysql -i)
+endif
+ifeq "$(MYSQL_LIB)" ""	
+	MYSQL_LIB=$(shell $(CLASTOOL)/scripts/find_mysql -l)
+endif
+
+#
+#
+vpath %.$(DllSuf) .:$(localslib)
+vpath %.a         .:$(locallib)
+#
+ROOTCFLAGS    = $(shell root-config --cflags)
+ROOTLDFLAGS   = $(shell root-config --ldflags)
+ROOTLIBS      = $(shell root-config --libs) -lEG
+ROOTGLIBS     = $(shell root-config --glibs)
+ROOTVERSION   = $(shell root-config --version)
+ROOTLIBDIR    = $(shell root-config --libdir)
+#
+# 
+# IF you use multiple versions of ROOT, you may
+# want to change $(OS_NAME) to $(OS_NAME)_$(ROOTVERSTION)
+#
+locallib = $(CLASTOOL)/lib/$(OS_NAME)
+localslib = $(CLASTOOL)/slib/$(OS_NAME)
+localobjs = obj/$(OS_NAME)
+localdicts= dicts/$(OS_NAME)
+localbin= $(CLASTOOL)/bin/$(OS_NAME)
+#
+ifeq "$(DEBUG)" ""
+  CXXFLAGS += -O2 
+else
+  CXXFLAGS += -g
+endif
+#
+ifeq ($(OS_NAME),SunOS)
+CXX = CC
+CXXFLAGS += -KPIC $(ROOTCFLAGS)
+LD  = CC
+LDFLAGS = $(ROOTLDFLAGS)
+SOFLAGS = -G
+BOSLIB += -lnsl
+
+ObjSuf        = o
+SrcSuf        = cc
+ExeSuf        =
+DllSuf        = so
+OutPutOpt     = -o
+endif
+
+ifeq ($(findstring Linux,$(OS_NAME)),Linux)
+CXX           = g++
+CXXFLAGS      += -Wall -fPIC $(ROOTCFLAGS)
+LD            = g++
+LDFLAGS       =  $(ROOTLDFLAGS)
+SOFLAGS       = -Wl,-soname,$(notdir $@) -shared
+ObjSuf        = o
+SrcSuf        = cc
+ExeSuf        =
+DllSuf        = so
+OutPutOpt     = -o
+endif
+
+ifeq ($(findstring Darwin,$(OS_NAME)),Darwin)
+CXX           = g++
+CXXFLAGS      += -Wall -fPIC $(ROOTCFLAGS)
+LD            = g++
+LDFLAGS       = $(ROOTLDFLAGS)
+SOFLAGS       = -O2 -dynamiclib -single_module -undefined dynamic_lookup -install_name $@ 
+ObjSuf        = o
+SrcSuf        = cc
+ExeSuf        =
+DllSuf        = dylib
+OutPutOpt     = -o
+POST_LINK_COMMAND= ln -fs $(localslib)/$(CREATED_SHLIB) $(localslib)//$(subst .dylib,.so,$(CREATED_SHLIB))
+endif
+#--------------------------------------------------------------------
+# If root is compiled with m64 flag the ROOTCFLAG returns
+# this flag compile time. And when this flag is not present
+# in the Linking stage MAC-OS returns "wrong architecture" warning
+# This flag does not affect Linux Linking. 
+#--------------------------------------------------------------------
+ifeq ($(findstring m64,$(ROOTCFLAGS)),m64)
+LDFLAGS += -m64
+endif
+#
+# "Path" to search for include files 
+#
+SEARCH_INCLUDES += ClasBanks TClasTool VirtualReader DSTReader NT10Reader FillBank Filter
+#
+# Locate the INCLUDE directory.
+#
+INCLUDES=-I. $(addprefix -I$(CLASTOOL)/,$(SEARCH_INCLUDES))
+#
+ifdef MYSQL_INCLUDE
+# YES
+CXXFLAGS += -D__USE_MYSQL__
+INCLUDES +=  -I$(MYSQL_INCLUDE) 
+endif
+
+#
+# SRC_FILES contains non-class sources.
+#
+OBJ_FILES=$(addprefix $(localobjs)/,$(SRC_FILES:.cc=.o))
+#
+# SRC_CLASS contains class sources that need dictionaries.
+#
+OBJ_CLASS = $(addprefix $(localobjs)/,$(SRC_CLASS:.cc=.o))
+DICTS_SOURCE = $(addprefix $(localdicts)/,$(SRC_CLASS:.cc=Dict.cc))
+DICTS_INCLUDE = $(addprefix $(localdicts)/,$(SRC_CLASS:.cc=Dict.h))
+OBJ_DICTS = $(addprefix $(localobjs)/,$(SRC_CLASS:.cc=Dict.o))
+OBJ_SHLIB = $(OBJ_FILES) $(OBJ_CLASS)  $(OBJ_DICTS)

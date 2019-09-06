@@ -1,0 +1,65 @@
+#
+#include $(CLAS_CMS)/Makefile
+
+#
+#
+ROOTCFLAGS    = $(shell root-config --cflags)
+ROOTLIBS      = $(shell root-config --libs)
+ROOTGLIBS     = $(shell root-config --glibs)
+ROOTVERSION   = $(shell root-config --version)
+#
+#
+
+
+
+#
+LIBNAME = libElossLib.so
+SOFLAGS =  -Wl,-soname,$(LIBNAME) -shared
+LDFLAGS = 
+CXX     = g++
+CC      = gcc
+CXXFLAGS = -fPIC
+G77FLAGS =  -O2 -fno-automatic -finit-local-zero -ffixed-line-length-none -fno-second-underscore -DLinux
+#
+#
+CERN_LIB     = -L$(CERNROOT)/lib -lpawlib -lpacklib -lkernlib -lmathlib -g2c  -pthread -lm -ldl -rdynamic
+FORT_FILES   = $(wildcard *.F)
+C_FILES      = $(wildcard *.cc)
+CXX_FILES    = $(wildcard *.cxx)
+DICT_FILE    = $(CXX_FILES:.cxx=Dict.o)
+OBJECT_FILES = $(CXX_FILES:.cxx=.o) 
+
+
+all: $(OBJECT_FILES)
+	@echo $(OBJECT_FILES)
+	$(CXX) -o  libtest.exe  $(OBJECT_FILES) 
+#	ar r libElossLib.a  $(OBJECT_FILES)
+show:
+	@echo $(OBJECT_FILES)
+clean:
+	@echo Cleaning up the repository
+	@rm -rf *.o *~
+
+#----------------------------------------------------
+# Compilation Rules
+#
+
+%Dict.cxx %Dict.h: %.h
+	$(ROOTSYS)/bin/rootcint -f $@ -c -p $(INCLUDES) $< $(<:.h=LinkDef.h)
+
+%Dict.o: %Dict.cxx
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+%.o:%.cc %.h
+	@echo Compiling Class $<
+	$(CC) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+%.o:%.cc
+	@echo Compiling File $<
+	$(CC) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+%.o:%.cxx
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+%.o:%.F
+	@echo Compiling File $<
+	g77 $(G77FLAGS) -c $< -o $@

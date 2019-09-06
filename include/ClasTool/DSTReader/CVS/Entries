@@ -1,0 +1,19 @@
+/.cvsignore/1.1/Wed Feb 14 16:47:49 2007//
+/Load_Libs.C/1.1/Wed Jul 30 20:48:29 2003//
+/Makefile/1.7/Tue Feb 17 21:08:52 2009//
+/TDSTReader.cc/1.27/Mon Sep 28 20:26:43 2009//
+/TDSTReader.h/1.25/Fri Jul 10 15:22:24 2009//
+/TDSTReaderLinkDef.h/1.1/Wed Jul 30 20:48:29 2003//
+/TDSTWriter.cc/1.7/Fri Jul 10 15:22:24 2009//
+/TDSTWriter.h/1.4/Fri Jul 10 15:22:24 2009//
+/TDSTWriterLinkDef.h/1.1/Wed Jan  9 20:56:19 2008//
+/TMiniDSTReader.cc/1.6/Wed Feb  6 20:15:58 2008//
+/TMiniDSTReader.h/1.3/Fri Jan  4 21:55:12 2008//
+/TMiniDSTReaderLinkDef.h/1.1/Wed Jul 30 20:48:29 2003//
+/TMiniDSTWriter.cc/1.4/Fri Jan  4 21:55:12 2008//
+/TMiniDSTWriter.h/1.3/Fri Jan  4 21:55:12 2008//
+/TMiniDSTWriterLinkDef.h/1.1/Wed Jul 30 20:48:29 2003//
+/TStoreClone.cc/1.1/Thu Apr  5 19:55:26 2007//
+/TStoreClone.h/1.2/Tue Jul  3 15:32:56 2007//
+/TStoreCloneLinkDef.h/1.1/Thu Apr  5 19:55:26 2007//
+D

@@ -1,0 +1,72 @@
+#-===================================================================
+#  This is a Makefile that is used to compile ROOT based code
+#  and creating a shared library for platforms Linux and BSD (OsX).
+#  The Files in the directory must have extention *.cc
+#  and for every *.cc file the LinkDef.h file should be present.
+#  
+#  Author: G.Gavalian
+#--------------------------------------------------------------------
+locallib = slib
+
+LIBNAME = libCLASTOOLELoss.so
+
+#
+ROOTCFLAGS    = $(shell root-config --cflags)
+ROOTLIBS      = $(shell root-config --libs)
+ROOTGLIBS     = $(shell root-config --glibs)
+ROOTVERSION   = $(shell root-config --version)
+#
+#
+
+ifeq ($(findstring Darwin,$(OS_NAME)),Darwin)
+SOFLAGS =  -O2 -dynamiclib -single_module -undefined dynamic_lookup -install_name $(LIBNAME)
+
+ifeq ($(findstring m64,$(ROOTCFLAGS)),m64)
+SOFLAGS += -m64
+endif
+
+LDFLAGS = 
+CXXFLAGS = -fPIC -O2
+CXX     = g++
+endif
+
+ifeq ($(findstring Linux,$(OS_NAME)),Linux)
+CXX           = g++
+CXXFLAGS      += -Wall -fPIC $(ROOTCFLAGS)
+LD            = g++
+LDFLAGS       = 
+SOFLAGS       = -Wl,-soname,$(LIBNAME) -shared
+endif
+
+#
+SRC_CLASS   = $(wildcard T*.cc)
+DICT_FILES  = $(SRC_CLASS:.cc=Dict.o)
+
+OBJ_FILES = $(SRC_CLASS:.cc=.o) $(DICT_FILES)
+
+all: $(OBJ_FILES)
+	$(CXX) $(SOFLAGS) $(LDFLAGS)  $(OBJ_FILES) -o $(LIBNAME)
+#	$(CXX) $(SOFLAGS) $(LDFLAGS)  $(OBJ_FILES) -o $(locallib)/$(LIBNAME)
+show:
+	@echo $(OBJ_FILES)
+clean:
+	@echo Removing backup and object files
+	@rm -rf *.o *~ lib*.so 
+#----------------------------------------------------
+# Compilation Rules
+#
+
+%Dict.cc %Dict.h: %.h
+	$(ROOTSYS)/bin/rootcint -f $@ -c -p $(INCLUDES) $< $(<:.h=LinkDef.h)
+
+%Dict.o: %Dict.cc
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+%.o:%.cc %.h
+	@echo Compiling Class $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@
+
+%.o:%.cc
+	@echo Compiling File $<
+	$(CXX) $(CXXFLAGS) -c $(ROOTCFLAGS) $(INCLUDES) $< -o $@

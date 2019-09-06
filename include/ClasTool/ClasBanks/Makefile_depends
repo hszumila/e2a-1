@@ -1,0 +1,34 @@
+### Automatically generated dependencies. Update with 'make dep'
+# DO NOT DELETE
+
+obj/Linux64RHEL7/TEPICValue.o: TEPICValue.h
+obj/Linux64RHEL7/TTAGRClass.o: TTAGRClass.h
+obj/Linux64RHEL7/TTRGSClass.o: TTRGSClass.h
+obj/Linux64RHEL7/TMiniDSTClass.o: TMiniDSTClass.h TVirtualData.h
+obj/Linux64RHEL7/TTBTRClass.o: TTBTRClass.h
+obj/Linux64RHEL7/TS1STClass.o: TS1STClass.h
+obj/Linux64RHEL7/TSCPBClass.o: TSCPBClass.h
+obj/Linux64RHEL7/TMCHDClass.o: TMCHDClass.h
+obj/Linux64RHEL7/TTBERClass.o: TTBERClass.h
+obj/Linux64RHEL7/THLSClass.o: THLSClass.h
+obj/Linux64RHEL7/TVirtualData.o: TVirtualData.h
+obj/Linux64RHEL7/TSTPBClass.o: TSTPBClass.h
+obj/Linux64RHEL7/TLCPBClass.o: TLCPBClass.h
+obj/Linux64RHEL7/TFBPMClass.o: TFBPMClass.h
+obj/Linux64RHEL7/TCCPBClass.o: TCCPBClass.h
+obj/Linux64RHEL7/TICHBClass.o: TICHBClass.h
+obj/Linux64RHEL7/TVERTClass.o: TVERTClass.h
+obj/Linux64RHEL7/TICPBClass.o: TICPBClass.h
+obj/Linux64RHEL7/TMVRTClass.o: TMVRTClass.h
+obj/Linux64RHEL7/TTGPBClass.o: TTGPBClass.h
+obj/Linux64RHEL7/TEVNTClass.o: TEVNTClass.h TVirtualData.h
+obj/Linux64RHEL7/TECPBClass.o: TECPBClass.h
+obj/Linux64RHEL7/TTBIDClass.o: TTBIDClass.h
+obj/Linux64RHEL7/THEADERClass.o: THEADERClass.h
+obj/Linux64RHEL7/TMiniHEADClass.o: TMiniHEADClass.h
+obj/Linux64RHEL7/TEPICClass.o: TEPICValue.h TEPICClass.h
+obj/Linux64RHEL7/TTGBIClass.o: TTGBIClass.h
+obj/Linux64RHEL7/TGSIMClass.o: TGSIMClass.h TEVNTClass.h TVirtualData.h
+obj/Linux64RHEL7/TGSIMClass.o: TGSIMClass_const.h
+obj/Linux64RHEL7/THEADClass.o: THEADClass.h
+obj/Linux64RHEL7/TDCPBClass.o: TDCPBClass.h

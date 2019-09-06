@@ -1,0 +1,102 @@
+#!/bin/bash
+#
+# Script to find the MySQL distribution.
+#
+# If the environment variables are already set,
+# just return their contends. (Trust the user.)
+#
+
+# if 'mysql' is in the path already set that.
+if [ -z ${MYSQL} ]; then
+    mysql_test=`which mysql 2> /dev/null` 
+    if [ -x $mysql_test ]; then 
+	MYSQL_EXEC=${mysql_test}
+    else
+	for icheck in \
+	     /usr/bin \
+	     /usr/local/bin \
+	     /usr/bin/mysql/bin \
+	     /usr/local/mysql/bin \
+	     /opt/mysql/bin \
+	     /apps/mysql/bin 
+	do
+	  if [ -x ${icheck}/mysql ]; then
+	      MYSQL_EXEC=${icheck}/mysql
+	      break
+	  fi
+
+	done
+    fi
+fi
+#
+# For the library, use 'locate' to build a path array,
+# and add some standard locations to it as well.
+#
+if [ -z ${MYSQL_LIB} ]; then
+    mysql_lib_paths=(`locate -q libmysqlclient.so | sed 's/libmysqlclient.so.*//' | uniq`)
+    if [ -z ${mysql_lib_paths} ]; then
+	mysql_lib_paths=(\
+	    /usr/lib/mysql \
+	    /usr/lib64/mysql \
+	    /usr/local/lib/mysql \
+	    /usr/local/lib64/mysql \
+	    /usr/mysql/lib \
+	    /usr/local/mysql/lib \
+	    /apps/mysql/lib/mysql )
+    fi
+    for icheck in ${mysql_lib_paths[*]}; do	
+	if [ -r ${icheck}/libmysqlclient.so ]; then
+	    MYSQL_LIB=${icheck}
+	    break
+	fi
+    done
+fi
+
+if [ -z ${MYSQL_INCLUDE} ]; then
+    mysql_inc_paths=(`locate -q /mysql.h | sed 's/mysql.h//' | uniq`)
+    if [ -z ${mysql_inc_paths} ]; then
+	mysql_inc_paths=(\
+	    /usr/include/mysql \
+	    /usr/local/include/mysql \
+	    /usr/include \
+	    /usr/local/include \
+	    /usr/mysql/include \
+	    /usr/local/mysql/include \
+	    /apps/mysql/include/mysql )
+    fi
+    for icheck in ${mysql_inc_paths[*]}; do	
+	if [ -r ${icheck}/mysql.h ]; then
+	    MYSQL_INCLUDE=${icheck}
+	    break
+	fi
+    done
+fi
+
+while getopts ilex opt
+do
+  case $opt in
+      i)
+	  echo $MYSQL_INCLUDE
+	  ;;
+      l)
+	  echo $MYSQL_LIB
+	  ;;
+      e)  
+	  echo $MYSQL_EXEC
+	  ;;
+      x)  
+	  export MYSQL_EXEC
+	  export MYSQL_INCLUDE
+	  export MYSQL_LIB
+	  ;;
+
+      *)
+	  echo "Use this script to find MySQL."
+	  echo " -i returns INCLUDE directory for -I"
+	  echo " -l returns LIBRARY directory for -L"
+	  echo " -e returns the executable mysql"
+          echo " -x   EXPORT the MYSQL_EXEC MYSQL_LIB and MYSQL_INCLUDE vars (bash)"
+	  return
+	  ;;
+  esac
+done

@@ -1,0 +1,478 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TMapUtils</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<a name="TopOfPage"></a>
+<script type="text/javascript">WriteFollowPageBox('class TMapUtils','','TMapUtils.h');</script>
+<div id="toplinks">
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Quick Links:</span>
+<a class="descrheadentry" href="http://www.physics.unh.edu/~maurik/ClasTool">(UNKNOWN PRODUCT)</a>
+<a class="descrheadentry" href="http://root.cern.ch">ROOT Homepage</a>
+<a class="descrheadentry" href="./ClassIndex.html">Class Index</a>
+<a class="descrheadentry" href="./ClassHierarchy.html">Class Hierarchy</a></div>
+<script type="text/javascript">
+function onSearch() {
+var s='http://www.google.com/search?q=%s+site%3A%u+-site%3A%u%2Fsrc%2F+-site%3A%u%2Fexamples%2F';
+var ref=String(document.location.href).replace(/https?:\/\//,'').replace(/\/[^\/]*$/,'').replace(/\//g,'%2F');
+window.location.href=s.replace(/%u/ig,ref).replace(/%s/ig,escape(document.searchform.t.value));
+return false;}
+</script>
+<form id="searchform" name="searchform" onsubmit="return onSearch()" action="javascript:onSearch();" method="post">
+<input name="t" size="30" value="Search documentation..." onfocus="if (document.searchform.t.value=='Search documentation...') document.searchform.t.value='';"></input>
+<a id="searchlink"  title="www.google.com"  href="javascript:onSearch();" onclick="return onSearch()">Search</a></form>
+</div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Source:</span>
+<a class="descrheadentry" href="src/TMapUtils.h.html">header file</a>
+<a class="descrheadentry" href="src/TMapUtils.cxx.html">source file</a>
+<a class="descrheadentry" href="TMapUtils_Tree.pdf">inheritance tree (.pdf)</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TMapUtils.h?view=log">viewVC header</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TMapUtils.cc?view=log">viewVC source</a> 
+</div></div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Sections:</span>
+<a class="descrheadentry" href="#TMapUtils:description">class description</a> 
+<a class="descrheadentry" href="#TMapUtils:Function_Members">function members</a>
+<a class="descrheadentry" href="#TMapUtils:Data_Members">data members</a>
+<a class="descrheadentry" href="#TMapUtils:Class_Charts">class charts</a>
+</div></div>
+</div>
+<div class="location">
+<a class="locationlevel" href="index.html">(UNKNOWN PRODUCT)</a>
+ &#187; <a class="locationlevel" href="./MAPUTILS_Index.html">MAPUTILS</a>
+ &#187; <a class="locationlevel" href="#TopOfPage">TMapUtils</a>
+</div>
+<div class="dropshadow"><div class="withshadow"><h1><a name="TMapUtils:description"></a>class TMapUtils: public TObject</h1>
+<div class="classdescr">
+<pre>
+
+  File :  <a href="./TMapUtils.html">TMapUtils</a>.cxx
+
+  <a href="./TMapUtils.html">TMapUtils</a> is set of tools to get or put
+  data into CLAS Calibration Database (MySQL version)
+
+  THIS NEEDS MORE DOCUMENTATION.
+</pre></div>
+</div></div>
+
+<div id="functions">
+<h2><a id="TMapUtils:Function_Members"></a>Function Members (Methods)</h2>
+<div class="access" id="funcpubl"><b>public:</b>
+<table class="func" id="tabfuncpubl" cellspacing="0">
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TMapUtils:TMapUtils">TMapUtils</a>()</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TMapUtils:TMapUtils@2">TMapUtils</a>(<span class="keyword">const</span> <a href="./TMapUtils.html">TMapUtils</a>&amp;)</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TMapUtils:TMapUtils@1">TMapUtils</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME, <span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE, <span class="keyword">const</span> <span class="keyword">char</span>* dbUSERNAME)</td></tr>
+<tr class="func"><td class="funcret"> virtual</td><td class="funcname"><a class="funcname" href="#TMapUtils:_TMapUtils">~TMapUtils</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AbstractMethod"><span class="baseclass">TObject::</span>AbstractMethod</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AppendPad"><span class="baseclass">TObject::</span>AppendPad</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Browse"><span class="baseclass">TObject::</span>Browse</a>(TBrowser* b)</td></tr>
+<tr class="func"><td class="funcret">static TClass*</td><td class="funcname"><a class="funcname" href="#TMapUtils:Class">Class</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:ClassName"><span class="baseclass">TObject::</span>ClassName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Clear"><span class="baseclass">TObject::</span>Clear</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:Clone"><span class="baseclass">TObject::</span>Clone</a>(<span class="keyword">const</span> <span class="keyword">char</span>* newname = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Compare"><span class="baseclass">TObject::</span>Compare</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">TSQLServer*</td><td class="funcname"><a class="funcname" href="#TMapUtils:ConnectDB">ConnectDB</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Copy"><span class="baseclass">TObject::</span>Copy</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>&amp; object) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:CreateSystem">CreateSystem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* system)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Delete"><span class="baseclass">TObject::</span>Delete</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:DistancetoPrimitive"><span class="baseclass">TObject::</span>DistancetoPrimitive</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Draw"><span class="baseclass">TObject::</span>Draw</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DrawClass"><span class="baseclass">TObject::</span>DrawClass</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:DrawClone"><span class="baseclass">TObject::</span>DrawClone</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Dump"><span class="baseclass">TObject::</span>Dump</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Error"><span class="baseclass">TObject::</span>Error</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute"><span class="baseclass">TObject::</span>Execute</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute@1"><span class="baseclass">TObject::</span>Execute</a>(TMethod* method, TObjArray* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ExecuteEvent"><span class="baseclass">TObject::</span>ExecuteEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Fatal"><span class="baseclass">TObject::</span>Fatal</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject@1"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:Get_Map_Float">Get_Map_Float</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, TArrayF* fFloatArray, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor = <span class="string">"*"</span>)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:Get_Map_Int">Get_Map_Int</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, TArrayI* fIntArray, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor = <span class="string">"*"</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetDrawOption"><span class="baseclass">TObject::</span>GetDrawOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Long_t">Long_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetDtorOnly"><span class="baseclass">TObject::</span>GetDtorOnly</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetIconName"><span class="baseclass">TObject::</span>GetIconName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetItem">GetItem</a>(TSQLServer* fbConn, <span class="keyword">const</span> <span class="keyword">char</span>* tSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tItem, <a href="./TDBItem.html">TDBItem</a>* tMapItem)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetItemEx">GetItemEx</a>(TSQLServer* conn, <span class="keyword">int</span> subsystem_id, <span class="keyword">const</span> <span class="keyword">char</span>* item_name, <a href="./TDBItem.html">TDBItem</a>* fMapItem)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetName"><span class="baseclass">TObject::</span>GetName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetObjectInfo"><span class="baseclass">TObject::</span>GetObjectInfo</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetObjectStat"><span class="baseclass">TObject::</span>GetObjectStat</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetOption"><span class="baseclass">TObject::</span>GetOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetRunIndex">GetRunIndex</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <a href="./TRunIndex.html">TRunIndex</a>* tRunIndex)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetRunIndexEx">GetRunIndexEx</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <a href="./TRunIndex.html">TRunIndex</a>* tRunIndex)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetSubSystemID">GetSubSystemID</a>(TSQLServer* conn, <span class="keyword">int</span> system_id, <span class="keyword">const</span> <span class="keyword">char</span>* subsystem_name, <a href="./ListOfTypes.html#Int_t">Int_t</a>* pSubSystem_ID)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetSubSystemIDEx">GetSubSystemIDEx</a>(TSQLServer* conn, <span class="keyword">int</span> system_id, <span class="keyword">const</span> <span class="keyword">char</span>* subsystem_name)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetSystemID">GetSystemID</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* system_name, <a href="./ListOfTypes.html#Int_t">Int_t</a>* pSystem_ID)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:GetSystemIDEx">GetSystemIDEx</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* system_name)</td></tr>
+<tr class="func"><td class="funcret">TString</td><td class="funcname"><a class="funcname" href="#TMapUtils:GetTableName">GetTableName</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dSystem, <span class="keyword">const</span> <span class="keyword">char</span>* dSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* dItem)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetTitle"><span class="baseclass">TObject::</span>GetTitle</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#UInt_t">UInt_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetUniqueID"><span class="baseclass">TObject::</span>GetUniqueID</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:HandleTimer"><span class="baseclass">TObject::</span>HandleTimer</a>(TTimer* timer)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#ULong_t">ULong_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Hash"><span class="baseclass">TObject::</span>Hash</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Info"><span class="baseclass">TObject::</span>Info</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> <span class="keyword">char</span>* classname) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom@1"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> TClass* cl) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Inspect"><span class="baseclass">TObject::</span>Inspect</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:InvertBit"><span class="baseclass">TObject::</span>InvertBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="func"><td class="funcret">virtual TClass*</td><td class="funcname"><a class="funcname" href="#TMapUtils:IsA">IsA</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsEqual"><span class="baseclass">TObject::</span>IsEqual</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsFolder"><span class="baseclass">TObject::</span>IsFolder</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsOnHeap"><span class="baseclass">TObject::</span>IsOnHeap</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsSortable"><span class="baseclass">TObject::</span>IsSortable</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsZombie"><span class="baseclass">TObject::</span>IsZombie</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ls"><span class="baseclass">TObject::</span>ls</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MayNotUse"><span class="baseclass">TObject::</span>MayNotUse</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Notify"><span class="baseclass">TObject::</span>Notify</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Obsolete"><span class="baseclass">TObject::</span>Obsolete</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* asOfVers, <span class="keyword">const</span> <span class="keyword">char</span>* removedFromVers) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete@1"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]@1"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new@1"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]@1"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TMapUtils.html">TMapUtils</a>&amp;</td><td class="funcname"><a class="funcname" href="#TMapUtils:operator_">operator=</a>(<span class="keyword">const</span> <a href="./TMapUtils.html">TMapUtils</a>&amp;)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Paint"><span class="baseclass">TObject::</span>Paint</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Pop"><span class="baseclass">TObject::</span>Pop</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Print"><span class="baseclass">TObject::</span>Print</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:PrintFloatArray">PrintFloatArray</a>(TArrayF tmpFArray)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:PrintInfo">PrintInfo</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:PrintIntArray">PrintIntArray</a>(TArrayI tmpIArray)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:PrintItem">PrintItem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* tSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> tMinRun, <a href="./ListOfTypes.html#Int_t">Int_t</a> tMaxRun)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:PrintItemTable">PrintItemTable</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Read"><span class="baseclass">TObject::</span>Read</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:RecursiveRemove"><span class="baseclass">TObject::</span>RecursiveRemove</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ResetBit"><span class="baseclass">TObject::</span>ResetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SaveAs"><span class="baseclass">TObject::</span>SaveAs</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename = <span class="string">""</span>, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SavePrimitive"><span class="baseclass">TObject::</span>SavePrimitive</a>(<a href="./ListOfTypes.html#ostream">ostream</a>&amp; out, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:ScanMaps">ScanMaps</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:ScanSystem">ScanSystem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* tSystem)</td></tr>
+<tr class="func"><td class="funcret">TSQLResult&amp;</td><td class="funcname"><a class="funcname" href="#TMapUtils:SelectValues">SelectValues</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <span class="keyword">const</span> <span class="keyword">char</span>* fcValueType)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit@1"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f, <a href="./ListOfTypes.html#Bool_t">Bool_t</a> set)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetDatabase">SetDatabase</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetDBParams">SetDBParams</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME, <span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE, <span class="keyword">const</span> <span class="keyword">char</span>* dbUSERNAME)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetDbVersion">SetDbVersion</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fVersion)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetDebugMode">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> DbgMode)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDrawOption"><span class="baseclass">TObject::</span>SetDrawOption</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDtorOnly"><span class="baseclass">TObject::</span>SetDtorOnly</a>(<span class="keyword">void</span>* obj)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetHost">SetHost</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetIndexTable">SetIndexTable</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fRunIndexTableName)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetObjectStat"><span class="baseclass">TObject::</span>SetObjectStat</a>(<a href="./ListOfTypes.html#Bool_t">Bool_t</a> stat)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:SetPassword">SetPassword</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbPASSWORD)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetUniqueID"><span class="baseclass">TObject::</span>SetUniqueID</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> uid)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:ShowMembers">ShowMembers</a>(TMemberInspector&amp;)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:Streamer">Streamer</a>(TBuffer&amp;)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TMapUtils:StreamerNVirtual">StreamerNVirtual</a>(TBuffer&amp; ClassDef_StreamerNVirtual_b)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SysError"><span class="baseclass">TObject::</span>SysError</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:TableExists">TableExists</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* tblname)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TMapUtils:TableExists_Ex">TableExists_Ex</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* tblname)</td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBit"><span class="baseclass">TObject::</span>TestBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBits"><span class="baseclass">TObject::</span>TestBits</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:UseCurrentStyle"><span class="baseclass">TObject::</span>UseCurrentStyle</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Warning"><span class="baseclass">TObject::</span>Warning</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write@1"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0) <span class="keyword">const</span></td></tr>
+
+</table></div>
+<div class="access" id="funcprot"><b>protected:</b>
+<table class="func" id="tabfuncprot" cellspacing="0">
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DoError"><span class="baseclass">TObject::</span>DoError</a>(<span class="keyword">int</span> level, <span class="keyword">const</span> <span class="keyword">char</span>* location, <span class="keyword">const</span> <span class="keyword">char</span>* fmt, va_list va) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MakeZombie"><span class="baseclass">TObject::</span>MakeZombie</a>()</td></tr>
+
+</table></div>
+</div>
+
+<div id="datamembers">
+<h2><a name="TMapUtils:Data_Members"></a>Data Members</h2>
+<div class="access" id="enumpubl"><b>public:</b>
+<table class="data" id="tabenumpubl" cellspacing="0">
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span>EStatusBits { </td><td class="dataname"><a href="#TObject:kCanDelete">kCanDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kMustCleanup">kMustCleanup</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kObjInCanvas">kObjInCanvas</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kIsReferenced">kIsReferenced</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kHasUUID">kHasUUID</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kCannotPick">kCannotPick</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNoContextMenu">kNoContextMenu</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kInvalidObject">kInvalidObject</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span><i>[unnamed]</i> { </td><td class="dataname"><a href="#TObject:kIsOnHeap">kIsOnHeap</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNotDeleted">kNotDeleted</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kZombie">kZombie</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kBitMask">kBitMask</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kSingleKey">kSingleKey</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kOverwrite">kOverwrite</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kWriteDelete">kWriteDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+
+</table></div>
+<div class="access" id="datapriv"><b>private:</b>
+<table class="data" id="tabdatapriv" cellspacing="0">
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fDATABASE"></a>fDATABASE</td><td class="datadesc">Database to use</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TMapUtils:fDebugMode"></a>fDebugMode</td><td class="datadesc">Debugmode controls printouts given from various methods</td></tr>
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fHOSTNAME"></a>fHOSTNAME</td><td class="datadesc">Database HOST name</td></tr>
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fItemValueVersion"></a>fItemValueVersion</td><td class="datadesc">This contains Velue table version Development or Production</td></tr>
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fPASSWORD"></a>fPASSWORD</td><td class="datadesc">Database User Password</td></tr>
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fRun_INDEX_Table"></a>fRun_INDEX_Table</td><td></td></tr>
+<tr class="data"><td class="datatype">TString</td><td class="dataname"><a name="TMapUtils:fUSERNAME"></a>fUSERNAME</td><td class="datadesc">Database User name </td></tr>
+
+</table></div>
+</div>
+<h2><a id="TMapUtils:Class_Charts"></a>Class Charts</h2>
+<!--INHERITANCE TREE-->
+<table><tr><td width="10%"></td><td width="70%"><a href="ClassHierarchy.html">Inheritance Chart</a>:</td></tr><tr class="inhtree"><td width="10%"></td><td width="70%"><table class="inhtree"><tr><td>
+<table width="100%" border="0" cellpadding ="0" cellspacing="2"><tr>
+<td><table><tr>
+<td bgcolor="#f7f7f7" align="right">
+<tt>TObject</tt></td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><big><b><tt><a name="TMapUtils" href="./TMapUtils.html">TMapUtils</a></tt></b></big></center>
+</td>
+<td><table><tr>
+<td></td>
+</tr></table></td>
+</tr></table>
+</td></tr></table></td></tr></table>
+<h2>Function documentation</h2>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TMapUtils:TMapUtils" href="src/TMapUtils.cxx.html#RNC2AD">TMapUtils</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TMapUtils:TMapUtils@1" href="src/TMapUtils.cxx.html#JPE_9B">TMapUtils</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME, <span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE, <span class="keyword">const</span> <span class="keyword">char</span>* dbUSERNAME)</span><br />
+<div class="funccomm"><pre>
+ Constructor initializes Database host
+ Database and user name
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TMapUtils:_TMapUtils" href="src/TMapUtils.cxx.html#dnAJiC">~TMapUtils</a>()</span><br />
+<div class="funccomm"><pre> Default destructor
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:CreateSystem" href="src/TMapUtils.cxx.html#n7RFrC">CreateSystem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* system)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:PrintInfo" href="src/TMapUtils.cxx.html#H0KKKD">PrintInfo</a>()</span><br />
+<div class="funccomm"><pre> Prints information about Database settings
+ HOSTNAME, DATABASE, USERNAME
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TSQLServer * <a class="funcname" name="TMapUtils:ConnectDB" href="src/TMapUtils.cxx.html#kB7DRD">ConnectDB</a>()</span><br />
+<div class="funccomm"><pre>
+  Connecting to a Database on server specified in constructor
+  and returning pointer to TSQLServer Structure...
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:ScanMaps" href="src/TMapUtils.cxx.html#z2sE2C">ScanMaps</a>()</span><br />
+<div class="funccomm"><pre>  Connectos to DATBASE on HOSTNAME and Prints out System Names from
+  table System. They correcspond to MAP names in old version of MapManager
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:ScanSystem" href="src/TMapUtils.cxx.html#V1.6eD">ScanSystem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* tSystem)</span><br />
+<div class="funccomm"><pre>
+ Prints out Subsystems and Items for Given System
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:PrintItemTable" href="src/TMapUtils.cxx.html#PS_VdB">PrintItemTable</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum)</span><br />
+<div class="funccomm"><pre>
+
+
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:PrintItem" href="src/TMapUtils.cxx.html#mGHNgB">PrintItem</a>(<span class="keyword">const</span> <span class="keyword">char</span>* tSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> tMinRun, <a href="./ListOfTypes.html#Int_t">Int_t</a> tMaxRun)</span><br />
+<div class="funccomm"><pre>
+  This function Prints content of ValueDescription table for Given Item
+ specified by (System,SubSystem,Item) in Run ranges tMinRun -&gt; tMaxRun
+
+ NOTE. This will print all entries independent of author entry in the database
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TSQLResult &amp; <a class="funcname" name="TMapUtils:SelectValues" href="src/TMapUtils.cxx.html#Sick7C">SelectValues</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <span class="keyword">const</span> <span class="keyword">char</span>* fcValueType)</span><br />
+<div class="funccomm"><pre>
+ Selects Values from Database for given Item , Run Number and author and returns
+ TSQLResult to calling function. Also makes check on type of Item.
+
+ NOTE. If calling this function one must call it from <span class="string">"try"</span>-<span class="string">"catch"</span> block.
+ If error accures function will trow an exception.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:Get_Map_Int" href="src/TMapUtils.cxx.html#BBA53E">Get_Map_Int</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, TArrayI* fIntArray, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor = <span class="string">"*"</span>)</span><br />
+<div class="funccomm"><pre>
+  This routine initializes Integer Buffer passed to it and fills it with
+  Values for given Item. There are several advantages using this method.
+
+  1) User does not have to warry about deleting array if it is defined
+      as static. For example :
+   {
+       TIntBuffer  myDC_T0;
+       GetMapIntBuff(<span class="string">"DC_"</span>,<span class="string">"t0"</span>,<span class="string">"value"</span>,15678,&amp;myDC_T0);
+   }
+   after this braket buffer will be delated automaticaly.
+
+   2) <a href="./TMapUtils.html#TMapUtils:Class" title="TClass* TMapUtils::Class()">Class</a> TIntBuffer has bound check (unlike array of <a href="./ListOfTypes.html#int">int</a>'s).
+      if one will ask for non existing element in array it will not
+      couse segmentation falt.
+
+  NOTE: It is recomended to use this function instead of
+  GetMapInt to avoid memory leaks.
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:Get_Map_Float" href="src/TMapUtils.cxx.html#DrbHnE">Get_Map_Float</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fcSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* fcItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRun_no, TArrayF* fFloatArray, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor = <span class="string">"*"</span>)</span><br />
+<div class="funccomm"><pre>
+  This routine initializes Float Buffer passed to it and fills it with
+  Values for given Item. There are several advantages using this method.
+
+  1) User does not have to warry about deleting array if it is defined
+      as static. For example :
+   {
+       TFloatBuffer  myDC_T0;
+       GetMapFloatBuff(<span class="string">"DC_"</span>,<span class="string">"t0"</span>,<span class="string">"value"</span>,15678,&amp;myDC_T0);
+   }
+   after this braket buffer will be delated automaticaly.
+
+   2) <a href="./TMapUtils.html#TMapUtils:Class" title="TClass* TMapUtils::Class()">Class</a> TFloatBuffer has bound check (unlike array of <a href="./ListOfTypes.html#int">int</a>'s).
+      if one will ask for non existing element in array it will not
+      couse segmentation falt.
+
+  NOTE: It is recomended to use this function instead of
+  GetMapFloat to avoid memory leaks.
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetSystemID" href="src/TMapUtils.cxx.html#oFEbwC">GetSystemID</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* system_name, <a href="./ListOfTypes.html#Int_t">Int_t</a>* pSystem_ID)</span><br />
+<div class="funccomm"><pre>
+ This routine writes into pSystem_ID system ID for given System_name
+
+ returns 0 if system was found. -1 otherwise
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetSystemIDEx" href="src/TMapUtils.cxx.html#QMxvdC">GetSystemIDEx</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* system_name)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:TableExists" href="src/TMapUtils.cxx.html#YvHJ7B">TableExists</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* tblname)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:TableExists_Ex" href="src/TMapUtils.cxx.html#CzcRAC">TableExists_Ex</a>(TSQLServer* conn, <span class="keyword">const</span> <span class="keyword">char</span>* tblname)</span><br />
+<div class="funccomm"><pre>
+  Checks if Tbale  tblname exists in database
+  returns 0 if table exists throws exception otherwise.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetSubSystemID" href="src/TMapUtils.cxx.html#BpnwmE">GetSubSystemID</a>(TSQLServer* conn, <span class="keyword">int</span> system_id, <span class="keyword">const</span> <span class="keyword">char</span>* subsystem_name, <a href="./ListOfTypes.html#Int_t">Int_t</a>* pSubSystem_ID)</span><br />
+<div class="funccomm"><pre>
+  SubSystem in pSubSystem_ID variable
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetSubSystemIDEx" href="src/TMapUtils.cxx.html#BOKpKC">GetSubSystemIDEx</a>(TSQLServer* conn, <span class="keyword">int</span> system_id, <span class="keyword">const</span> <span class="keyword">char</span>* subsystem_name)</span><br />
+<div class="funccomm"><pre>
+ Returns SubSystem id from table SubSystem corresponding to given SystemID
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:GetItemEx" href="src/TMapUtils.cxx.html#b3d5iD">GetItemEx</a>(TSQLServer* conn, <span class="keyword">int</span> subsystem_id, <span class="keyword">const</span> <span class="keyword">char</span>* item_name, <a href="./TDBItem.html">TDBItem</a>* fMapItem)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetItem" href="src/TMapUtils.cxx.html#waU3xB">GetItem</a>(TSQLServer* fbConn, <span class="keyword">const</span> <span class="keyword">char</span>* tSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* tItem, <a href="./TDBItem.html">TDBItem</a>* tMapItem)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TMapUtils:GetRunIndex" href="src/TMapUtils.cxx.html#N198mB">GetRunIndex</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <a href="./TRunIndex.html">TRunIndex</a>* tRunIndex)</span><br />
+<div class="funccomm"><pre>
+ This routin finds latest ItemValueId from RunIndex table for given run number
+ and returns Record of Runindex entry in tRunIndex variable.
+ This is just wrapper for <a href="./TMapUtils.html#TMapUtils:GetRunIndexEx" title="void TMapUtils::GetRunIndexEx(TSQLServer* fbConn,TDBItem tMapItem,Int_t fcRunNum,const char* fcAuthor,TRunIndex* tRunIndex)">GetRunIndexEx</a> routin which throws exception if
+ ItemValueId is not found. returns 0 on success, -1 otherwise.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:GetRunIndexEx" href="src/TMapUtils.cxx.html#tO2OpD">GetRunIndexEx</a>(TSQLServer* fbConn, <a href="./TDBItem.html">TDBItem</a> tMapItem, <a href="./ListOfTypes.html#Int_t">Int_t</a> fcRunNum, <span class="keyword">const</span> <span class="keyword">char</span>* fcAuthor, <a href="./TRunIndex.html">TRunIndex</a>* tRunIndex)</span><br />
+<div class="funccomm"><pre>
+ This routin finds latest ItemValueId from RunIndex table for given run number
+ and returns Record of Runindex entry in tRunIndex variable.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TString <a class="funcname" name="TMapUtils:GetTableName" href="src/TMapUtils.cxx.html#IaHUnD">GetTableName</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dSystem, <span class="keyword">const</span> <span class="keyword">char</span>* dSubSystem, <span class="keyword">const</span> <span class="keyword">char</span>* dItem)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetDebugMode" href="src/TMapUtils.cxx.html#IppwYC">SetDebugMode</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> DbgMode)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetIndexTable" href="src/TMapUtils.cxx.html#x5nxfC">SetIndexTable</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fRunIndexTableName)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetDbVersion" href="src/TMapUtils.cxx.html#KedNwD">SetDbVersion</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fVersion)</span><br />
+<div class="funccomm"><pre>
+
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:PrintIntArray" href="src/TMapUtils.cxx.html#NK4o_">PrintIntArray</a>(TArrayI tmpIArray)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:PrintFloatArray" href="src/TMapUtils.cxx.html#k4yYcC">PrintFloatArray</a>(TArrayF tmpFArray)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TMapUtils:TMapUtils" href="src/TMapUtils.h.html#mEI3GB">TMapUtils</a>()</span><br />
+<div class="funccomm"><pre>
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetDBParams" href="src/TMapUtils.h.html#eWjOxD">SetDBParams</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME, <span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE, <span class="keyword">const</span> <span class="keyword">char</span>* dbUSERNAME)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetHost" href="src/TMapUtils.h.html#sWiWxC">SetHost</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbHOSTNAME)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetDatabase" href="src/TMapUtils.h.html#CYT65C">SetDatabase</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbDATABASE)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TMapUtils:SetPassword" href="src/TMapUtils.h.html#hrd.JE">SetPassword</a>(<span class="keyword">const</span> <span class="keyword">char</span>* dbPASSWORD)</span><br />
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: Fri Feb 24 17:40:12 2017</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

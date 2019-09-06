@@ -1,0 +1,644 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--                                             -->
+<!-- Author: Maurik Holtrop                      -->
+<!--                                             -->
+<!--                                             -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>TClasTool</title>
+<meta name="rating" content="General" />
+<meta name="objecttype" content="Manual" />
+<meta name="keywords" content="software development, CLAS Collaboration, ClasTool, Maurik Holtrop" />
+<meta name="description" content="ClasTool, A ROOT based system for analyzing CLAS Data." />
+<link rel="stylesheet" type="text/css" href="ROOT.css" id="ROOTstyle" />
+<script type="text/javascript" src="ROOT.js"></script>
+</head>
+<body BGCOLOR="#f7f7f7" LINK="#0000FF" VLINK="#551a8b" ALINK="#FF0000" TEXT="#000000" onload="javascript:SetValuesFromCookie();">
+<p align="center">
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+<img src="http://www.physics.unh.edu/~maurik/ClasTool/ClasTool3.gif" width="500" height="84">
+</p>
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">
+More information on this package is here.
+</a>
+<hr>
+<!-- Extra Index Info Goes Here -->
+<a name="TopOfPage"></a>
+<script type="text/javascript">WriteFollowPageBox('class TClasTool','','TClasTool.h');</script>
+<div id="toplinks">
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Quick Links:</span>
+<a class="descrheadentry" href="http://www.physics.unh.edu/~maurik/ClasTool">(UNKNOWN PRODUCT)</a>
+<a class="descrheadentry" href="http://root.cern.ch">ROOT Homepage</a>
+<a class="descrheadentry" href="./ClassIndex.html">Class Index</a>
+<a class="descrheadentry" href="./ClassHierarchy.html">Class Hierarchy</a></div>
+<script type="text/javascript">
+function onSearch() {
+var s='http://www.google.com/search?q=%s+site%3A%u+-site%3A%u%2Fsrc%2F+-site%3A%u%2Fexamples%2F';
+var ref=String(document.location.href).replace(/https?:\/\//,'').replace(/\/[^\/]*$/,'').replace(/\//g,'%2F');
+window.location.href=s.replace(/%u/ig,ref).replace(/%s/ig,escape(document.searchform.t.value));
+return false;}
+</script>
+<form id="searchform" name="searchform" onsubmit="return onSearch()" action="javascript:onSearch();" method="post">
+<input name="t" size="30" value="Search documentation..." onfocus="if (document.searchform.t.value=='Search documentation...') document.searchform.t.value='';"></input>
+<a id="searchlink"  title="www.google.com"  href="javascript:onSearch();" onclick="return onSearch()">Search</a></form>
+</div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Source:</span>
+<a class="descrheadentry" href="src/TClasTool.h.html">header file</a>
+<a class="descrheadentry" href="src/TClasTool.cxx.html">source file</a>
+<a class="descrheadentry" href="TClasTool_Tree.pdf">inheritance tree (.pdf)</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TClasTool.h?view=log">viewVC header</a> <a class="descrheadentry" href="http://root.cern.ch/viewcvs/trunk/TClasTool.cc?view=log">viewVC source</a> 
+</div></div>
+<div class="descrhead"><div class="descrheadcontent">
+<span class="descrtitle">Sections:</span>
+<a class="descrheadentry" href="#TClasTool:description">class description</a> 
+<a class="descrheadentry" href="#TClasTool:Function_Members">function members</a>
+<a class="descrheadentry" href="#TClasTool:Data_Members">data members</a>
+<a class="descrheadentry" href="#TClasTool:Class_Charts">class charts</a>
+</div></div>
+</div>
+<div class="location">
+<a class="locationlevel" href="index.html">(UNKNOWN PRODUCT)</a>
+ &#187; <a class="locationlevel" href="./TCLASTOOL_Index.html">TCLASTOOL</a>
+ &#187; <a class="locationlevel" href="#TopOfPage">TClasTool</a>
+</div>
+<div class="dropshadow"><div class="withshadow"><h1><a name="TClasTool:description"></a>class TClasTool: public TObject</h1>
+<div class="classdescr">
+<pre>
+
+</pre><!-- TDocHtmlDirective start --> <!--
+/* -->
+</pre><H1> TClasTool </H1>
+<H2>A framework for ROOT based analysis of CLAS data.</H2>
+<p>Created at UNH by <b><i><a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></b></i> 
+and <b><i>Gagik Gavalian</b></i>
+<p>
+This class provides a flexible way to analyze CLAS data using the ROOT system.
+It was originally intended to read ROOT based DST files created by the
+<i>WriteRootDST</i> utility, but has since then been expanded to handle other
+data formats as well. See the TNT10Reader class for a reader of <i>ntuple-10</i>
+hbook files.</p>
+<H3>Implementation Philosophy</H3>
+I have doubted for quite some time whether the layered approach of TClasTool is the 
+best way to implement an analysis. Why not put everything in the reader, and so have
+only one class to deal with? In the end I stuck to this segmented approach for
+several reasons: 
+<ol>
+<li> It gives more flexibility to write readers for different data
+formats. </li>
+<li> Methods that are useful for all data formats can be implemented in TClasTool, those
+that apply only to specific data formats go in to the reader.</li>
+<li> If you don't like this implementation of TClasTool, you can create your own.
+<li> You can always revert to using only the reader, by passing the TClasTool. </li>
+</ol> 
+<p> The penalty is an additional layer of classes, and the overhead (very slight) in passing
+calls from one layer to the underlying layer. </p>
+<p>Note that in general this framework is <strong>not</strong> build to be the fastest 
+code with the smallest DST. The idea is to have something that is <strong>reliable, 
+understandable and comprehensive.</strong></p>
+<H3>Implementation</H3>
+<p>The TClasTool class acts as an interface to the data through a DST reader class.
+You start by connecting to a <emphasis>reader</emphasis>
+with a call to InitDSTReader(). Then you open one or more DST files with Add().
+After this you can loop through the data (with Next()) and retreive the relevant
+physics 3 and 4 vectors with various other methods. </p>
+<p>I hope that eventually this class can be expanded to also connect to a TFiducialCut class
+to provide CLAS fiducial cuts, a TMomentumCorrection class to provide momentum
+corrections and perhaps even particle id corrections, kinematic fitting
+any other common tasks that form a complete analysis.</p>
+<h3>ClasTool Namespace</h3>
+The implementation of TClasTool also includes a ClasTool namespace which currently includes some
+general use arrays and some functions:
+<ol>
+<li>  Int_t    GetTypeFromPid(Int_t pid); // Finds the index (internally used type) from PDG PID</li>
+<li>  Int_t    GetPidFromType(Int_t type);// Finds the PDG PID from the index. </li>
+<li>  Float_t  GetPartMassID(Int_t pid);  // Finds the mass of a particle with PDG PID. </li>
+<li>  const char * GetPartName(Int_t pid); // Finds the name of a particle with PDG PID. </li>
+<li>  const char * GetShortPartName(Int_t pid); // Same, but get the short name. </li>
+<li>  static const Float_t fgParticle_Mass[]=  // Masses of particles, indexed by internal type. </li>
+<li>  static const Int_t   fgParticle_Id[]=   // Id's of particles.  , indexed by internal type.  </li>
+<li>  static const char   *fgParticle_Name[]= // Names of the particles.
+<li>  static const char   *fgParticle_ShortName[]= // Short Names (abbreviations) of the particles, 4 chars or less each.
+<li>  static const char   *fgParticle_Symbol[]= // Symbols (as in "#pi^{+}" for pi+.
+</ol>
+<p>
+Additional information about this package, including an overview, can be found at the
+<a href="http://www.physics.unh.edu/~maurik/ClasTool">ClasTool Documentation</a> web pages.
+</p>
+<pre> 
+<!-- */ 
+ --> 
+<!-- TDocHtmlDirective end --><pre>
+</pre></div>
+</div></div>
+
+<div id="functions">
+<h2><a id="TClasTool:Function_Members"></a>Function Members (Methods)</h2>
+<div class="access" id="funcpubl"><b>public:</b>
+<table class="func" id="tabfuncpubl" cellspacing="0">
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TClasTool:TClasTool">TClasTool</a>()</td></tr>
+<tr class="func"><td class="funcret"></td><td class="funcname"><a class="funcname" href="#TClasTool:TClasTool@1">TClasTool</a>(<span class="keyword">const</span> <a href="./TClasTool.html">TClasTool</a>&amp;)</td></tr>
+<tr class="func"><td class="funcret"> virtual</td><td class="funcname"><a class="funcname" href="#TClasTool:_TClasTool">~TClasTool</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AbstractMethod"><span class="baseclass">TObject::</span>AbstractMethod</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:Add">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:AddEPICFile">AddEPICFile</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:AddFile">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:AppendPad"><span class="baseclass">TObject::</span>AppendPad</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Browse"><span class="baseclass">TObject::</span>Browse</a>(TBrowser* b)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:Check_Reader_Defined">Check_Reader_Defined</a>()</td></tr>
+<tr class="func"><td class="funcret">static TClass*</td><td class="funcname"><a class="funcname" href="#TClasTool:Class">Class</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:ClassName"><span class="baseclass">TObject::</span>ClassName</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Clear"><span class="baseclass">TObject::</span>Clear</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:Clone"><span class="baseclass">TObject::</span>Clone</a>(<span class="keyword">const</span> <span class="keyword">char</span>* newname = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Compare"><span class="baseclass">TObject::</span>Compare</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Copy"><span class="baseclass">TObject::</span>Copy</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>&amp; object) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:Correct_ECPB_bank">Correct_ECPB_bank</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* e)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:Correct_ECPB_bank@1">Correct_ECPB_bank</a>(<a href="./TECPBClass.html">TECPBClass</a>* eco)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Delete"><span class="baseclass">TObject::</span>Delete</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:DistancetoPrimitive"><span class="baseclass">TObject::</span>DistancetoPrimitive</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Draw"><span class="baseclass">TObject::</span>Draw</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DrawClass"><span class="baseclass">TObject::</span>DrawClass</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:DrawClone"><span class="baseclass">TObject::</span>DrawClone</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Dump"><span class="baseclass">TObject::</span>Dump</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Error"><span class="baseclass">TObject::</span>Error</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute"><span class="baseclass">TObject::</span>Execute</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Execute@1"><span class="baseclass">TObject::</span>Execute</a>(TMethod* method, TObjArray* params, <a href="./ListOfTypes.html#Int_t">Int_t</a>* error = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ExecuteEvent"><span class="baseclass">TObject::</span>ExecuteEvent</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> event, <a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Fatal"><span class="baseclass">TObject::</span>Fatal</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TObject:FindObject@1"><span class="baseclass">TObject::</span>FindObject</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetBankRow">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetBeamEnergy">GetBeamEnergy</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetCurrentEvent">GetCurrentEvent</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TDCPBClass.html">TDCPBClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetDCPB">GetDCPB</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetDrawOption"><span class="baseclass">TObject::</span>GetDrawOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Long_t">Long_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetDtorOnly"><span class="baseclass">TObject::</span>GetDtorOnly</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Double_t">Double_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetEntries">GetEntries</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Double_t">Double_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetEntriesFast">GetEntriesFast</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetEntry">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TEPICClass.html">TEPICClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetEPICClass">GetEPICClass</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetEPICValue">GetEPICValue</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fName)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetEventNumber">GetEventNumber</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TEVNTClass.html">TEVNTClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetEVNT">GetEVNT</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</td></tr>
+<tr class="func"><td class="funcret"><a href="./THEADERClass.html">THEADERClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetHEADER">GetHEADER</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetHelicity">GetHelicity</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetIconName"><span class="baseclass">TObject::</span>GetIconName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:GetInvariants">GetInvariants</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a>* Q2, <a href="./ListOfTypes.html#Float_t">Float_t</a>* W2)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetName"><span class="baseclass">TObject::</span>GetName</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetNFiles">GetNFiles</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetNotify">GetNotify</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetNPart">GetNPart</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetNRows">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetObjectInfo"><span class="baseclass">TObject::</span>GetObjectInfo</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> px, <a href="./ListOfTypes.html#Int_t">Int_t</a> py) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetObjectStat"><span class="baseclass">TObject::</span>GetObjectStat</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Option_t">Option_t</a>*</td><td class="funcname"><a class="funcname" href="#TObject:GetOption"><span class="baseclass">TObject::</span>GetOption</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">TVector3</td><td class="funcname"><a class="funcname" href="#TClasTool:GetPart3Vector">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">TLorentzVector</td><td class="funcname"><a class="funcname" href="#TClasTool:GetPart4Vector">GetPart4Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetPartCharge">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:GetPartID">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret">TVector3</td><td class="funcname"><a class="funcname" href="#TClasTool:GetPartVertex">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TVirtualReader.html">TVirtualReader</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetReader">GetReader</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">const</span> <span class="keyword">char</span>*</td><td class="funcname"><a class="funcname" href="#TObject:GetTitle"><span class="baseclass">TObject::</span>GetTitle</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret">TChain*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetTree">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVNT"</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#UInt_t">UInt_t</a></td><td class="funcname"><a class="funcname" href="#TObject:GetUniqueID"><span class="baseclass">TObject::</span>GetUniqueID</a>() <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./TVERTClass.html">TVERTClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:GetVert">GetVert</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> part1, <a href="./ListOfTypes.html#Int_t">Int_t</a> part2)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:HandleTimer"><span class="baseclass">TObject::</span>HandleTimer</a>(TTimer* timer)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#ULong_t">ULong_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Hash"><span class="baseclass">TObject::</span>Hash</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Info"><span class="baseclass">TObject::</span>Info</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> <span class="keyword">char</span>* classname) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:InheritsFrom@1"><span class="baseclass">TObject::</span>InheritsFrom</a>(<span class="keyword">const</span> TClass* cl) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:InitDSTReader">InitDSTReader</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* readertype = <span class="string">"ROOTDSTR"</span>)</td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:InitDSTReader@1">InitDSTReader</a>(<a href="./TVirtualReader.html">TVirtualReader</a>* reader)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Inspect"><span class="baseclass">TObject::</span>Inspect</a>() <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:InvertBit"><span class="baseclass">TObject::</span>InvertBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="func"><td class="funcret">virtual TClass*</td><td class="funcname"><a class="funcname" href="#TClasTool:IsA">IsA</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsEqual"><span class="baseclass">TObject::</span>IsEqual</a>(<span class="keyword">const</span> <a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsFolder"><span class="baseclass">TObject::</span>IsFolder</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsOnHeap"><span class="baseclass">TObject::</span>IsOnHeap</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsSortable"><span class="baseclass">TObject::</span>IsSortable</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:IsZombie"><span class="baseclass">TObject::</span>IsZombie</a>() <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ls"><span class="baseclass">TObject::</span>ls</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MayNotUse"><span class="baseclass">TObject::</span>MayNotUse</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method) <span class="keyword">const</span></td></tr>
+<tr class="func"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TClasTool:Next">Next</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Notify"><span class="baseclass">TObject::</span>Notify</a>()</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Obsolete"><span class="baseclass">TObject::</span>Obsolete</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* asOfVers, <span class="keyword">const</span> <span class="keyword">char</span>* removedFromVers) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete@1"><span class="baseclass">TObject::</span>operator delete</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:operator_delete[]@1"><span class="baseclass">TObject::</span>operator delete[]</a>(<span class="keyword">void</span>* ptr, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new@1"><span class="baseclass">TObject::</span>operator new</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span>*</td><td class="funcname"><a class="funcname" href="#TObject:operator_new[]@1"><span class="baseclass">TObject::</span>operator new[]</a>(<a href="./ListOfTypes.html#size_t">size_t</a> sz, <span class="keyword">void</span>* vp)</td></tr>
+<tr class="func"><td class="funcret"><a href="./TClasTool.html">TClasTool</a>&amp;</td><td class="funcname"><a class="funcname" href="#TClasTool:operator_">operator=</a>(<span class="keyword">const</span> <a href="./TClasTool.html">TClasTool</a>&amp;)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Paint"><span class="baseclass">TObject::</span>Paint</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Pop"><span class="baseclass">TObject::</span>Pop</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:Print">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:PrintEPICPosition">PrintEPICPosition</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:PrintEventStatus">PrintEventStatus</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Read"><span class="baseclass">TObject::</span>Read</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:RecursiveRemove"><span class="baseclass">TObject::</span>RecursiveRemove</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* obj)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:ResetBit"><span class="baseclass">TObject::</span>ResetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SaveAs"><span class="baseclass">TObject::</span>SaveAs</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename = <span class="string">""</span>, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>) <span class="keyword">const</span><span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SavePrimitive"><span class="baseclass">TObject::</span>SavePrimitive</a>(<a href="./ListOfTypes.html#ostream">ostream</a>&amp; out, <a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:SetBeamEnergy">SetBeamEnergy</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> fbm)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit@1"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f)</td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetBit"><span class="baseclass">TObject::</span>SetBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f, <a href="./ListOfTypes.html#Bool_t">Bool_t</a> set)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDrawOption"><span class="baseclass">TObject::</span>SetDrawOption</a>(<a href="./ListOfTypes.html#Option_t">Option_t</a>* option = <span class="string">""</span>)<span class="funcprop"><abbr title="has a popup menu entry">MENU</abbr> </span></td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetDtorOnly"><span class="baseclass">TObject::</span>SetDtorOnly</a>(<span class="keyword">void</span>* obj)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:SetNoScalers">SetNoScalers</a>()</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:SetNotify">SetNotify</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a>)</td></tr>
+<tr class="funcinh"><td class="funcret">static <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetObjectStat"><span class="baseclass">TObject::</span>SetObjectStat</a>(<a href="./ListOfTypes.html#Bool_t">Bool_t</a> stat)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SetUniqueID"><span class="baseclass">TObject::</span>SetUniqueID</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> uid)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:ShowMembers">ShowMembers</a>(TMemberInspector&amp;)</td></tr>
+<tr class="func"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:Streamer">Streamer</a>(TBuffer&amp;)</td></tr>
+<tr class="func"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TClasTool:StreamerNVirtual">StreamerNVirtual</a>(TBuffer&amp; ClassDef_StreamerNVirtual_b)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:SysError"><span class="baseclass">TObject::</span>SysError</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Bool_t">Bool_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBit"><span class="baseclass">TObject::</span>TestBit</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:TestBits"><span class="baseclass">TObject::</span>TestBits</a>(<a href="./ListOfTypes.html#UInt_t">UInt_t</a> f) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:UseCurrentStyle"><span class="baseclass">TObject::</span>UseCurrentStyle</a>()</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:Warning"><span class="baseclass">TObject::</span>Warning</a>(<span class="keyword">const</span> <span class="keyword">char</span>* method, <span class="keyword">const</span> <span class="keyword">char</span>* msgfmt) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0)</td></tr>
+<tr class="funcinh"><td class="funcret">virtual <a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="funcname"><a class="funcname" href="#TObject:Write@1"><span class="baseclass">TObject::</span>Write</a>(<span class="keyword">const</span> <span class="keyword">char</span>* name = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> option = 0, <a href="./ListOfTypes.html#Int_t">Int_t</a> bufsize = 0) <span class="keyword">const</span></td></tr>
+
+</table></div>
+<div class="access" id="funcprot"><b>protected:</b>
+<table class="func" id="tabfuncprot" cellspacing="0">
+<tr class="funcinh"><td class="funcret">virtual <span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:DoError"><span class="baseclass">TObject::</span>DoError</a>(<span class="keyword">int</span> level, <span class="keyword">const</span> <span class="keyword">char</span>* location, <span class="keyword">const</span> <span class="keyword">char</span>* fmt, va_list va) <span class="keyword">const</span></td></tr>
+<tr class="funcinh"><td class="funcret"><span class="keyword">void</span></td><td class="funcname"><a class="funcname" href="#TObject:MakeZombie"><span class="baseclass">TObject::</span>MakeZombie</a>()</td></tr>
+<tr class="func"><td class="funcret"><a href="./TVERTClass.html">TVERTClass</a>*</td><td class="funcname"><a class="funcname" href="#TClasTool:Vert_Error_Handler">Vert_Error_Handler</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> NRows, <a href="./ListOfTypes.html#Int_t">Int_t</a> track1, <a href="./ListOfTypes.html#Int_t">Int_t</a> track2)</td></tr>
+
+</table></div>
+</div>
+
+<div id="datamembers">
+<h2><a name="TClasTool:Data_Members"></a>Data Members</h2>
+<div class="access" id="enumpubl"><b>public:</b>
+<table class="data" id="tabenumpubl" cellspacing="0">
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span>EStatusBits { </td><td class="dataname"><a href="#TObject:kCanDelete">kCanDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kMustCleanup">kMustCleanup</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kObjInCanvas">kObjInCanvas</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kIsReferenced">kIsReferenced</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kHasUUID">kHasUUID</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kCannotPick">kCannotPick</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNoContextMenu">kNoContextMenu</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kInvalidObject">kInvalidObject</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+<tr class="datainh"><td class="datatype">enum <span class="baseclass">TObject::</span><i>[unnamed]</i> { </td><td class="dataname"><a href="#TObject:kIsOnHeap">kIsOnHeap</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kNotDeleted">kNotDeleted</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kZombie">kZombie</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kBitMask">kBitMask</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kSingleKey">kSingleKey</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kOverwrite">kOverwrite</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype"></td><td class="dataname"><a href="#TObject:kWriteDelete">kWriteDelete</a></td><td></td></tr>
+<tr class="datainh"><td class="datatype">};</td><td></td><td></td></tr>
+
+</table></div>
+<div class="access" id="datapubl"><b>public:</b>
+<table class="data" id="tabdatapubl" cellspacing="0">
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TClasTool:fDebug_Mode"></a>fDebug_Mode</td><td class="datadesc">Sets the verbosity of the code. </td></tr>
+<tr class="data"><td class="datatype"><a href="./TVirtualReader.html">TVirtualReader</a>*</td><td class="dataname"><a name="TClasTool:fReader"></a>fReader</td><td class="datadesc">This is a pointer to the actual reader used.</td></tr>
+
+</table></div>
+<div class="access" id="dataprot"><b>protected:</b>
+<table class="data" id="tabdataprot" cellspacing="0">
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Float_t">Float_t</a></td><td class="dataname"><a name="TClasTool:fEBeam"></a>fEBeam</td><td class="datadesc">Beam energy. Set with SetBeamEnergy().</td></tr>
+<tr class="data"><td class="datatype"><a href="./ListOfTypes.html#Int_t">Int_t</a></td><td class="dataname"><a name="TClasTool:isReaderDefined"></a>isReaderDefined</td><td class="datadesc">True is reader is initialized.</td></tr>
+
+</table></div>
+</div>
+<h2><a id="TClasTool:Class_Charts"></a>Class Charts</h2>
+<!--INHERITANCE TREE-->
+<table><tr><td width="10%"></td><td width="70%"><a href="ClassHierarchy.html">Inheritance Chart</a>:</td></tr><tr class="inhtree"><td width="10%"></td><td width="70%"><table class="inhtree"><tr><td>
+<table width="100%" border="0" cellpadding ="0" cellspacing="2"><tr>
+<td><table><tr>
+<td bgcolor="#f7f7f7" align="right">
+<tt>TObject</tt></td>
+</tr></table></td>
+<td>&larr;</td><td>
+<center><big><b><tt><a name="TClasTool" href="./TClasTool.html">TClasTool</a></tt></b></big></center>
+</td>
+<td><table><tr>
+<td>&larr;</td><td><table><tr>
+<td bgcolor="#f7f7f7"><table><tr><td>
+<center><tt><a name="TFilter" href="./TFilter.html">TFilter</a></tt></center></td>
+<td></td>
+</tr></table></td>
+</tr></table></td>
+</tr></table></td>
+</tr></table>
+</td></tr></table></td></tr></table>
+<h2>Function documentation</h2>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TClasTool:TClasTool" href="src/TClasTool.cxx.html#g82QIB">TClasTool</a>()</span><br />
+<div class="funccomm"><pre>
+ <a href="./TClasTool.html#TClasTool:Class" title="TClass* TClasTool::Class()">Class</a> default constructor.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TClasTool:_TClasTool" href="src/TClasTool.cxx.html#iqWvHC">~TClasTool</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TClasTool.html#TClasTool:Class" title="TClass* TClasTool::Class()">Class</a> default destructor.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:InitDSTReader" href="src/TClasTool.cxx.html#CWar2C">InitDSTReader</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* readertype = <span class="string">"ROOTDSTR"</span>)</span><br />
+<div class="funccomm"><pre>
+ Initialize the DST reader if not already defined.
+
+ Argument can be:
+    ROOTDSTR   -- start a <a href="./TDSTReader.html">TDSTReader</a> [default]
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:InitDSTReader@1" href="src/TClasTool.cxx.html#kEQ7MB">InitDSTReader</a>(<a href="./TVirtualReader.html">TVirtualReader</a>* reader)</span><br />
+<div class="funccomm"><pre> Set the current DST reader to reader.
+ Argument can be any DST class derived from <a href="./TVirtualReader.html">TVirtualReader</a>
+
+ Example:
+ <a href="./TClasTool.html">TClasTool</a> *ct=new <a href="./TClasTool.html">TClasTool</a>();
+ TNT10Reader *nt=new TNT10Reader();
+ ct-&gt;<a href="./TClasTool.html#TClasTool:InitDSTReader" title="Int_t TClasTool::InitDSTReader(const Char_t* readertype=&quot;ROOTDSTR&quot;) or overloads">InitDSTReader</a>(nt);
+ ct-&gt;<a href="./TClasTool.html#TClasTool:Add" title="Int_t TClasTool::Add(const Char_t* filename)">Add</a>(<span class="string">"myfile.hbook"</span>);
+
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:Add" href="src/TClasTool.cxx.html#dI84OB">Add</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</span><br />
+<div class="funccomm"><pre> <a href="./TClasTool.html#TClasTool:Add" title="Int_t TClasTool::Add(const Char_t* filename)">Add</a> one or more files to the chain of files to be analyzed, using
+ wildcard format.
+ This filename is passed on to the DST reader that is
+ currently initialized.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:AddFile" href="src/TClasTool.cxx.html#QxtPtE">AddFile</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* filename)</span><br />
+<div class="funccomm"><pre> <a href="./TClasTool.html#TClasTool:Add" title="Int_t TClasTool::Add(const Char_t* filename)">Add</a> a single file to the chain of files to be analyzed.
+ This filename is passed on to the DST reader that is
+ currently initialized.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:AddEPICFile" href="src/TClasTool.cxx.html#HMpF9D">AddEPICFile</a>(<span class="keyword">const</span> <span class="keyword">char</span>* filename, <a href="./ListOfTypes.html#Int_t">Int_t</a> nentries)</span><br />
+<div class="funccomm"><pre><a href="./TClasTool.html#TClasTool:Add" title="Int_t TClasTool::Add(const Char_t* filename)">Add</a> a single file to the EPIC chain of files.
+Files must be added in order of run number for
+<a href="./TClasTool.html#TClasTool:GetEPICValue" title="Float_t TClasTool::GetEPICValue(const char* fName)">GetEPICValue</a> to work correctly. Only for use with <a href="./TDSTReader.html">TDSTReader</a>
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:Check_Reader_Defined" href="src/TClasTool.cxx.html#vrxhfC">Check_Reader_Defined</a>()</span><br />
+<div class="funccomm"><pre>
+ Internal function that checks if the reader is ok.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:Next" href="src/TClasTool.cxx.html#p1Dll">Next</a>()</span><br />
+<div class="funccomm"><pre> <a href="./#TObject:Read" title="Int_t TObject::Read(const char* name)">Read</a> the next event from the currently attached file.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a> * <a class="funcname" name="TClasTool:GetBankRow" href="src/TClasTool.cxx.html#tQRou">GetBankRow</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname, <a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</span><br />
+<div class="funccomm"><pre> Return the bank with bankname (i.e. <span class="string">"EVNT"</span>) at row nrow.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetCurrentEvent" href="src/TClasTool.cxx.html#tq7zZD">GetCurrentEvent</a>()</span><br />
+<div class="funccomm"><pre> Return the sequence number of the current event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Double_t">Double_t</a> <a class="funcname" name="TClasTool:GetEntries" href="src/TClasTool.cxx.html#IggFc">GetEntries</a>()</span><br />
+<div class="funccomm"><pre> Return the number of events (entries) in all files loaded.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Double_t">Double_t</a> <a class="funcname" name="TClasTool:GetEntriesFast" href="src/TClasTool.cxx.html#hLLjXB">GetEntriesFast</a>()</span><br />
+<div class="funccomm"><pre> Return the number of events (entries) in all files,
+ without checking. This is faster, but could return
+ the wrong number is <a href="./TClasTool.html#TClasTool:GetEntries" title="Double_t TClasTool::GetEntries()">GetEntries</a>() was not called
+ earlier.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetEntry" href="src/TClasTool.cxx.html#qe3OtB">GetEntry</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> entry = -1, <a href="./ListOfTypes.html#Int_t">Int_t</a> getall = 0)</span><br />
+<div class="funccomm"><pre> Get a specific entry from the file with sequence number entry.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./THEADERClass.html">THEADERClass</a> * <a class="funcname" name="TClasTool:GetHEADER" href="src/TClasTool.cxx.html#hupXQE">GetHEADER</a>()</span><br />
+<div class="funccomm"><pre> Return a pointer to the current HEADER bank.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TClasTool:GetEPICValue" href="src/TClasTool.cxx.html#tGVf2B">GetEPICValue</a>(<span class="keyword">const</span> <span class="keyword">char</span>* fName)</span><br />
+<div class="funccomm"><pre>Get the EPIC value corresponding to fName
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEPICClass.html">TEPICClass</a> * <a class="funcname" name="TClasTool:GetEPICClass" href="src/TClasTool.cxx.html#JmRZFE">GetEPICClass</a>()</span><br />
+<div class="funccomm"><pre> Return a pointer to the current EPIC bank.
+ Returns the current EPIC without checking to see
+ if it corresponds to the current physics event.
+ Calling GETEPICValue first will ensure the EPIC bank
+ corresponds to the physics bank.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetEventNumber" href="src/TClasTool.cxx.html#x9vZgD">GetEventNumber</a>()</span><br />
+<div class="funccomm"><pre> Return the (physics) event number for current event.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetNFiles" href="src/TClasTool.cxx.html#CPZ4bE">GetNFiles</a>()</span><br />
+<div class="funccomm"><pre> Return the number of files currently loaded.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a> * <a class="funcname" name="TClasTool:GetNotify" href="src/TClasTool.cxx.html#kAktx">GetNotify</a>()</span><br />
+<div class="funccomm"><pre> Return a pointer to the <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a> class.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetNPart" href="src/TClasTool.cxx.html#IMe2DE">GetNPart</a>()</span><br />
+<div class="funccomm"><pre> Calls <a href="./TClasTool.html#TClasTool:GetNPart" title="Int_t TClasTool::GetNPart()">GetNPart</a> on the attached DST Reader, which should return
+ the number of particles that this event contains.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetNRows" href="src/TClasTool.cxx.html#hEmEFE">GetNRows</a>(<span class="keyword">const</span> <a href="./ListOfTypes.html#Char_t">Char_t</a>* bankname = <span class="string">"EVNT"</span>)</span><br />
+<div class="funccomm"><pre> Get the number of rows for the bank in bankname.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetPartID" href="src/TClasTool.cxx.html#yrFX_B">GetPartID</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Calls the <a href="./TClasTool.html#TClasTool:GetPartID" title="Int_t TClasTool::GetPartID(Int_t indx)">GetPartID</a> on the attached DST Reader, which should return
+ the particle id of the the particle at index indx.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetPartCharge" href="src/TClasTool.cxx.html#YJrYrE">GetPartCharge</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Calls the <a href="./TClasTool.html#TClasTool:GetPartCharge" title="Int_t TClasTool::GetPartCharge(Int_t indx)">GetPartCharge</a> on the attached DST Reader, which should return
+ the charge of the particle at index indx.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TClasTool:GetPart3Vector" href="src/TClasTool.cxx.html#WqM8CB">GetPart3Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Call the <a href="./TClasTool.html#TClasTool:GetPart3Vector" title="TVector3 TClasTool::GetPart3Vector(Int_t indx)">GetPart3Vector</a> on the attached DST Reader, which should return
+ the TVector3 momentum vector of the particle.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TLorentzVector <a class="funcname" name="TClasTool:GetPart4Vector" href="src/TClasTool.cxx.html#DCq9EE">GetPart4Vector</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre>
+ Returns the TLorentzVector (4-vector) of the particle's 4-momentum.
+ Calls <a href="./TClasTool.html#TClasTool:GetPart3Vector" title="TVector3 TClasTool::GetPart3Vector(Int_t indx)">GetPart3Vector</a> and GetPartMassID(<a href="./TClasTool.html#TClasTool:GetPartID" title="Int_t TClasTool::GetPartID(Int_t indx)">GetPartID</a>(indx)) to construct
+ the 4-momentum from the 3-momentum and the mass.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TVector3 <a class="funcname" name="TClasTool:GetPartVertex" href="src/TClasTool.cxx.html#FCfdwE">GetPartVertex</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> indx)</span><br />
+<div class="funccomm"><pre> Call the <a href="./TClasTool.html#TClasTool:GetPartVertex" title="TVector3 TClasTool::GetPartVertex(Int_t indx)">GetPartVertex</a> on the attached DST Reader, which should return
+ the TVector3 vertex vector of the particle.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:Correct_ECPB_bank" href="src/TClasTool.cxx.html#TkpKlC">Correct_ECPB_bank</a>(<a href="./TEVNTClass.html">TEVNTClass</a>* e)</span><br />
+<div class="funccomm"><pre>
+ See <a href="./TClasTool.html">TClasTool</a>::<a href="./TClasTool.html#TClasTool:Correct_ECPB_bank" title="Int_t TClasTool::Correct_ECPB_bank(TEVNTClass* e) or overloads">Correct_ECPB_bank</a>(<a href="./TECPBClass.html">TECPBClass</a> *eco)
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:Correct_ECPB_bank@1" href="src/TClasTool.cxx.html#wa8vwE">Correct_ECPB_bank</a>(<a href="./TECPBClass.html">TECPBClass</a>* eco)</span><br />
+<div class="funccomm"><pre>
+ Correct the incorrect values for Ein or Eout (or both) in the ECPB bank for the
+ particle stored in the <a href="./TEVNTClass.html">TEVNTClass</a> bank given.
+
+ This routine is needed because of an error in the ECPB bank construction which
+ occasionally has multiple copies for the same EC hit, but some of these copies
+ are missing Ein or Eout or both. They WILL have Innstr and Outstr, which indicates
+ that there SHOULD be a non zero entry for Ein and Eout.
+
+ Further documentation can be found at:
+ http://clasweb.jlab.org/cgi-bin/ENOTE/enote.pl?nb=eg2&amp;action=view&amp;page=84
+
+ So before using Ein and/or Eout from the ECPB you want to make the following
+ lines of code, assuming *<a href="./TEVNTClass.html">evnt</a> is your <a href="./TEVNTClass.html">TEVNTClass</a> object for the event, and
+ *ec is the TECPBObject for that event:
+
+ if( ( (ec-&gt;Ein ==0 &amp;&amp; ec-&gt;Innstr&gt;0) || (ec-&gt;Eout == 0 &amp;&amp; ec-&gt;Outstr&gt;0) ) &amp;&amp; ec-&gt;Etot&gt;0.){
+     <a href="./ListOfTypes.html#Int_t">Int_t</a> stat = cltool-&gt;<a href="./TClasTool.html#TClasTool:Correct_ECPB_bank" title="Int_t TClasTool::Correct_ECPB_bank(TEVNTClass* e) or overloads">Correct_ECPB_bank</a>(<a href="./TEVNTClass.html">evnt</a>);
+ }
+
+ Returns in stat whether 0, 1 or 2 corrections were made to the ECPB banks values.
+
+ (Created by Maurik Holtrop, UNH, 2006-03-24 )
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:GetInvariants" href="src/TClasTool.cxx.html#JISvlB">GetInvariants</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a>* Q2, <a href="./ListOfTypes.html#Float_t">Float_t</a>* W2)</span><br />
+<div class="funccomm"><pre> Returns four momentum square and the invariant mass square in *Q2 and *W2.
+
+</pre><!-- TDocHtmlDirective start -->  /* > 
+The routines calculates the Q<sup>2</sup> as 2 P<sub>e</sub> E<sub>beam</sub> (1 - cos <font face="Symbol">q</font>)
+and the invariant mass W<sup>2</sup> as M<sub>p</sub><sup>2</sup>+ 2 M<sub>p</sub> (E<sub>beam</sub>-P<sub>e</sub> ) - Q<sup>2</sup>,
+where P<sub>e</sub> is the momentum of the scattered electron and <font face="Symbol">q</font> is the angle with respect to the beam,
+and E<sub>beam</sub> is the beam energy, M<sub>p</sub> is the mass of the proton. </p>
+<p><strong>Note:</strong> To get meaningful results from this routine you must have set the beam energy correctly with SetBeamEnergy.<br>
+The code assumes that the zero-index particle is the electron.
+  <pre>
+  */
+ 
+<!-- TDocHtmlDirective end --><pre>
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TVERTClass.html">TVERTClass</a>* <a class="funcname" name="TClasTool:GetVert" href="src/TClasTool.cxx.html#mrul5">GetVert</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> part1, <a href="./ListOfTypes.html#Int_t">Int_t</a> part2)</span><br />
+<div class="funccomm"><pre>
+ This function will return a pointer to the correct <a href="./TVERTClass.html">TVERTClass</a> bank
+ that is associated with the two tracks that are pointed to
+ by the integer indexes into the EVNT bank, part1 and part2.
+
+ Among other methods, you can locate the correct indexes
+ for particle type X, using the <a href="./TPartSieve.html">TPartSieve</a>::GetIndex()
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TVERTClass.html">TVERTClass</a>* <a class="funcname" name="TClasTool:Vert_Error_Handler" href="src/TClasTool.cxx.html#EySEgB">Vert_Error_Handler</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> NRows, <a href="./ListOfTypes.html#Int_t">Int_t</a> track1, <a href="./ListOfTypes.html#Int_t">Int_t</a> track2)</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Int_t">Int_t</a> <a class="funcname" name="TClasTool:GetHelicity" href="src/TClasTool.cxx.html#Uu2Ae">GetHelicity</a>()</span><br />
+<div class="funccomm"><pre> A simple interface to read the helicity. This routine will NOT work for
+ experiments with delayed helicity reporting.
+ Calls the DST Readers <a href="./TClasTool.html#TClasTool:GetHelicity" title="Int_t TClasTool::GetHelicity()">GetHelicity</a>() function.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TVirtualReader.html">TVirtualReader</a> * <a class="funcname" name="TClasTool:GetReader" href="src/TClasTool.cxx.html#MIq7nC">GetReader</a>(<span class="keyword">void</span>)</span><br />
+<div class="funccomm"><pre> Returns a pointer to the reader.
+ Usefull for directly manipulating the reader.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname">TChain * <a class="funcname" name="TClasTool:GetTree" href="src/TClasTool.cxx.html#l4yJBB">GetTree</a>(<a href="./ListOfTypes.html#Char_t">Char_t</a>* treename = <span class="string">"EVNT"</span>)</span><br />
+<div class="funccomm"><pre> Returns a pointer to the actual tree that was created by the reader.
+ If the reader is incapable of returning a TTree, it will return NULL.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:Print" href="src/TClasTool.cxx.html#X03rMC">Print</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> full = 0)</span><br />
+<div class="funccomm"><pre> Overrides the standard print with a bit more information.
+ Set full=1 to get even more information.
+
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:PrintEventStatus" href="src/TClasTool.cxx.html#X13gAB">PrintEventStatus</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TClasTool.html#TClasTool:Print" title="void TClasTool::Print(Int_t full=0)">Print</a> the event status to the terminal. (Useful for debugging.)
+ Calls the DST Readers <a href="./TClasTool.html#TClasTool:PrintEventStatus" title="void TClasTool::PrintEventStatus()">PrintEventStatus</a>().
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:PrintEPICPosition" href="src/TClasTool.cxx.html#RgrmLE">PrintEPICPosition</a>()</span><br />
+<div class="funccomm"><pre> <a href="./TClasTool.html#TClasTool:Print" title="void TClasTool::Print(Int_t full=0)">Print</a> the position of the current EPIC in terms of its range of
+ event numbers and run number
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:SetNotify" href="src/TClasTool.cxx.html#Dwpj3E">SetNotify</a>(<a href="./#TObject:TObject" title="TObject TObject::TObject() or overloads">TObject</a>* <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a>)</span><br />
+<div class="funccomm"><pre> Set the <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a>() class to <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a>.
+ This is a class that contains a routine called <a href="./#TObject:Notify" title="Bool_t TObject::Notify()">Notify</a>()
+ This method of this call will be called when the Reader loads the
+ next file of the chain. This allows you to perform certain tasks,
+ like loading new constants, when the file changes.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:SetNoScalers" href="src/TClasTool.cxx.html#h0C4kE">SetNoScalers</a>()</span><br />
+<div class="funccomm"><pre> Tell the reader (<a href="./TDSTReader.html">TDSTReader</a>) that you don't want to read the
+ scaler chain, even if it exists.
+ This is useful when filtering on data.
+ You can only call this after the reader has been initialized.
+</pre></div>
+</div>
+<div class="funcdoc"><span class="funcname"> <a class="funcname" name="TClasTool:TClasTool" href="src/TClasTool.h.html#QREv.B">TClasTool</a>()</span><br />
+</div>
+<div class="funcdoc"><span class="funcname"><span class="keyword">void</span> <a class="funcname" name="TClasTool:SetBeamEnergy" href="src/TClasTool.h.html#MNaUKE">SetBeamEnergy</a>(<a href="./ListOfTypes.html#Float_t">Float_t</a> fbm)</span><br />
+<div class="funccomm"><pre>
+
+  Local Functions
+</pre></div>
+
+<div class="code"><code class="inlinecode">{<a href="./TClasTool.html#TClasTool:fEBeam" title="Float_t TClasTool::fEBeam">fEBeam</a>=fbm;}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./ListOfTypes.html#Float_t">Float_t</a> <a class="funcname" name="TClasTool:GetBeamEnergy" href="src/TClasTool.h.html#holUjE">GetBeamEnergy</a>()</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span>(<a href="./TClasTool.html#TClasTool:fEBeam" title="Float_t TClasTool::fEBeam">fEBeam</a>);}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TEVNTClass.html">TEVNTClass</a>    * <a class="funcname" name="TClasTool:GetEVNT" href="src/TClasTool.h.html#Oei2pB">GetEVNT</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</span><br />
+<div class="funccomm"><pre>
+ Inlines.
+
+</pre></div>
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span> (<a href="./TEVNTClass.html">TEVNTClass</a> *)<a href="./TClasTool.html#TClasTool:GetBankRow" title="TObject* TClasTool::GetBankRow(const Char_t* bankname,Int_t nrow)">GetBankRow</a>(<span class="string">"EVNT"</span>,nrow);}</code></div>
+<div style="clear:both;"></div>
+</div>
+<div class="funcdoc"><span class="funcname"><a href="./TDCPBClass.html">TDCPBClass</a>    * <a class="funcname" name="TClasTool:GetDCPB" href="src/TClasTool.h.html#NJHPdC">GetDCPB</a>(<a href="./ListOfTypes.html#Int_t">Int_t</a> nrow)</span><br />
+
+<div class="code"><code class="inlinecode">{<span class="keyword">return</span> (<a href="./TDCPBClass.html">TDCPBClass</a> *)<a href="./TClasTool.html#TClasTool:GetBankRow" title="TObject* TClasTool::GetBankRow(const Char_t* bankname,Int_t nrow)">GetBankRow</a>(<span class="string">"DCPB"</span>,nrow);}</code></div>
+<div style="clear:both;"></div>
+</div>
+
+<!-- FOOTER -->
+<hr><br>
+<!--SIGNATURE-->
+<em>Author: <a href="http://www.physics.unh.edu/~maurik">Maurik Holtrop</a></em><br>
+<em>Last update: Fri Feb 24 17:40:12 2017</em><br>
+<em>CopyLeft - This code is freely available.</em>
+<br>
+<hr>
+<center>
+<address>
+<a href="http://root.cern.ch/root/Welcome.html">ROOT Home page</a> - <a href="ClassIndex.html">ClasTool Class index</a> - <a href="ClassHierarchy.html">Class Hierarchy</a> - <a href="#TopOfPage">Top of the page</a><br>
+</address>
+</center>
+<hr>
+</body>
+</html>

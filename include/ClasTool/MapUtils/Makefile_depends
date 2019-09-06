@@ -1,0 +1,7 @@
+### Automatically generated dependencies. Update with 'make dep'
+# DO NOT DELETE
+
+obj/Linux64RHEL7/TMapUtils.o: TMapUtils.h TQuery.h TDBItem.h TRunIndex.h
+obj/Linux64RHEL7/TQuery.o: TQuery.h
+obj/Linux64RHEL7/TRunIndex.o: TRunIndex.h
+obj/Linux64RHEL7/TDBItem.o: TDBItem.h
