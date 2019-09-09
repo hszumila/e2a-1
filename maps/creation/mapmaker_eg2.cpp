@@ -29,7 +29,8 @@ int main(int argc, char ** argv)
     {
       cerr << "Wrong number of arguments. Instead try\n"
            << "\tmapmaker /path/to/inputs /path/to/output particle\n\n";
-      cerr << "For particle of interest, please use either e, p for electron, proton respectively" << endl;
+      cerr << "For particle of interest, please use either e, p for electron, proton respectively.\n\n";
+      return -1;
     }
   int numfiles = argc-3;
   TFile * infile[numfiles];
