@@ -12,11 +12,9 @@ project (e2a)
 if (DEFINED ENV{E2A_INSTALL})
    message(STATUS "Found E2A_INSTALL set to $ENV{E2A_INSTALL}")
 else()
-   message(FATAL_ERROR "E2A_INSTALL variable was not defined. It needs to be set. You could, for example, add to your rc script:\n\
+   message(FATAL_ERROR "E2A_INSTALL variable was not defined. It needs to be set. You could, for example, add to your .bashrc script:\n\
    	    export E2A_INSTALL=\${HOME}/.e2a")
 endif()
-
-# We may need to create the directory if it doesn't exist.
 
 # ADD SUBDIRECTORIES
 add_subdirectory(cut_library)
