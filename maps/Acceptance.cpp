@@ -15,9 +15,9 @@ Acceptance::Acceptance(std::string target, int Ebeam, int torus, std::string par
   if (target == "Fe56") target = "solid";
 
   // We need to construct the file name
-  char * home=getenv("HOME");
+  char * e2ahome=getenv("E2A_INSTALL");
   char filename[100];
-  sprintf(filename,"%s/.e2a/maps/e2a_%s_%d_%d_%s.root",home, target.c_str(),Ebeam,torus,part.c_str());
+  sprintf(filename,"%s/maps/e2a_%s_%d_%d_%s.root",e2ahome, target.c_str(),Ebeam,torus,part.c_str());
   
   // Test if the file exists
   TFile * f = NULL;

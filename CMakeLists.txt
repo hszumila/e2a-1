@@ -9,11 +9,14 @@ find_package(ROOT REQUIRED)
 project (e2a)
 
 # Create an install directory
-set (E2A_INSTALL $ENV{HOME}/.e2a CACHE PATH "Directory for the installing calibration files" )
+if (DEFINED ENV{E2A_INSTALL})
+   message(STATUS "Found E2A_INSTALL set to $ENV{E2A_INSTALL}")
+else()
+   message(FATAL_ERROR "E2A_INSTALL variable was not defined. It needs to be set. You could, for example, add to your rc script:\n\
+   	    export E2A_INSTALL=\${HOME}/.e2a")
+endif()
 
-# If E2A_INSTALL defined, then use that variable
-# If not defined, then set E2A_INSTALL to .e2a
-# Allow user to define it from CCMAKE
+# We may need to create the directory if it doesn't exist.
 
 # ADD SUBDIRECTORIES
 add_subdirectory(cut_library)

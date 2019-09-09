@@ -93,7 +93,7 @@ add_dependencies(Acceptance e2a_He3_1161_750_e e2a_He3_1161_750_p e2a_He3_1161_7
 
 # Install the completed maps so other programs can find them
 INSTALL ( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/maps/" 
-	  DESTINATION ${E2A_INSTALL}/maps
+	  DESTINATION $ENV{E2A_INSTALL}/maps
 	  FILES_MATCHING PATTERN "e2a_*.root"
 	  PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ )
 

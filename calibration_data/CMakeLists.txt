@@ -14,4 +14,4 @@ INSTALL (FILES
 	vz_4461_4He.root vz_4461_12C.root vz_1161_3He.root
 	vz_2261_4He.root vz_2261_12C.root vz_2261_3He.root vz_2261_56Fe.root
 	n_pathlength_corr_4461.dat
-        DESTINATION "${E2A_INSTALL}")
+        DESTINATION "$ENV{E2A_INSTALL}")
