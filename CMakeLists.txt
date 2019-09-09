@@ -8,6 +8,13 @@ find_package(ROOT REQUIRED)
 # Project name
 project (e2a)
 
+# Create an install directory
+set (E2A_INSTALL $ENV{HOME}/.e2a CACHE PATH "Directory for the installing calibration files" )
+
+# If E2A_INSTALL defined, then use that variable
+# If not defined, then set E2A_INSTALL to .e2a
+# Allow user to define it from CCMAKE
+
 # ADD SUBDIRECTORIES
 add_subdirectory(cut_library)
 add_subdirectory(calibration_data)
