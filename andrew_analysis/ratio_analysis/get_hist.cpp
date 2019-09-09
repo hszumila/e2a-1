@@ -132,8 +132,14 @@ int main(int argc, char ** argv){
   twoD_list.push_back(xB_QSq);
   TH2D * xB_pMiss = new TH2D("xb_pMiss","xB_pMiss;xB;pMiss;Counts",numbinxB,binxB,15,0,0.6);
   twoD_list.push_back(xB_pMiss);
+  TH2D * eVTX_pMiss = new TH2D("eVTX_pMiss","eVTX_pMiss;eVTX;pMiss;Counts",40,-0.5,1.5,15,0,0.6);
+  twoD_list.push_back(eVTX_pMiss);
+  TH2D * OS_pMiss = new TH2D("OS_pMiss","OS_pMiss;OS;pMiss;Counts",40,-0.5,1.5,15,0,0.6);
+  twoD_list.push_back(OS_pMiss);
   TH2D * xB_mMiss_cutPMiss[6];
   TH2D * xB_poq_cutPMiss[6];
+  TH2D * xB_eVTX_cutPMiss[6];
+  TH2D * xB_OS_cutPMiss[6];
   for(int i=0; i<6; i++){
       char temp[100];
 
@@ -142,8 +148,17 @@ int main(int argc, char ** argv){
       twoD_list.push_back(xB_mMiss_cutPMiss[i]);
 
       sprintf(temp,"xB_poq_cut_PMiss%d",i);
-      xB_poq_cutPMiss[i] = new TH2D(temp,"x_B vs p/q;xB;p/q",numbinxB,binxB,16,0.6,1.4);
+      xB_poq_cutPMiss[i] = new TH2D(temp,"x_B vs p/q;xB;p/q",numbinxB,binxB,28,0,1.4);
       twoD_list.push_back(xB_poq_cutPMiss[i]);
+
+      sprintf(temp,"xB_eVTX_cut_PMiss%d",i);
+      xB_eVTX_cutPMiss[i] = new TH2D(temp,"x_B vs eVTX;xB;eVTX",numbinxB,binxB,40,-0.5,1.5);
+      twoD_list.push_back(xB_eVTX_cutPMiss[i]);
+
+      sprintf(temp,"xB_OS_cut_PMiss%d",i);
+      xB_OS_cutPMiss[i] = new TH2D(temp,"x_B vs OS;xB;OS",numbinxB,binxB,40,-0.5,1.5);
+      twoD_list.push_back(xB_OS_cutPMiss[i]);
+
   }
   for(int i=0; i<twoD_list.size(); i++){
     twoD_list[i]->Sumw2();
@@ -281,6 +296,10 @@ int main(int argc, char ** argv){
       double eMiss = omega + mP + mN - eLead;
       double mMiss = sqrt(sq(eMiss)-vMiss.Mag2());
       double poq = vLead.Mag()/vq.Mag();
+      double eVTX = eLead - omega;
+      double OS = sq(eVTX) - vMiss.Mag2();
+      //sqrt(vMiss.Mag2() - sq(mP))      
+      //      cout<<eVTX<<"\n";
       double eff = 0;
       //Get the correct efficiency for the specific particle
       if(myInfo.isProton(1)){
@@ -311,8 +330,11 @@ int main(int argc, char ** argv){
       }
       
       if((mMiss < 0.9) || (mMiss > 1.1)){ continue; }
+      //if((eVTX < 0)){ continue; }
     
       xB_pMiss->Fill(xB,vMiss.Mag(),weight);
+      eVTX_pMiss->Fill(eVTX,vMiss.Mag(),weight);
+      OS_pMiss->Fill(OS,vMiss.Mag(),weight);
       hist_xB_binPMiss[getPMissBin(vMiss.Mag())]->Fill(xB,weight);
       hist_pMiss_binXB[getXBBin(xB)]->Fill(vMiss.Mag(),weight);
 
@@ -321,31 +343,43 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[0]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[0]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[0]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[0]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[0]->Fill(xB,OS,weight);
       }
       if(vMiss.Mag()>0.10){
 	hist_xB_cutPMiss[1]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[1]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[1]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[1]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[1]->Fill(xB,OS,weight);
       }
       if(vMiss.Mag()>0.13){
 	hist_xB_cutPMiss[2]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[2]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[2]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[2]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[2]->Fill(xB,OS,weight);
       }
       if(vMiss.Mag()>0.16){
 	hist_xB_cutPMiss[3]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[3]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[3]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[3]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[3]->Fill(xB,OS,weight);
       }
       if(vMiss.Mag()>0.20){
 	hist_xB_cutPMiss[4]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[4]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[4]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[4]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[4]->Fill(xB,OS,weight);
       }
       if(vMiss.Mag()>0.30){
 	hist_xB_cutPMiss[5]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[5]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[5]->Fill(xB,poq,weight);
+	xB_eVTX_cutPMiss[5]->Fill(xB,eVTX,weight);
+	xB_OS_cutPMiss[5]->Fill(xB,OS,weight);
       }
      
 
