@@ -36,8 +36,8 @@ int main(int argc, char ** argv)
 
   TFile * outfile = new TFile(argv[numfiles+1],"RECREATE");
   string particle_oi = argv[numfiles+2];
-  generated = new TH3D("solid_e_gen","solid_e_gen",pbins,0,5,costbins,-1,1,phibins,-30,330);
-  accepted = new TH3D("solid_e_acc","solid_e_acc",pbins,0,5,costbins,-1,1,phibins,-30,330);
+  generated = new TH3D("deut_p_gen","Generated protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+  accepted = new TH3D("deut_p_acc","Accepted protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
 
   if (particle_oi != "e" && particle_oi != "p" && particle_oi != "pip" && particle_oi != "pim")
     {
