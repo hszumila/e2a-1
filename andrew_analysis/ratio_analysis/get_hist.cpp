@@ -121,10 +121,10 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxB[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
-  int numbinxB = 22;
-  //double binxB[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.44,1.53,1.62,1.72,1.8,1.9,2};
-  //int numbinxB = 26;
+  //double binxB[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
+  //int numbinxB = 22;
+  double binxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.44,1.53,1.62,1.72,1.8,1.9,2};
+  int numbinxB = 34;
 
   //Make a histogram list to make things easier
   vector<TH2*> twoD_list;
@@ -138,6 +138,7 @@ int main(int argc, char ** argv){
   twoD_list.push_back(OS_pMiss);
   TH2D * xB_mMiss_cutPMiss[6];
   TH2D * xB_poq_cutPMiss[6];
+  TH2D * plead_poq_cutPMiss[6];
   TH2D * xB_eVTX_cutPMiss[6];
   TH2D * xB_OS_cutPMiss[6];
   for(int i=0; i<6; i++){
@@ -150,6 +151,10 @@ int main(int argc, char ** argv){
       sprintf(temp,"xB_poq_cut_PMiss%d",i);
       xB_poq_cutPMiss[i] = new TH2D(temp,"x_B vs p/q;xB;p/q",numbinxB,binxB,28,0,1.4);
       twoD_list.push_back(xB_poq_cutPMiss[i]);
+
+      sprintf(temp,"plead_poq_cut_PMiss%d",i);
+      plead_poq_cutPMiss[i] = new TH2D(temp,"p_lead vs p/q;plead;p/q",100,0,4,28,0,1.4);
+      twoD_list.push_back(plead_poq_cutPMiss[i]);
 
       sprintf(temp,"xB_eVTX_cut_PMiss%d",i);
       xB_eVTX_cutPMiss[i] = new TH2D(temp,"x_B vs eVTX;xB;eVTX",numbinxB,binxB,40,-0.5,1.5);
@@ -343,6 +348,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[0]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[0]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[0]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[0]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[0]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[0]->Fill(xB,OS,weight);
       }
@@ -350,6 +356,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[1]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[1]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[1]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[1]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[1]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[1]->Fill(xB,OS,weight);
       }
@@ -357,6 +364,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[2]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[2]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[2]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[2]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[2]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[2]->Fill(xB,OS,weight);
       }
@@ -364,6 +372,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[3]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[3]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[3]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[3]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[3]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[3]->Fill(xB,OS,weight);
       }
@@ -371,6 +380,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[4]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[4]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[4]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[4]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[4]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[4]->Fill(xB,OS,weight);
       }
@@ -378,6 +388,7 @@ int main(int argc, char ** argv){
 	hist_xB_cutPMiss[5]->Fill(xB,weight);
 	xB_mMiss_cutPMiss[5]->Fill(xB,mMiss,weight);
 	xB_poq_cutPMiss[5]->Fill(xB,poq,weight);
+	plead_poq_cutPMiss[5]->Fill(vLead.Mag(),poq,weight);
 	xB_eVTX_cutPMiss[5]->Fill(xB,eVTX,weight);
 	xB_OS_cutPMiss[5]->Fill(xB,OS,weight);
       }

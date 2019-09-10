@@ -1005,9 +1005,9 @@ int main(int argc, char ** argv){
       // --------------------------------------------------------------------------------------------------
       // Fill the output tree
       bool protonsOk = ((max_p < min_p) || ((nProtons >= min_p) && (nProtons <= max_p)));
-      bool neutronsOk = ((max_n < min_n) || ((nProtons >= min_n) && (nProtons <= max_n)));
-      bool piPlusOk = ((max_pip < min_pip) || ((nProtons >= min_pip) && (nProtons <= max_pip)));
-      bool piMinusOk = ((max_pim < min_pim) || ((nProtons >= min_pim) && (nProtons <= max_pim)));
+      bool neutronsOk = ((max_n < min_n) || ((nNeutrons >= min_n) && (nNeutrons <= max_n)));
+      bool piPlusOk = ((max_pip < min_pip) || ((nPiplus >= min_pip) && (nPiplus <= max_pip)));
+      bool piMinusOk = ((max_pim < min_pim) || ((nPiminus >= min_pim) && (nPiminus <= max_pim)));
 
       if( protonsOk && neutronsOk && piPlusOk && piMinusOk)
         outtree->Fill();
