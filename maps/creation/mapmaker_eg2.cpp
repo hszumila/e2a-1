@@ -33,11 +33,6 @@ int main(int argc, char ** argv)
       return -1;
     }
   int numfiles = argc-3;
-  TFile * infile[numfiles];
-  for (int i = 0; i < numfiles; i++)
-    {
-      infile[i] = new TFile(argv[i+1]);
-    }
 
   TFile * outfile = new TFile(argv[numfiles+1],"RECREATE");
   string particle_oi = argv[numfiles+2];
@@ -66,7 +61,9 @@ int main(int argc, char ** argv)
 
   for (int file = 0; file < numfiles; file++)
     {
-      TTree * intree = (TTree*)infile[file]->Get("data");
+      TFile * thisFile = new TFile(argv[file+1]);
+
+      TTree * intree = (TTree*)thisFile->Get("data");
       if (!intree)
         {
           cerr << "Tree not found!!!\n";
@@ -146,25 +143,27 @@ int main(int argc, char ** argv)
 
           if(particle_oi =="p")
             {
+	      // Determine if the electron is good
+              if (gPart < 1)
+                continue;
+
+              if (!( (StatEC[0] > 0) && // EC status is good for the electron candidate
+                     (StatDC[0] > 0) && // DC status is good for the electron candidate
+                     (StatCC[0] > 0) && // CC status is good for the electron candidate
+                     (StatSC[0] > 0) && // SC status is good for the electron candidate
+                     (charge[0] < 0)    // Electron candidate curvature direction is negative
+                          ))
+                continue;
+
+	      // Define the relevant generated proton quantities, and fill the generated histogram
               double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
               generated->Fill(mom_g[1],cost_g,phi_g[1]);
 	      
               // Define a sector variable
               int sec_g = (phi_g[1]+30.)/60;
-	      
-              if (gPart <= 1)
-                continue;
 
+	      // Do we have a proton passing selection criteria?	      
               bool pass = false;
-
-              if (!(			(StatEC[0] > 0) && // EC status is good for the electron candidate
-                          (StatDC[0] > 0) && // DC status is good for the electron candidate
-                          (StatCC[0] > 0) && // CC status is good for the electron candidate
-                          (StatSC[0] > 0) && // SC status is good for the electron candidate
-                          (charge[0] < 0)    // Electron candidate curvature direction is negative
-                          ))
-                {continue;}
-
               for (int part = 1; (part < gPart)&&(!pass); part++)
                 {
                   //Positive particle test
@@ -184,6 +183,7 @@ int main(int argc, char ** argv)
                   if (sec != sec_g)
                     continue;
 		  
+		  // Looks like a suitable proton
                   pass = true;
                 }
 	      
@@ -191,7 +191,9 @@ int main(int argc, char ** argv)
                 accepted->Fill(mom_g[1],cost_g,phi_g[1]);
             }
         }
+      thisFile->Close();
     }
+
   for (int p = 1; p<=pbins;p++)
     {
       for (int phi = 1; phi<=phibins; phi++)
