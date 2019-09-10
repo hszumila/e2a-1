@@ -166,6 +166,8 @@ int main(int argc, char ** argv)
               bool pass = false;
               for (int part = 1; (part < gPart)&&(!pass); part++)
                 {
+		  //cerr << "Working on particle " << part << " out of " << gPart << "\n";
+
                   //Positive particle test
                   if (!(
                         (StatSC[part] > 0) && 		// SC status is good for the positive candidate
@@ -175,14 +177,20 @@ int main(int argc, char ** argv)
                         ))
                     {continue;}
 
-                  //if (particle[part] != 2212)
-                  //continue;
-
                   int sec = (phi[part]+30.)/60;
 
                   if (sec != sec_g)
-                    continue;
-		  
+		    {
+		      //cerr << "Generated in sector " << sec_g << " but reconstructed in sector " << sec << "\n";
+		      continue;
+		    }
+
+                  if (particle[part] != 2212)
+		    {
+		      cerr << "Particle guess is " << particle[part] << "\n";
+		      continue;
+		    }
+
 		  // Looks like a suitable proton
                   pass = true;
                 }
