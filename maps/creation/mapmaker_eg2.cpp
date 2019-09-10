@@ -205,6 +205,7 @@ int main(int argc, char ** argv)
             }
         }
     }
+  outfile->cd();
   generated->Write();
   accepted->Write();
 
