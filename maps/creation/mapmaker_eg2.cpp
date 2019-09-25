@@ -56,8 +56,8 @@ int main(int argc, char ** argv)
     pz[maxPart], theta[maxPart], phi[maxPart], targetZ[maxPart], theta_pq[maxPart],
     EC_X[maxPart],EC_Y[maxPart],EC_Z[maxPart], EC_U[maxPart],EC_V[maxPart],EC_W[maxPart], 
     CC_Chi2[maxPart];
-  float num_g[maxPart], targetZ_g[maxPart], theta_g[maxPart], phi_g[maxPart], mom_g[maxPart], px_g[maxPart], py_g[maxPart], pz_g[maxPart];
-  int particle_g[maxPart], particle[maxPart];
+  float targetZ_g[maxPart], theta_g[maxPart], phi_g[maxPart], mom_g[maxPart], px_g[maxPart], py_g[maxPart], pz_g[maxPart];
+  int num_g, particle_g[maxPart], particle[maxPart];
 
   for (int file = 0; file < numfiles; file++)
     {
@@ -114,7 +114,7 @@ int main(int argc, char ** argv)
           if (event%100000==0)
             cout << "File " << file+1 << " and event " << event << " out of " << intree->GetEntries() << endl;
 
-          if (gPart <= 0)
+          if (num_g < 1)
             continue;
 
           if (particle_oi == "e")
