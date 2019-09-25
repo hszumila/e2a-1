@@ -175,6 +175,14 @@ int main(int argc, char ** argv)
                           ))
                 continue;
 
+	      // The electron is good!
+
+	      if (num_g < 2)
+		{
+		  cerr << "Error: event does not have two generated particles!\n";
+		  continue;
+		}
+
 	      // Define the relevant generated proton quantities, and fill the generated histogram
               double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
               generated->Fill(mom_g[1],cost_g,phi_g[1]);
@@ -205,11 +213,11 @@ int main(int argc, char ** argv)
 		      continue;
 		    }
 
-                  if (particle[part] != 2212)
-		    {
+                  //if (particle[part] != 2212)
+		  // {
 		      //cerr << "Particle guess is " << particle[part] << "\n";
-		      continue;
-		    }
+		  //    continue;
+		  //  }
 
 		  // Looks like a suitable proton
                   pass = true;
