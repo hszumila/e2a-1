@@ -114,16 +114,26 @@ int main(int argc, char ** argv)
           if (event%100000==0)
             cout << "File " << file+1 << " and event " << event << " out of " << intree->GetEntries() << endl;
 
-          if (num_g < 1)
-            continue;
-
           if (particle_oi == "e")
             {
+	      if (num_g < 1)
+		{
+		  cerr << "Error: event has no generated particles!\n";
+		  continue;
+		}
+
+	      // Fill the generated histogram based on generated values
               double cost_g = TMath::Cos(theta_g[0]*M_PI/180);
               generated->Fill(mom_g[0],cost_g,phi_g[0]);
 
+	      // Calculate the generated electron sector, crucial for later.
               int sec_g = (phi_g[0]+30.)/60;
 
+	      // If there are no reconstructed particles, that's fine, no acceptance
+	      if (gPart < 1)
+		continue;
+
+	      // Assume that index [0] is the electron candidate
               if (!(			(StatEC[0] > 0) && // EC status is good for the electron candidate
                           (StatDC[0] > 0) && // DC status is good for the electron candidate
                           (StatCC[0] > 0) && // CC status is good for the electron candidate
@@ -132,12 +142,13 @@ int main(int argc, char ** argv)
                           ))
                 {continue;}
 
-
+	      // Compare to the generated sector
               int sec = (phi[0]+30.)/60;
 
               if (sec != sec_g)
                 continue;
 
+	      // Particle met acceptance criteria
               accepted->Fill(mom_g[0],cost_g,phi_g[0]);
             }
 
