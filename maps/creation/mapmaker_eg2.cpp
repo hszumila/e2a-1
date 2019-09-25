@@ -207,7 +207,7 @@ int main(int argc, char ** argv)
 
                   if (particle[part] != 2212)
 		    {
-		      cerr << "Particle guess is " << particle[part] << "\n";
+		      //cerr << "Particle guess is " << particle[part] << "\n";
 		      continue;
 		    }
 
