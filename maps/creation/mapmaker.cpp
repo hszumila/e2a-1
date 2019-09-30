@@ -30,7 +30,6 @@ TH3D * accepted;
 
 int main(int argc, char ** argv)
 {
-  gSystem->Load("libTree");
   if (argc < 7)
     {
       cerr << "Wrong number of arguments. Instead try\n"
@@ -152,17 +151,15 @@ int main(int argc, char ** argv)
           intree->GetEvent(event);
           if (event%100000==0)
             cout << "File " << file+1 << " and event " << event << " out of " << intree->GetEntries() << endl;
-	
-	  if (num_g <= 0)
-	    {
-	      continue;
-	    }
 	      
 	  if (particle_oi == "e")
 	    {
+	      if (num_g <= 0)
+		continue;
+
 	      double cost_g = TMath::Cos(theta_g[0]*M_PI/180);
-	      //double cost = TMath::Cos(theta[0]*180/3.141592);
 	      int sec_g = (phi_g[0]+30.)/60;
+
 	      generated->Fill(mom_g[0],cost_g,phi_g[0]);
 
 	      if (gPart < 1)
@@ -175,54 +172,54 @@ int main(int argc, char ** argv)
 					(charge[0] < 0)    // Electron candidate curvature direction is negative
 					))
 		{continue;}
-	      //cout << phi_g[0] << endl;
-	      //cout << theta_g[0] << endl;
 
 	      double el_cand_EC = TMath::Max(EC_in[0] + EC_out[0], EC_tot[0]); // Define the electron candidate energy in the EC
 
-	      //Electron particle Identification
-	      /*if (!(                  (EC_in [0] > EC_in_cut) &&      // Electron candidate has enough energy deposit in inner layer of EC
-		(el_cand_EC > el_EC_cut) //&&     // Enough total energy in the EC
-				      //(fid_params.in_e_EoverP(el_cand_EC/mom[0],mom[0],epratio_sig_cutrange)) // Electron PID (E/p)
-				      ))
-		{continue;}
-	      */
+	      // Electron E/p cut
+	      // We no longer due this cut due to the simulation mismodeling the 
+	      // calorimeter sampling fraction. 
+	      // if (!( (EC_in [0] > EC_in_cut) &&  // Electron candidate has enough energy deposit in inner layer of EC
+	      //        (el_cand_EC > el_EC_cut)  &&  // Enough total energy in the EC
+	      //        (fid_params.in_e_EoverP(el_cand_EC/mom[0],mom[0],epratio_sig_cutrange)))) // Electron PID (E/p)
+	      // {continue;}
+
+	      // Electron fiducial cuts
+	      // We no longer do this cut due to problems with the granularity of
+	      // the map binning.
 	      TVector3 T3_e_mom(px[0],py[0],pz[0]);
 	      TVector3 e_ec_xyz(EC_X[0],EC_Y[0],EC_Z[0]);
 	      // Electron Fiducial cuts
 	      //if (!fid_params.e_inFidRegion(T3_e_mom)) continue; // Electron theta-phi cut
 	      //if (!fid_params.CutUVW_e(e_ec_xyz)       ) continue; // Cuts on edges of calorimeter (u>60, v<360, w<400);
-
-
 	      TVector3 T3_e_mom_g(px_g[0],py_g[0],pz_g[0]);
 	      //if (!fid_params.e_inFidRegion(T3_e_mom_g)) continue; // Electron theta-phi cut
 	      
+	      // Require that the generated and reconstructed sectors match.
 	      int sec = (phi[0]+30.)/60;
 	      if (sec != sec_g)
 		continue;
 
 	      accepted->Fill(mom_g[0],cost_g,phi_g[0]);
 	    }
-
-	  if (num_g <= 1)
-	    continue;
-	  if (particle_oi == "p" || particle_oi == "pip")
+	  else if (particle_oi == "p" || particle_oi == "pip")
 	    {
+	      if (num_g < 2)
+		continue;
+
 	      double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
+
+	      if (!((StatEC[0] > 0) && // EC status is good for the electron candidate
+		    (StatDC[0] > 0) && // DC status is good for the electron candidate
+		    (StatCC[0] > 0) && // CC status is good for the electron candidate
+		    (StatSC[0] > 0) && // SC status is good for the electron candidate
+		    (charge[0] < 0)    // Electron candidate curvature direction is negative
+		    ))
+		{continue;}
+
+	      // We have a good electron candidate. Go ahead and fill generated
 	      generated->Fill(mom_g[1],cost_g,phi_g[1]);
 
-	      if (!(			(StatEC[0] > 0) && // EC status is good for the electron candidate
-					(StatDC[0] > 0) && // DC status is good for the electron candidate
-					(StatCC[0] > 0) && // CC status is good for the electron candidate
-					(StatSC[0] > 0) && // SC status is good for the electron candidate
-					(charge[0] < 0)    // Electron candidate curvature direction is negative
-					))
-		{continue;}
-	      
-	      //if (charge[0] >0)
-	      //continue;
-
-
+	      // Define the sector
 	      int sec_g = (phi_g[1]+30.)/60;
 	      if (gPart <= 1)
 		continue;
@@ -260,9 +257,8 @@ int main(int argc, char ** argv)
 			continue;
 
 		      pass = true;
-		    }
-		  
-		  if (particle_oi == "pip")
+		    }		  
+		  else if (particle_oi == "pip")
 		    {
 		      double beta_assuming_pip = mom[part]/sqrt(mom[part]*mom[part] + mpc*mpc);
 		      double pip_t0 = SC_Time[part] - SC_Path[part]/(beta_assuming_pip * c_cm_ns);
@@ -297,8 +293,7 @@ int main(int argc, char ** argv)
     }
   generated->Write();
   accepted->Write();
-  delete generated;
-  delete accepted;
-  outfile->Write();
+  outfile->Close();
+
   return 0;
 }
