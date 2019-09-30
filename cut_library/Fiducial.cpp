@@ -29,7 +29,7 @@ Fiducial::Fiducial(int E_beam, int torus, int mini, std::string target, bool dat
   tar = target;
   is_data = data;
   
-  homedir = std::string(getenv("HOME"));
+  e2adir = std::string(getenv("E2A_INSTALL"));
     
   // Read in the various parameters
   bool all_ok=true;
@@ -529,7 +529,7 @@ bool Fiducial::read_n_pathlength_corr()
   //Parameters for neutron path length correction
 
   char param_file_name[256];
-  sprintf(param_file_name,"%s/.e2a/n_pathlength_corr_%d.dat",homedir.c_str(),E1);
+  sprintf(param_file_name,"%s/.e2a/n_pathlength_corr_%d.dat",e2adir.c_str(),E1);
   std::ifstream param_file(param_file_name);
   std::cerr<<param_file_name<<std::endl;
        
@@ -551,7 +551,7 @@ bool Fiducial::read_p_fid_params()
 	//"http://www.physics.odu.edu/~rust/clas/fidp.html"
 
 	char param_file_name[256];
-	sprintf(param_file_name,"%s/.e2a/PFID_%d_%d.dat",homedir.c_str(),E1,torus_current);
+	sprintf(param_file_name,"%s/.e2a/PFID_%d_%d.dat",e2adir.c_str(),E1,torus_current);
 	std::ifstream param_file(param_file_name);
 	std::cerr<<param_file_name<<std::endl;	
 	if ( E1 > 4000 && E1 < 5000 && torus_current > 2240. && torus_current < 2260.){
@@ -733,7 +733,7 @@ bool Fiducial::read_p_fid_params()
 bool Fiducial::read_pim_fid_params()
 {
   char param_file_name[256];
-  sprintf(param_file_name,"%s/.e2a/PIMFID_%d_%d.dat",homedir.c_str(),E1,torus_current);
+  sprintf(param_file_name,"%s/.e2a/PIMFID_%d_%d.dat",e2adir.c_str(),E1,torus_current);
   std::ifstream param_file(param_file_name);
   if (! param_file.is_open())
     {
@@ -787,7 +787,7 @@ bool Fiducial::read_pim_fid_params()
 bool Fiducial::read_e_fid_params()
 {
   char param_file_name[256];
-  sprintf(param_file_name,"%s/.e2a/FCP_%d_%d.dat",homedir.c_str(),E1,torus_current);
+  sprintf(param_file_name,"%s/.e2a/FCP_%d_%d.dat",e2adir.c_str(),E1,torus_current);
   std::ifstream param_file(param_file_name);
   if(!param_file.is_open()){
     std::cerr<<"Could not open file: "<<param_file_name<<std::endl;
@@ -975,7 +975,7 @@ bool Fiducial::read_vz_cor_params()
 	else effective_tar = tar;
 
 	char param_file_name[256];
-	sprintf(param_file_name,"%s/.e2a/vz_%d_%s.root",homedir.c_str(),E1,effective_tar.c_str());	
+	sprintf(param_file_name,"%s/.e2a/vz_%d_%s.root",e2adir.c_str(),E1,effective_tar.c_str());	
 
 	TFile * old_gfile = gFile;
 	TFile * cal_file = new TFile(param_file_name);
@@ -1014,7 +1014,7 @@ bool Fiducial::read_vz_cor_params()
 bool Fiducial::read_e_pcor_params()
 {
 	char param_file_name[256];
-	sprintf(param_file_name,"%s/.e2a/EMCP_%d_%d.dat",homedir.c_str(),E1,torus_current);
+	sprintf(param_file_name,"%s/.e2a/EMCP_%d_%d.dat",e2adir.c_str(),E1,torus_current);
 	std::ifstream param_file(param_file_name);
 
 	int param_type, sector;
@@ -1064,8 +1064,8 @@ bool Fiducial::read_e_pid_params()
 {
 	char param_file_name[256];
 
-	if(is_data) sprintf(param_file_name,"%s/.e2a/el_Epratio_mom_%d.root"    ,homedir.c_str(),E1);
-	else        sprintf(param_file_name,"%s/.e2a/el_Epratio_mom_%d_sim.root",homedir.c_str(),E1);
+	if(is_data) sprintf(param_file_name,"%s/.e2a/el_Epratio_mom_%d.root"    ,e2adir.c_str(),E1);
+	else        sprintf(param_file_name,"%s/.e2a/el_Epratio_mom_%d_sim.root",e2adir.c_str(),E1);
 
 	TFile * old_gfile = gFile;
 	TFile * cal_file = new TFile(param_file_name);
@@ -1096,7 +1096,7 @@ bool Fiducial::read_e_pid_params()
 bool Fiducial::read_p_pid_params()
 {
 	char param_file_name[256];
-	sprintf(param_file_name,"%s/.e2a/protdeltat_mom_%d_%d.root",homedir.c_str(),E1,torus_current);
+	sprintf(param_file_name,"%s/.e2a/protdeltat_mom_%d_%d.root",e2adir.c_str(),E1,torus_current);
 	TFile * old_gfile = gFile;
 	TFile * file_in1 = new TFile(param_file_name);
 
@@ -1122,7 +1122,7 @@ bool Fiducial::read_p_pid_params()
 bool Fiducial::read_pip_pid_params()
 {
         char param_file_name[256];
-        sprintf(param_file_name,"%s/.e2a/pipdeltat_mom_%d_%d.root",homedir.c_str(),E1,torus_current);
+        sprintf(param_file_name,"%s/.e2a/pipdeltat_mom_%d_%d.root",e2adir.c_str(),E1,torus_current);
         TFile * old_gfile = gFile;
         TFile * file_in1 = new TFile(param_file_name);
 
@@ -1151,7 +1151,7 @@ bool Fiducial::read_pip_pid_params()
 bool Fiducial::read_pim_pid_params()
 {
         char param_file_name[256];
-        sprintf(param_file_name,"%s/.e2a/pimdeltat_mom_%d_%d.root",homedir.c_str(),E1,torus_current);
+        sprintf(param_file_name,"%s/.e2a/pimdeltat_mom_%d_%d.root",e2adir.c_str(),E1,torus_current);
         TFile * old_gfile = gFile;
         TFile * file_in1 = new TFile(param_file_name);
 

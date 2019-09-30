@@ -25,7 +25,7 @@ class Run_dependent
 		int torus;
 		int mini;
 		std::string targ;	
-		std::string homedir;
+		std::string e2adir;
 
 		// Helper functions
 		bool read_run_table();
