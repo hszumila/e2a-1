@@ -49,7 +49,7 @@ bool Run_dependent::read_run_table()
   else{
     int this_run;
     // Open up the run_table
-    std::ifstream run_table((e2adir + std::string("/.e2a/run_table.dat")).c_str());
+    std::ifstream run_table((e2adir + std::string("/run_table.dat")).c_str());
     while (run_table >> this_run)
       {
 	run_table >> E1   ;
@@ -72,7 +72,7 @@ bool Run_dependent::read_run_table()
 bool Run_dependent::read_p_pcor_params() // Proton correction parameters
 {
 	char param_file_name[256];
-	sprintf(param_file_name,"%s/.e2a/prot_mom_corr_18338_18438.dat",e2adir.c_str());
+	sprintf(param_file_name,"%s/prot_mom_corr_18338_18438.dat",e2adir.c_str());
 				        
 	std::ifstream param_file(param_file_name);
 
