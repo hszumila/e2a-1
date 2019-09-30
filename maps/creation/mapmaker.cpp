@@ -81,7 +81,6 @@ int main(int argc, char ** argv)
   cout << tab_E1 << " " << tab_torus << " " << tab_targ << endl;
   cout << atoi(argv[numfiles+4]) << endl;
   TFile * outfile = new TFile(argv[numfiles+1],"RECREATE");
-
   generated = new TH3D("Generated Particles","Generated Particles",pbins,0,5,costbins,-1,1,phibins,-30,330);
   accepted = new TH3D("Accepted Particles","Accepted Particles",pbins,0,5,costbins,-1,1,phibins,-30,330);
 
@@ -291,6 +290,7 @@ int main(int argc, char ** argv)
             }
         }
     }
+  outfile->cd();
   generated->Write();
   accepted->Write();
   outfile->Close();
