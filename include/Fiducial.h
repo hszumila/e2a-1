@@ -33,7 +33,7 @@ class Fiducial
 		int E1;
 		int torus_current;
 		int mini_current;
-		std::string homedir;
+		std::string e2adir;
 		std::string tar;
 		bool is_data;
 

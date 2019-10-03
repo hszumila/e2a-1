@@ -10,3 +10,6 @@ target_link_libraries(${LIBNAME} ${ROOT_LIBRARIES} )
 
 add_executable(fiducial_test fiducial_test.cpp)
 target_link_libraries(fiducial_test ${LIBNAME})
+
+add_executable(fiducial_print fiducial_print.cpp)
+target_link_libraries(fiducial_print ${LIBNAME})

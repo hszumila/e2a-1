@@ -36,8 +36,17 @@ int main(int argc, char ** argv)
 
   TFile * outfile = new TFile(argv[numfiles+1],"RECREATE");
   string particle_oi = argv[numfiles+2];
-  generated = new TH3D("deut_p_gen","Generated protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
-  accepted = new TH3D("deut_p_acc","Accepted protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+  
+  if (particle_oi == "e")
+    {
+      generated = new TH3D("deut_e_gen","Generated electrons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+      accepted = new TH3D("deut_e_acc","Accepted electrons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+    }
+  else
+    {
+      generated = new TH3D("deut_p_gen","Generated protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+      accepted = new TH3D("deut_p_acc","Accepted protons;momentum [GeV/c];Cos(theta);Phi [deg]",pbins,0,5,costbins,-1,1,phibins,-30,330);
+    }
 
   if (particle_oi != "e" && particle_oi != "p" && particle_oi != "pip" && particle_oi != "pim")
     {
@@ -56,8 +65,8 @@ int main(int argc, char ** argv)
     pz[maxPart], theta[maxPart], phi[maxPart], targetZ[maxPart], theta_pq[maxPart],
     EC_X[maxPart],EC_Y[maxPart],EC_Z[maxPart], EC_U[maxPart],EC_V[maxPart],EC_W[maxPart], 
     CC_Chi2[maxPart];
-  float num_g[maxPart], targetZ_g[maxPart], theta_g[maxPart], phi_g[maxPart], mom_g[maxPart], px_g[maxPart], py_g[maxPart], pz_g[maxPart];
-  int particle_g[maxPart], particle[maxPart];
+  float targetZ_g[maxPart], theta_g[maxPart], phi_g[maxPart], mom_g[maxPart], px_g[maxPart], py_g[maxPart], pz_g[maxPart];
+  int num_g, particle_g[maxPart], particle[maxPart];
 
   for (int file = 0; file < numfiles; file++)
     {
@@ -114,16 +123,26 @@ int main(int argc, char ** argv)
           if (event%100000==0)
             cout << "File " << file+1 << " and event " << event << " out of " << intree->GetEntries() << endl;
 
-          if (gPart <= 0)
-            continue;
-
           if (particle_oi == "e")
             {
+	      if (num_g < 1)
+		{
+		  cerr << "Error: event has no generated particles!\n";
+		  continue;
+		}
+
+	      // Fill the generated histogram based on generated values
               double cost_g = TMath::Cos(theta_g[0]*M_PI/180);
               generated->Fill(mom_g[0],cost_g,phi_g[0]);
 
+	      // Calculate the generated electron sector, crucial for later.
               int sec_g = (phi_g[0]+30.)/60;
 
+	      // If there are no reconstructed particles, that's fine, no acceptance
+	      if (gPart < 1)
+		continue;
+
+	      // Assume that index [0] is the electron candidate
               if (!(			(StatEC[0] > 0) && // EC status is good for the electron candidate
                           (StatDC[0] > 0) && // DC status is good for the electron candidate
                           (StatCC[0] > 0) && // CC status is good for the electron candidate
@@ -132,12 +151,13 @@ int main(int argc, char ** argv)
                           ))
                 {continue;}
 
-
+	      // Compare to the generated sector
               int sec = (phi[0]+30.)/60;
 
               if (sec != sec_g)
                 continue;
 
+	      // Particle met acceptance criteria
               accepted->Fill(mom_g[0],cost_g,phi_g[0]);
             }
 
@@ -154,6 +174,14 @@ int main(int argc, char ** argv)
                      (charge[0] < 0)    // Electron candidate curvature direction is negative
                           ))
                 continue;
+
+	      // The electron is good!
+
+	      if (num_g < 2)
+		{
+		  cerr << "Error: event does not have two generated particles!\n";
+		  continue;
+		}
 
 	      // Define the relevant generated proton quantities, and fill the generated histogram
               double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
@@ -185,11 +213,11 @@ int main(int argc, char ** argv)
 		      continue;
 		    }
 
-                  if (particle[part] != 2212)
-		    {
-		      cerr << "Particle guess is " << particle[part] << "\n";
-		      continue;
-		    }
+                  //if (particle[part] != 2212)
+		  // {
+		      //cerr << "Particle guess is " << particle[part] << "\n";
+		  //    continue;
+		  //  }
 
 		  // Looks like a suitable proton
                   pass = true;
