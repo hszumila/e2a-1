@@ -213,20 +213,19 @@ bool event_Info::isLeadbyIndex(int i){
   if(xB > 2){
   passLead=false;
   }
-  if(vq.Angle(vLead)>((M_PI*25)/180)){
-    passLead=false;
-  }
-  if((vLead.Mag()/vq.Mag())<(0.62)){
-    passLead=false;
-  }
+  //if(vq.Angle(vLead)>((M_PI*25)/180)){
+  //  passLead=false;
+  //}
+  //if((vLead.Mag()/vq.Mag())<(0.62)){
+  //  passLead=false;
+  //}
   //if((vLead.Mag()/vq.Mag())>(0.96)){
   //  passLead=false;
   //}
   if(vMiss.Mag() < (minP)){
     passLead=false;
   }
-  //if(passLead){std::cout<<passLead<<"\n";}
-  if(vMiss.Mag() > (0.6)){
+  if(vMiss.Mag() > (2)){
     passLead=false;
   }
   return passLead;
