@@ -4,7 +4,7 @@ this makes for poor maps. So we have redone some maps
 that do not have fiducial cuts applied. The files that
 have been replaced are:
 
-Nucleus Energy Magnetic Particle
+Nucleus Energy Torus    Particle
 3He	4461   2250	e
 3He	4461   2250	p
 3He	4461   2250	pip
@@ -14,6 +14,10 @@ Nucleus Energy Magnetic Particle
 12C	4461   2250	e
 12C	4461   2250	p
 12C	4461   2250	pip
+3He	1161   1500	e
+12C	1161   1500	e
+3He	1161    750	e
+12C	1161    750	e
 
 I have kept the original maps and saved them in the
 oldMaps directory. All other maps not mentioned still

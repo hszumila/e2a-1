@@ -160,8 +160,7 @@ int main(int argc, char ** argv)
 	      // Particle met acceptance criteria
               accepted->Fill(mom_g[0],cost_g,phi_g[0]);
             }
-
-          if(particle_oi =="p")
+          else if(particle_oi =="p")
             {
 	      // Determine if the electron is good
               if (gPart < 1)

@@ -202,10 +202,13 @@ int main(int argc, char ** argv)
 	    }
 	  else if (particle_oi == "p" || particle_oi == "pip")
 	    {
+	      // We better have generated at least two particles.
 	      if (num_g < 2)
 		continue;
-
-	      double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
+	      
+	      // Make sure the electron is good, first requiring that we did detect a particle!
+	      if (gPart < 1)
+		continue;
 
 	      if (!((StatEC[0] > 0) && // EC status is good for the electron candidate
 		    (StatDC[0] > 0) && // DC status is good for the electron candidate
@@ -216,15 +219,14 @@ int main(int argc, char ** argv)
 		{continue;}
 
 	      // We have a good electron candidate. Go ahead and fill generated
+	      double cost_g = TMath::Cos(theta_g[1]*M_PI/180);
 	      generated->Fill(mom_g[1],cost_g,phi_g[1]);
 
 	      // Define the sector
 	      int sec_g = (phi_g[1]+30.)/60;
-	      if (gPart <= 1)
-		continue;
 
+	      // Loop over remaining particles and see if any pass requirements
 	      bool pass = false;
-
 	      for (int part = 1; part < gPart; part++)
 		{
 		  //Positive particle test
@@ -285,8 +287,8 @@ int main(int argc, char ** argv)
         {
           for (int cost = 1; cost<=costbins; cost++)
             {
-              if (generated->GetBinContent(p,cost,phi)==0)
-                generated->SetBinContent(p, cost, phi, 10);
+              if (generated->GetBinContent(p,cost,phi)<=0.)
+                generated->SetBinContent(p, cost, phi, 10.);
             }
         }
     }
