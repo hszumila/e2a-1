@@ -31,6 +31,7 @@ class target_Info
   double pip_acc(TVector3 p);
   double getTrans();
   double getLum();
+  double getRadCorr();
   bool evtxInRange(double eVTX);
   bool vtxInRange(double eVTX, double leadVTX);
   void change_vtxMin(double newMin);
@@ -47,11 +48,15 @@ class target_Info
   double vzMin;
   double thick;
   std::string target;
+  std::ifstream radFile;
+  double radXB[37];
+  double radTheta[51];
+  double radCorr[37][51];
   Acceptance * eMap = NULL; 
   Acceptance * pMap = NULL;
   Acceptance * pipMap = NULL;
   void setLum();
-
+  void fillRadArray();
   
 };
 

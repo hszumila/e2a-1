@@ -13,12 +13,11 @@
 #include "TF1.h"
 #include "TVector3.h"
 
-#include "event_Info.h"
+#include "oldEvent_Info.h"
 #include "e2a_constants.h"
 
 using namespace std;
 
-const TVector3 vBeam(0.,0.,4.461);
 double sq(double x){ return x*x; };
 
 void help_message()
@@ -169,7 +168,7 @@ int main(int argc, char ** argv){
       return -1;
     }
 
-    event_Info myInfo(nPar,parID,xB,momx,momy,momz,vtxZCorr,minxB,minPMiss,onlyProt,onlyNeut);
+    oldEvent_Info myInfo(nPar,parID,xB,momx,momy,momz,vtxZCorr,minxB,minPMiss,onlyProt,onlyNeut);
     if(mergeD){myInfo.findAndMergeDeltas();}
     if(mergeD && (myInfo.getNumDeltas() < 1)){continue;}
     

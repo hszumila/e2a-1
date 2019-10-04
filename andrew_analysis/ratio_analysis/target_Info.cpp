@@ -39,6 +39,7 @@ target_Info::target_Info(int A)
   eMap = new Acceptance(target,4461,2250,"e");
   pMap = new Acceptance(target,4461,2250,"p");
   pipMap = new Acceptance(target,4461,2250,"pip");
+  fillRadArray();
   setLum();
 
 }
@@ -123,4 +124,20 @@ void target_Info::change_vtxMax(double newMax)
 void target_Info::setLum()
 {
   lum = density * thick * ltcc / M_a;
+}
+
+void target_Info::fillRadArray()
+{
+  double Theta,Eprime,Cross,CrossR,Corr,XB;
+  radFile.open(target);
+  for(int i = 0; i < 51; i++){
+    for(int j = 0; j < 37; j++){
+      radFile >> Theta >> Eprime >> Cross >> CrossR >> Corr >> XB;
+      radCorr[j][i] = Corr;
+      if(i==0){
+	radXB[j] = XB;
+      }
+      radTheta[i] = Theta;
+    }
+  }
 }

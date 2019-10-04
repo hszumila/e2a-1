@@ -14,6 +14,7 @@ const double pi = 3.14159;
 const double ns_to_s = 1.0E-09;
 
 //Particle ID codes
+const int eCode = 11;
 const int pCode = 2212;
 const int nCode = 2112;
 const int pipCode = 211;
@@ -24,5 +25,7 @@ const int dpCode = 2214;
 const int d0Code = 2114;
 const int dmCode = 1114;
 
+//Beam Energy
+const TVector3 vBeam(0.,0.,4.461);
 
 #endif

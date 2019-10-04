@@ -1,5 +1,5 @@
-#ifndef __EVENTINFO_H__
-#define __EVENTINFO_H__
+#ifndef __OLDEVENTINFO_H__
+#define __OLDEVENTINFO_H__
 
 #include <iostream>
 #include <cmath>
@@ -11,19 +11,20 @@
 #include "TVector3.h"
 
 #include "e2a_constants.h"
-#include "part_Info.h"
 
-class event_Info
+class oldEvent_Info
 {
  public:
-  event_Info(int numberOfParticles, int particleIDs[19], double Xb, double Q2, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19]);
-  ~event_Info();
+  oldEvent_Info(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19], double minimumXb, double minimumPMiss, bool onlyAcceptLeadProtons, bool onlyAcceptLeadNeutrons);
+  //event_Info(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19]);
+  ~oldEvent_Info();
+  void fillValues(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19], double minimumXb, double minimumPMiss, bool onlyAcceptLeadProtons, bool onlyAcceptLeadNeutrons);
   //Functions to test the type of particle
-  bool isNucleon(int i);
-  bool isProton(int i);
-  bool isNeutron(int i);
-  bool isPion(int i);
-  bool isDelta(int i);
+  bool isNucleon(int j);
+  bool isProton(int j);
+  bool isNeutron(int j);
+  bool isPion(int j);
+  bool isDelta(int j);
   int getDeltaType(int j, int k);
   //Functions to get values
   int getNumDeltas();
@@ -33,12 +34,6 @@ class event_Info
   double getPY(int i);
   double getPZ(int i);
   double getVTX(int i);
-  double getThetaPQ(int i);
-  double getPoQ(int i);
-  double getPMiss(int i);
-  double getMassMiss(int i);
-  double getXB();
-  double getQSq();
   //Functions to related to lead and recoil
   void setLead(int i);
   void setRec(int i);
@@ -56,15 +51,23 @@ class event_Info
  private:
   int nPar;
   int nDeltas;
+  int parID[19];
   double xB;
-  double QSq;
-  vector<part_Info> parList;
+  double px[19];
+  double py[19];
+  double pz[19];
+  double vtx[19];
+
+  double minP;
+  double minX;
+  bool onlyLeadProtons;
+  bool onlyLeadNeutrons;
 
   bool vtxMatch(int j, int k);
   bool checkDeltaWithMass(const double dMass);
   //Functions for manipulating the set
   void combineParticle(int j, int k, int newParID);
-  void moveEntry(int startIndex, int endIndex);
+  void moveEntryForward(int startIndex, int endIndex);
   void copy(int indexOverWrite, int indexCopy);
   void changeNPar(int new_nPar);
   void mergParInArrays(int j, int k, int newParID, TVector3 vDelta, double new_vtx);

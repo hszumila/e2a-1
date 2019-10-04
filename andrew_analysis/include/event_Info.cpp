@@ -1,102 +1,57 @@
 #include "event_Info.h"
 #include "Acceptance.h"
-event_Info::event_Info(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19], double minimumXb, double minimumPMiss, bool onlyAcceptLeadProtons, bool onlyAcceptLeadNeutrons)
+event_Info::event_Info(int numberOfParticles, int particleIDs[19], double Xb, double Q2, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19])
 {
-  fillValues(numberOfParticles, particleIDs, Xb, mom_x, mom_y, mom_z, vertecies, minimumXb, minimumPMiss, onlyAcceptLeadProtons, onlyAcceptLeadNeutrons);
-}
+  nPar=numberOfParticles;
+  nDeltas = 0;
+  xB=Xb;
+  QSq=Q2;
+  for(int i = 0; i < nPar; i++){
+    part_Info thisPart(particleIDs[i], mom_x[i], mom_y[i], mom_z[i], vertecies[i]);
+    parList.push_back(thisPart);
+  }
 
-//event_Info::event_Info(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19])
-//{
-//fillValues(numberOfParticles, particleIDs, Xb, mom_x, mom_y, mom_z, vertecies, 1.2, 0.3, true, false);
-//}
+}
 
 event_Info::~event_Info()
 {
 }
 
-void event_Info::fillValues(int numberOfParticles, int particleIDs[19], double Xb, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19], double minimumXb, double minimumPMiss, bool onlyAcceptLeadProtons, bool onlyAcceptLeadNeutrons)
-{
-  nPar=numberOfParticles;
-  nDeltas = 0;
-  xB=Xb;
-  for(int i = 0; i < 19; i++){
-    parID[i]=particleIDs[i];
-    px[i]=mom_x[i];
-    py[i]=mom_y[i];
-    pz[i]=mom_z[i];
-    vtx[i]=vertecies[i];
-  }
-
-  minX = minimumXb;
-  minP = minimumPMiss;
-  onlyLeadProtons = onlyAcceptLeadProtons;
-  onlyLeadNeutrons = onlyAcceptLeadNeutrons;
-
-}
-
 //Particle ID functions
-bool event_Info::isNucleon(int j){
-  int ID = parID[j];
-  if(ID == pCode){
-    return true;
-  }
-  else if(ID == nCode){
-    return true;
-  }
-  return false;
+bool event_Info::isElectron(int i)
+{
+  return parList.at(i).isElectron();
 }
 
-bool event_Info::isProton(int j){
-  int ID = parID[j];
-  if(ID == pCode){
-    return true;
-  }
-  return false;
+bool event_Info::isNucleon(int i)
+{
+  return parList.at(i).isNucleon();
 }
 
-bool event_Info::isNeutron(int j){
-  int ID = parID[j];
-  if(ID == nCode){
-    return true;
-  }
-  return false;
+bool event_Info::isProton(int i)
+{
+  return parList.at(i).isProton();  
+}
+
+bool event_Info::isNeutron(int i)
+{
+  return parList.at(i).isNeutron();
 }
 
 
-bool event_Info::isPion(int j){
-  int ID = parID[j];
-  if(ID == pipCode){
-    return true;
-  }
-  else if(ID == pimCode){
-    return true;
-  }
-  else if(ID == pi0Code){
-    return true;
-  }
-  return false;
+bool event_Info::isPion(int i)
+{
+return parList.at(i).isPion();
 }
 
-bool event_Info::isDelta(int j){
-  int ID = parID[j];
-  if(ID == dppCode){
-    return true;
-  }
-  else if(ID == dpCode){
-    return true;
-  }
-  else if(ID == d0Code){
-    return true;
-  }
-  else if(ID == dmCode){
-    return true;
-  }
-  return false;
+bool event_Info::isDelta(int i)
+{
+return parList.at(i).isDelta();
 }
 
 int event_Info::getDeltaType(int j, int k){
-  int nucleonID = parID[j];
-  int pionID = parID[k];
+  int nucleonID = parList.at(j).getParID();
+  int pionID = parList.at(j).getParID();
   
   if((nucleonID==pCode) && (pionID==pipCode) ){
     return dppCode;
@@ -137,39 +92,95 @@ int event_Info::getNPar()
 
 int event_Info::getParID(int i)
 {
-  return parID[i];
+  return parList.at(i).getParID();
 }
 
 double event_Info::getPX(int i)
 {
-  return px[i];
+  return parList.at(i).getPX();
 }
 
 double event_Info::getPY(int i)
 {
-  return py[i];
+  return parList.at(i).getPY();
 }
 
 double event_Info::getPZ(int i)
 {
-  return pz[i];
+  return parList.at(i).getPZ();
+}
+
+TVector3 event_Info::getVector(int i)
+{
+  return parList.at(i).getVector();
 }
 
 double event_Info::getVTX(int i)
 {
-  return vtx[i];
+  return parList.at(i).getVTX();
+}
+
+double event_Info::getThetaPQ(int i)
+{
+  TVector3 vLead = getVector(i);
+  TVector3 vq = vBeam - getVector(0);
+  double ThetaPQ = vq.Angle(vLead) * (180/M_PI);
+  
+  return ThetaPQ;
+}
+
+double event_Info::getPoQ(int i)
+{
+  TVector3 vLead = getVector(i);
+  TVector3 vq = vBeam - getVector(0);
+  double PoQ = vLead.Mag()/vq.Mag();
+  
+  return PoQ;
+}
+
+double event_Info::getPMiss(int i)
+{
+  TVector3 vLead = getVector(i);
+  TVector3 vq = vBeam - getVector(0);
+  TVector3 vMiss = vLead - vq;
+  double PMiss = vMiss.Mag();
+
+  return PMiss;
+}
+
+double event_Info::getMassMiss(int i)
+{ 
+  TVector3 vLead = getVector(i);
+  TVector3 vq = vBeam - getVector(0);
+  double omega = vBeam.Mag() - getVector(0).Mag();
+  TVector3 vMiss = vLead - vq;
+  double eLead = sqrt(vLead.Mag2() + sq(mP));
+  double eMiss = omega + mP + mN - eLead;
+  double mMiss = sqrt(sq(eMiss)-vMiss.Mag2());
+
+  return mMiss;
+}
+
+double event_Info::getXB()
+{
+  return xB;
+}
+
+double event_Info::getQSq()
+{
+  return QSq;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions to find and set the lead
 void event_Info::setLead(int i)
 {
-  moveEntryForward(i,1);
+  moveEntry(i,1);
 }
 
 void event_Info::setRec(int i)
 {
-  moveEntryForward(i,2);
+  moveEntry(i,2);
 }
 
 //Finds out which particle is a lead nucleon in the entire event
@@ -254,7 +265,6 @@ void event_Info::addDelta(int j, int k)
   int dType = getDeltaType(j,k);
   combineParticle(j,k,dType);
   nDeltas++;
- 
 }
 //Returns true if the nucleon can be matched with a pion to create a delta
 bool event_Info::doesNucleonMatchPion(int i){
@@ -283,8 +293,8 @@ int event_Info::getWhichPionMatch(int i){
 //Returns the invariant mass of a nucleon at index j and a pion at index k
 double event_Info::getMassNucleonPion(int j, int k){
 
-  TVector3 vN(px[j],py[j],pz[j]);
-  TVector3 vpi(px[j],py[j],pz[j]);
+  TVector3 vN = parList.at(j).getVector();
+  TVector3 vpi = parList.at(k).getVector();
   TVector3 vD_test = vN + vpi;
   double eN = sqrt(vN.Mag2()+(mN*mN));
   double epi = sqrt(vpi.Mag2()+(mpc*mpc));
@@ -306,7 +316,7 @@ bool event_Info::checkDeltaWithIndex(int j, int k){
 //Private Functions
 bool event_Info::vtxMatch(int j, int k)
 {
-  if(abs(vtx[j]-vtx[k]) < 0.5){
+  if(abs(parList.at(j).getVTX()-parList.at(k).getVTX()) < 0.5){
     return true;
   }
 
@@ -324,95 +334,28 @@ if((dMass > (mD-wD)) && (dMass < (mD+wD))){
 void event_Info::combineParticle(int j, int k, int newParID)
 {
   changeNPar(nPar-1);
-  TVector3 vDelta((px[j]+px[k]),(py[j]+py[k]),(pz[j]+pz[k]));
-  double new_vtx = (vtx[j]+vtx[k])/2;
-  mergParInArrays(j,k,newParID,vDelta,new_vtx);
+  TVector3 vDelta = parList.at(j).getVector() + parList.at(k).getVector();
+  double new_vtx = (parList.at(j).getVTX()+parList.at(k).getVTX())/2;
+  part_Info merged(newParID, vDelta.X(), vDelta.X(), vDelta.X(), new_vtx);
+  mergParInArrays(j,k,merged);
 }
 
-void event_Info::moveEntryForward(int startIndex, int endIndex)
+void event_Info::moveEntry(int startIndex, int endIndex)
 {
-  if(endIndex > startIndex){
-    std::cerr<<"You are trying to move a particle forward in the index from index "<<startIndex<<" to index "<<endIndex<<".\n Aborting..";
-    exit(-2);
-  }
-
-  int startID = parID[startIndex];
-  double startpx = px[startIndex];
-  double startpy = py[startIndex];
-  double startpz = pz[startIndex];
-  double startvtx = vtx[startIndex];
-
-  for(int l = startIndex; l > endIndex; l--){
-    copy(l,(l-1));
-  }
-
-  parID[endIndex]=startID;
-  px[endIndex]=startpx;
-  py[endIndex]=startpy;
-  pz[endIndex]=startpz;;
-  vtx[endIndex]=startvtx;  
+  part_Info temp = parList.at(startIndex);
+  parList.erase(startIndex);
+  parList.insert(endIndex,temp);
 
 }
 
-void event_Info::copy(int indexOverWrite, int indexCopy){
-    parID[indexOverWrite]=parID[indexCopy];
-    px[indexOverWrite]=px[indexCopy];
-    py[indexOverWrite]=py[indexCopy];
-    pz[indexOverWrite]=pz[indexCopy];
-    vtx[indexOverWrite]=vtx[indexCopy];  
-}
-  
 void event_Info::changeNPar(int new_nPar)
 {
   nPar = new_nPar;
 }
 
-void event_Info::mergParInArrays(int j, int k, int newParID, TVector3 vDelta, double new_vtx)
+void event_Info::mergParInArrays(int j, int k, part_Info merged)
 {
-  //Check which particle comes first in the list
-  int a,b;
-  if(j<k){
-    a = j;
-    b = k;
-  }
-  else if(k<j){
-    a = k;
-    b = j;
-  }
-  else{
-    std::cerr<<"The program has picked the same particle to combine with itself.\n Aborting..";
-    exit(-2);
-  } 
-
-  //Now I move all particles between the two up by one
-  for(int i = a; i < (b-1) ; i++){
-      parID[i]=parID[i+1];
-      px[i]=px[i+1];
-      py[i]=py[i+1];
-      pz[i]=pz[i+1];      
-      vtx[i]=vtx[i+1];
-    }
-  //Now I move all particles after the two up by two
-  for(int i = (b-1); i < (nPar-1) ; i++){
-      parID[i]=parID[i+2];
-      px[i]=px[i+2];
-      py[i]=py[i+2];
-      pz[i]=pz[i+2];
-      vtx[i]=vtx[i+2];
-  }
-  //Now set anything else equal to zero
-  for(int i = (nPar-1); i < 19; i++){
-    parID[i]=0;
-    px[i]=0;
-    py[i]=0;
-    pz[i]=0;
-    vtx[i]=0;
-
-  }
-  //Finally, make the last particle the delta
-  parID[nPar-1] = newParID;
-  px[nPar-1]=vDelta.X();
-  py[nPar-1]=vDelta.Y();
-  pz[nPar-1]=vDelta.Z();
-  vtx[nPar-1]=new_vtx;
+  parList.erase(j);
+  parList.erase(k);
+  parList.push_back(merged);
 }

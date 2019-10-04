@@ -12,12 +12,11 @@
 #include "TVector3.h"
 
 #include "target_Info.h"
-#include "event_Info.h"
+#include "oldEvent_Info.h"
 
 using namespace std;
 
 //Define some globale functions and constants
-const TVector3 vBeam(0.,0.,4.461);
 double sq(double x){
   return x*x;
 }
@@ -335,7 +334,7 @@ int main(int argc, char ** argv){
   for(int i = 0; i < inTree->GetEntries(); i++){
     double weight = 1;
     inTree->GetEntry(i);
-    event_Info myInfo(nPar,parID,xB,momx,momy,momz,vtxZCorr,0,0,false,false);
+    oldEvent_Info myInfo(nPar,parID,xB,momx,momy,momz,vtxZCorr,0,0,false,false);
 
     TVector3 ve(momx[0],momy[0],momz[0]);
     TVector3 vq = vBeam - ve;
