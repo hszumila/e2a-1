@@ -129,7 +129,7 @@ void target_Info::setLum()
 void target_Info::fillRadArray()
 {
   double Theta,Eprime,Cross,CrossR,Corr,XB;
-  radFile.open(target);
+  radFile.open("");
   for(int i = 0; i < 51; i++){
     for(int j = 0; j < 37; j++){
       radFile >> Theta >> Eprime >> Cross >> CrossR >> Corr >> XB;
