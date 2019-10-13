@@ -29,16 +29,14 @@ bool part_Info::isNucleon(){
   return false;
 }
 
-bool part_Info::isProton(int j){
-  int parID = parparID[j];
+bool part_Info::isProton(){
   if(parID == pCode){
     return true;
   }
   return false;
 }
 
-bool part_Info::isNeutron(int j){
-  int parID = parparID[j];
+bool part_Info::isNeutron(){
   if(parID == nCode){
     return true;
   }
@@ -46,8 +44,7 @@ bool part_Info::isNeutron(int j){
 }
 
 
-bool part_Info::isPion(int j){
-  int parID = parparID[j];
+bool part_Info::isPion(){
   if(parID == pipCode){
     return true;
   }
@@ -60,8 +57,7 @@ bool part_Info::isPion(int j){
   return false;
 }
 
-bool part_Info::isDelta(int j){
-  int parID = parparID[j];
+bool part_Info::isDelta(){
   if(parID == dppCode){
     return true;
   }
@@ -100,7 +96,7 @@ double part_Info::getPZ()
 
 double part_Info::getVTX()
 {
-  return vtx[i];
+  return vtx;
 }
 
 TVector3 part_Info::getVector()

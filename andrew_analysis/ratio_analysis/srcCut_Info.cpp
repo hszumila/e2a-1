@@ -1,5 +1,5 @@
-#include "event_Info.h"
-#include "Acceptance.h"
+#include "srcCut_Info.h"
+#include "e2a_constants.h"
 srcCut_Info::srcCut_Info()
 {
 
@@ -17,10 +17,10 @@ srcCut_Info::srcCut_Info()
   doMaxThetaCut = false;
   doMinPoQCut = false;
   doMaxPoQCut = false;
-  doMinPMiss = false;
-  doMaxPMiss = false;
-  doMinMass = false;
-  doMaxMass = false;
+  doMinPMissCut = false;
+  doMaxPMissCut = false;
+  doMinMassCut = false;
+  doMaxMassCut = false;
 
 }
 
@@ -30,18 +30,115 @@ srcCut_Info::~srcCut_Info()
 
 
 //Returns false if it does not pass the cut
-bool srcCut_Info::applyCut(event_Info &myEvent){
-  
+int srcCut_Info::passCutReorder(event_Info &myEvent)
+{  
+  //If it is only a cut on the electrons
+  if(cutE && !cutLead){
+    if(passECut(myEvent)){
+      myEvent.clearNonElectron();
+      return 1;
+    }
+    return 0;
+  }    //If it is a cut on the electron and the lead
+  else if(cutE && cutLead){
+    if(!passECut(myEvent)){
+	return 0;
+      }
+    else{
+      int leadIndex = passLeadCut(myEvent);      
+      if(leadIndex > 0){
+	myEvent.setLeadandClear(leadIndex);	
+	return 1;
+      }
+      else if(leadIndex == -2){
+	return 2;
+      }
+      else{
+	return 0;
+      }      
+    }
+  }
 }
+
+int srcCut_Info::passCutConst(const event_Info myEvent)
+{
+  //If it is only a cut on the electrons
+  if(cutE && !cutLead){
+    if(passECut(myEvent)){
+      return 1;
+    }
+    return 0;
+  }    //If it is a cut on the electron and the lead
+  else if(cutE && cutLead){
+   
+    if(!passECut(myEvent)){
+	return 0;
+      }
+    else{
+      int leadIndex = passLeadCut(myEvent);
+      
+      if(leadIndex > 0){
+	return 1;
+      }
+      else if(leadIndex == -2){
+	return 2;
+      }
+      else{
+	return 0;
+      }      
+    }
+  }
+
+}
+
+
+void srcCut_Info::makeInclCut()
+{
+  setMinQSqCut(1.4);
+  setMaxQSqCut(5);
+}
+
+void srcCut_Info::makeStandardSemiCut()
+{
+  setMinXBCut(1.2);
+  setMaxXBCut(2);
+  setMaxThetaCut(50);
+  setMinPoQCut(0.62);
+  setMaxPoQCut(0.96);
+  setMinPMissCut(0.3);
+  setMaxPMissCut(0.6);
+  setMinMassCut(0.9);
+  setMaxMassCut(1.1);
+}
+
+void srcCut_Info::makeNewSemiCut()
+{
+  setMaxXBCut(2);
+  setMaxThetaCut(50);
+  setMinPoQCut(0.62);
+  setMinPMissCut(0.3);
+  setMaxPMissCut(0.6);
+  setMinMassCut(0.9);
+  setMaxMassCut(1.1);
+}
+
+void srcCut_Info::makeLightCut()
+{
+  setMaxXBCut(2);
+  setMaxThetaCut(25);
+  setMinPoQCut(0.62);
+  setMaxPMissCut(2);
+}
+
 
 bool srcCut_Info::passECut(event_Info myEvent)
 {
   bool passE = true; 
   if(!passXBCut(myEvent.getXB())){
-    passLead=false;
+    passE=false;
   }
-  if(!passQsqCut(myEvent.getQSq())){
-    passLead=false;
+  if(!passQSqCut(myEvent.getQSq())){
+    passE=false;
   }
 
   return passE;
@@ -84,106 +181,106 @@ bool srcCut_Info::passLeadCutbyIndex(event_Info myEvent, int i)
     passLead=false;
   }
   
-  return passE;
+  return passLead;
 }
 
 void srcCut_Info::setOnlyLeadProton()
 {
   doOnlyLeadProtons = true;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setOnlyLeadNeutron()
 {
   doOnlyLeadNeutrons = true;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMinXBCut(double X)
 {
   doMinXBCut = true;
   MinXBCut = X;
-  cutE = false;
+  cutE = true;
 }
 
 void srcCut_Info::setMaxXBCut(double X)
 {
   doMaxXBCut = true;
   MaxXBCut = X;
-  cutE = false;
+  cutE = true;
 }
 
 void srcCut_Info::setMinQSqCut(double X)
 {
   doMinQSqCut = true;
   MinQSqCut = X;
-  cutE = false;
+  cutE = true;
 }
 
 void srcCut_Info::setMaxQSqCut(double X)
 {
   doMaxQSqCut = true;
   MaxQSqCut = X;
-  cutE = false;
+  cutE = true;
 }
 
 void srcCut_Info::setMinThetaCut(double X)
 {
   doMinThetaCut = true;
   MinThetaCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMaxThetaCut(double X)
 {
   doMaxThetaCut = true;
   MaxThetaCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 void srcCut_Info::setMinPoQCut(double X)
 {
   doMinPoQCut = true;
   MinPoQCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMaxPoQCut(double X)
 {
   doMaxPoQCut = true;
   MaxPoQCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMinPMissCut(double X)
 {
   doMinPMissCut = true;
   MinPMissCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMaxPMissCut(double X)
 {
   doMaxPMissCut = true;
   MaxPMissCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 void srcCut_Info::setMinMassCut(double X)
 {
   doMinMassCut = true;
   MinMassCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 void srcCut_Info::setMaxMassCut(double X)
 {
   doMaxMassCut = true;
   MaxMassCut = X;
-  cutLead = false;
+  cutLead = true;
 }
 
 bool srcCut_Info::passXBCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinXBCut) && (X < MinXBCut)){
     passCut = false;
   }
@@ -191,12 +288,12 @@ bool srcCut_Info::passXBCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 bool srcCut_Info::passQSqCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinQSqCut) && (X < MinQSqCut)){
     passCut = false;
   }
@@ -204,19 +301,19 @@ bool srcCut_Info::passQSqCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 bool srcCut_Info::passLeadNucleonType(int ID)
 {
-  passCut = true;
-  if((ID != pcode) && (ID != ncode)){
+  bool passCut = true;
+  if((ID != pCode) && (ID != nCode)){
     passCut = false;
   }
-  if(doOnlyLeadProtons && (ID != pcode)){
+  if(doOnlyLeadProtons && (ID != pCode)){
     passCut = false;
   }
-  if(doOnlyLeadNeutrons && (ID != ncode)){
+  if(doOnlyLeadNeutrons && (ID != nCode)){
     passCut = false;
   }
 
@@ -225,7 +322,7 @@ bool srcCut_Info::passLeadNucleonType(int ID)
 
 bool srcCut_Info::passThetaCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinThetaCut) && (X < MinThetaCut)){
     passCut = false;
   }
@@ -233,12 +330,12 @@ bool srcCut_Info::passThetaCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 bool srcCut_Info::passPoQCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinPoQCut) && (X < MinPoQCut)){
     passCut = false;
   }
@@ -246,12 +343,12 @@ bool srcCut_Info::passPoQCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 bool srcCut_Info::passPMissCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinPMissCut) && (X < MinPMissCut)){
     passCut = false;
   }
@@ -259,12 +356,12 @@ bool srcCut_Info::passPMissCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 bool srcCut_Info::passMassCut(double X)
 {
-  passCut = true;
+  bool passCut = true;
   if((doMinMassCut) && (X < MinMassCut)){
     passCut = false;
   }
@@ -272,7 +369,7 @@ bool srcCut_Info::passMassCut(double X)
     passCut = false;
   }
 
-  return passCut
+  return passCut;
 }
 
 

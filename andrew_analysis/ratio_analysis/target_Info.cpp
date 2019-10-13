@@ -39,13 +39,48 @@ target_Info::target_Info(int A)
   eMap = new Acceptance(target,4461,2250,"e");
   pMap = new Acceptance(target,4461,2250,"p");
   pipMap = new Acceptance(target,4461,2250,"pip");
-  fillRadArray();
+  //fillRadArray();
   setLum();
 
 }
 
 target_Info::~target_Info()
 {
+}
+
+double target_Info::incl_acc(const TVector3 ve)
+{
+  double sumAcc = 0;
+  TRandom3 myRand(0);
+  for(int i = 0; i < 100; i++){
+    double phiE = 2 * M_PI * myRand.Rndm();
+    TVector3 vePrime = ve;
+    vePrime.Rotate(phiE,vBeam);
+    sumAcc += e_acc(vePrime);
+  }
+  return sumAcc/100;
+}
+
+double target_Info::semi_acc(const TVector3 ve,const TVector3 vLead)
+{
+  double sumAcc = 0;
+  TRandom3 myRand(0);
+
+  for(int i = 0; i < 100; i++){
+    double phiE = 2 * M_PI * myRand.Rndm();
+    double phiP = 2 * M_PI * myRand.Rndm();
+
+    TVector3 vePrime = ve;
+    TVector3 vLeadPrime = vLead;
+    vePrime.Rotate(phiE,vBeam);
+    vLeadPrime.Rotate(phiE,vBeam);
+    TVector3 q = vBeam - vePrime;
+    vLeadPrime.Rotate(phiP,q);
+
+    sumAcc += (e_acc(vePrime) * p_acc(vLeadPrime));
+  }
+  return sumAcc/100;
+
 }
 
 double target_Info::e_acc(TVector3 p)

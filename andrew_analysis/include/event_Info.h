@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <fstream>
 #include <cstdlib>
+#include <vector>
 
 #include "TVector3.h"
 
@@ -19,6 +20,7 @@ class event_Info
   event_Info(int numberOfParticles, int particleIDs[19], double Xb, double Q2, double mom_x[19], double mom_y[19], double mom_z[19], double vertecies[19]);
   ~event_Info();
   //Functions to test the type of particle
+  bool isElectron(int i);
   bool isNucleon(int i);
   bool isProton(int i);
   bool isNeutron(int i);
@@ -32,6 +34,7 @@ class event_Info
   double getPX(int i);
   double getPY(int i);
   double getPZ(int i);
+  TVector3 getVector(int i);
   double getVTX(int i);
   double getThetaPQ(int i);
   double getPoQ(int i);
@@ -40,10 +43,10 @@ class event_Info
   double getXB();
   double getQSq();
   //Functions to related to lead and recoil
+  void clearNonElectron();
   void setLead(int i);
+  void setLeadandClear(int i);
   void setRec(int i);
-  int getWhichLead();
-  bool isLeadbyIndex(int i);
   //Functions related to the delta
   void findAndMergeDeltas();
   void addDelta(int j, int k);
@@ -58,16 +61,17 @@ class event_Info
   int nDeltas;
   double xB;
   double QSq;
-  vector<part_Info> parList;
+  std::vector<part_Info> parList;
 
   bool vtxMatch(int j, int k);
   bool checkDeltaWithMass(const double dMass);
   //Functions for manipulating the set
   void combineParticle(int j, int k, int newParID);
   void moveEntry(int startIndex, int endIndex);
+  void clearAbove(int startIndex);
   void copy(int indexOverWrite, int indexCopy);
   void changeNPar(int new_nPar);
-  void mergParInArrays(int j, int k, int newParID, TVector3 vDelta, double new_vtx);
+  void mergeParInArrays(int j, int k, part_Info merged);
 };
 
 #endif

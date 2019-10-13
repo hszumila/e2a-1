@@ -154,9 +154,9 @@ double event_Info::getMassMiss(int i)
   TVector3 vq = vBeam - getVector(0);
   double omega = vBeam.Mag() - getVector(0).Mag();
   TVector3 vMiss = vLead - vq;
-  double eLead = sqrt(vLead.Mag2() + sq(mP));
+  double eLead = sqrt(vLead.Mag2() + (mP*mP));
   double eMiss = omega + mP + mN - eLead;
-  double mMiss = sqrt(sq(eMiss)-vMiss.Mag2());
+  double mMiss = sqrt((eMiss*eMiss)-vMiss.Mag2());
 
   return mMiss;
 }
@@ -173,73 +173,25 @@ double event_Info::getQSq()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions to find and set the lead
+void event_Info::clearNonElectron()
+{
+  clearAbove(1);
+}
+
 void event_Info::setLead(int i)
 {
   moveEntry(i,1);
 }
 
+void event_Info::setLeadandClear(int i)
+{
+  moveEntry(i,1);
+  clearAbove(2);
+}
+
 void event_Info::setRec(int i)
 {
   moveEntry(i,2);
-}
-
-//Finds out which particle is a lead nucleon in the entire event
-//If none are lead return -1. If more than one is lead return -2.
-int event_Info::getWhichLead(){
-  int numLead = 0;
-  int leadIndex = -1;
-  for(int j = 1; j < nPar; j++){
-    if(isLeadbyIndex(j)){
-      leadIndex = j;
-      numLead++;
-    }
-  }
-  if(numLead < 2){
-    return leadIndex;
-  }
-  return -2;
-}
-//Tests to see if the nucleon at index i is a lead
-bool event_Info::isLeadbyIndex(int i){
-  
-  const TVector3 vBeam(0.,0.,4.461);
-  TVector3 ve(px[0],py[0],pz[0]);
-  TVector3 vLead(px[i],py[i],pz[i]);
-  TVector3 vq = vBeam - ve;
-  TVector3 vMiss = vLead - vq;
-  bool passLead = true;
-  
-  if(!isNucleon(i)){
-    passLead=false;
-  }
-  if(onlyLeadProtons && (!isProton(i))){
-    passLead=false;
-  }
-  if(onlyLeadNeutrons && (!isNeutron(i))){
-    passLead=false;
-  }
-  if(xB < minX){
-    passLead=false;
-  }
-  if(xB > 2){
-  passLead=false;
-  }
-  //if(vq.Angle(vLead)>((M_PI*25)/180)){
-  //  passLead=false;
-  //}
-  //if((vLead.Mag()/vq.Mag())<(0.62)){
-  //  passLead=false;
-  //}
-  //if((vLead.Mag()/vq.Mag())>(0.96)){
-  //  passLead=false;
-  //}
-  if(vMiss.Mag() < (minP)){
-    passLead=false;
-  }
-  if(vMiss.Mag() > (2)){
-    passLead=false;
-  }
-  return passLead;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -337,15 +289,23 @@ void event_Info::combineParticle(int j, int k, int newParID)
   TVector3 vDelta = parList.at(j).getVector() + parList.at(k).getVector();
   double new_vtx = (parList.at(j).getVTX()+parList.at(k).getVTX())/2;
   part_Info merged(newParID, vDelta.X(), vDelta.X(), vDelta.X(), new_vtx);
-  mergParInArrays(j,k,merged);
+  mergeParInArrays(j,k,merged);
 }
 
 void event_Info::moveEntry(int startIndex, int endIndex)
 {
   part_Info temp = parList.at(startIndex);
-  parList.erase(startIndex);
-  parList.insert(endIndex,temp);
+  parList.erase(parList.begin()+startIndex);
+  parList.insert(parList.begin()+endIndex,temp);
 
+}
+
+void event_Info::clearAbove(int startIndex)
+{
+  for(int i = startIndex; i < nPar; i++){
+    parList.erase(parList.begin()+startIndex);
+  }
+  nPar = startIndex;
 }
 
 void event_Info::changeNPar(int new_nPar)
@@ -353,9 +313,9 @@ void event_Info::changeNPar(int new_nPar)
   nPar = new_nPar;
 }
 
-void event_Info::mergParInArrays(int j, int k, part_Info merged)
+void event_Info::mergeParInArrays(int j, int k, part_Info merged)
 {
-  parList.erase(j);
-  parList.erase(k);
+  parList.erase(parList.begin()+j);
+  parList.erase(parList.begin()+k);
   parList.push_back(merged);
 }

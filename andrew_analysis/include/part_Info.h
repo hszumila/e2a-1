@@ -11,6 +11,7 @@
 #include "TVector3.h"
 
 #include "e2a_constants.h"
+#include "constants.h"
 
 class part_Info
 {

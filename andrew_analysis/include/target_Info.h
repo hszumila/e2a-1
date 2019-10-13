@@ -11,8 +11,10 @@
 #include "TFile.h"
 #include "TH3.h"
 #include "TVector3.h"
+#include "TRandom3.h"
 
 #include "Acceptance.h"
+#include "e2a_constants.h"
 
 class TH3D;
 class TFile;
@@ -26,6 +28,8 @@ class target_Info
  public:
   target_Info(int A);
   ~target_Info();
+  double incl_acc(const TVector3 ve);
+  double semi_acc(const TVector3 ve, const TVector3 vLead);
   double e_acc(TVector3 p);
   double p_acc(TVector3 p);
   double pip_acc(TVector3 p);

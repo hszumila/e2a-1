@@ -18,9 +18,16 @@ class srcCut_Info
  public:
   srcCut_Info();
   ~srcCut_Info();
-  bool applyCut(event_Info &myEvent);
+  int passCutReorder(event_Info &myEvent);
+  int passCutConst(const event_Info myEvent);
+  //Predefined Cuts
+  void makeInclCut();
+  void makeStandardSemiCut();
+  void makeNewSemiCut();
+  void makeLightCut();
+  //Check what it passed
   bool passECut(event_Info myEvent);
-  bool passLeadCut(event_Info myEvent);
+  int passLeadCut(event_Info myEvent);
   bool passLeadCutbyIndex(event_Info myEvent, int i);
   //Functions to set a cut
   void setOnlyLeadProton();
@@ -53,10 +60,10 @@ class srcCut_Info
   bool doMaxThetaCut;
   bool doMinPoQCut;
   bool doMaxPoQCut;
-  bool doMinPMiss;
-  bool doMaxPMiss;
-  bool doMinMass;
-  bool doMaxMass;
+  bool doMinPMissCut;
+  bool doMaxPMissCut;
+  bool doMinMassCut;
+  bool doMaxMassCut;
 
   double MinXBCut;
   double MaxXBCut;
@@ -66,12 +73,12 @@ class srcCut_Info
   double MaxThetaCut;
   double MinPoQCut;
   double MaxPoQCut;
-  double MinPMiss;
-  double MaxPMiss;
-  double MinMass;
-  double MaxMass;
+  double MinPMissCut;
+  double MaxPMissCut;
+  double MinMassCut;
+  double MaxMassCut;
 
-  bool passLeadNucleonType(intID);
+  bool passLeadNucleonType(int ID);
   bool passXBCut(double X);
   bool passQSqCut(double X);
   bool passThetaCut(double X);
