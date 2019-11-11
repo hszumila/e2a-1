@@ -102,7 +102,7 @@ void srcCut_Info::makeStandardSemiCut()
 {
   setMinXBCut(1.2);
   setMaxXBCut(2);
-  setMaxThetaCut(50);
+  setMaxThetaCut(25);
   setMinPoQCut(0.62);
   setMaxPoQCut(0.96);
   setMinPMissCut(0.3);
@@ -114,13 +114,27 @@ void srcCut_Info::makeStandardSemiCut()
 void srcCut_Info::makeNewSemiCut()
 {
   setMaxXBCut(2);
-  setMaxThetaCut(50);
+  setMaxThetaCut(25);
   setMinPoQCut(0.62);
   setMinPMissCut(0.3);
   setMaxPMissCut(0.6);
   setMinMassCut(0.9);
   setMaxMassCut(1.1);
 }
+
+void srcCut_Info::makeGausCut()
+{
+  setMaxXBCut(2);
+
+  TRandom3 myRand(0);
+  setMaxThetaCut(myRand.Gaus(25,5));
+  setMinPoQCut(myRand.Gaus(0.62,0.124));
+  setMinPMissCut(myRand.Gaus(0.3,0.05));
+  setMaxPMissCut(myRand.Gaus(0.6,0.05));
+  setMinMassCut(myRand.Gaus(0.9,0.05));
+  setMaxMassCut(myRand.Gaus(1.1,0.05));
+}
+
 
 void srcCut_Info::makeLightCut()
 {

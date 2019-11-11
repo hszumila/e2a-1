@@ -14,6 +14,7 @@
 #include "TRandom3.h"
 
 #include "Acceptance.h"
+#include "Fiducial.h"
 #include "e2a_constants.h"
 
 class TH3D;
@@ -30,6 +31,8 @@ class target_Info
   ~target_Info();
   double incl_acc(const TVector3 ve);
   double semi_acc(const TVector3 ve, const TVector3 vLead);
+  bool pass_incl_fid(const TVector3 ve);
+  bool pass_semi_fid(const TVector3 ve, const TVector3 vLead);
   double e_acc(TVector3 p);
   double p_acc(TVector3 p);
   double pip_acc(TVector3 p);
@@ -51,15 +54,19 @@ class target_Info
   double vzMax;
   double vzMin;
   double thick;
-  std::string target;
-  std::ifstream radFile;
+  std::string acc_Name;
+  std::string fid_Name;
+  std::string rad_Name;
   double radXB[37];
   double radTheta[51];
   double radCorr[37][51];
   Acceptance * eMap = NULL; 
   Acceptance * pMap = NULL;
   Acceptance * pipMap = NULL;
+  Fiducial * targFid = NULL;
   void setLum();
+
+  std::ifstream radFile;
   void fillRadArray();
   
 };

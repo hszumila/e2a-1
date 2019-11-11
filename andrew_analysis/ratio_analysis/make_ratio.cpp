@@ -92,7 +92,7 @@ int main(int argc, char ** argv){
   inputNumFile->Close();
   inputDenFile->cd();
   inputDenFile->Close();
-  cerr<< argv[2]<<" has been completed. \n\n\n";
+  cerr<< argv[3]<<" has been completed. \n\n\n";
   
   return 0;
 }

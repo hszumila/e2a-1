@@ -12,7 +12,10 @@ target_Info::target_Info(int A)
     density = 0.0655;
     ltcc=10224579.8;
     thick=vzMax-vzMin;
-    target = "He3";
+    acc_Name = "He3";
+    fid_Name = "3He";
+    //No 3He rad correction
+    rad_Name = "He4.dat";
   }
   else if(A==4){
     trans = 0.75;
@@ -21,7 +24,9 @@ target_Info::target_Info(int A)
     density = 0.1375;
     ltcc=6895323.02;
     thick=vzMax-vzMin;
-    target = "He4";
+    acc_Name = "He4";
+    fid_Name = "4He";
+    rad_Name = "He4.dat";
   }
   else if(A==12){
     trans = 0.53;
@@ -30,16 +35,19 @@ target_Info::target_Info(int A)
     density = 1.786;
     ltcc=17962592.69;
     thick=0.1;
-    target = "solid";
+    acc_Name = "solid";
+    fid_Name = "12C";
+    rad_Name = "C12.dat";
   }
   else{
     std::cerr << "The nucleus you have chosen could not be found\n\n Aborting...\n\n";
     exit(-2);
   }
-  eMap = new Acceptance(target,4461,2250,"e");
-  pMap = new Acceptance(target,4461,2250,"p");
-  pipMap = new Acceptance(target,4461,2250,"pip");
-  //fillRadArray();
+  eMap = new Acceptance(acc_Name,4461,2250,"e");
+  pMap = new Acceptance(acc_Name,4461,2250,"p");
+  pipMap = new Acceptance(acc_Name,4461,2250,"pip");
+  targFid = new Fiducial(4461,2250,5996,fid_Name,true);
+  fillRadArray();
   setLum();
 
 }
@@ -81,6 +89,19 @@ double target_Info::semi_acc(const TVector3 ve,const TVector3 vLead)
   }
   return sumAcc/100;
 
+}
+
+bool target_Info::pass_incl_fid(const TVector3 ve)
+{
+  return targFid->e_inFidRegion(ve);
+}
+
+bool target_Info::pass_semi_fid(const TVector3 ve, const TVector3 vLead)
+{
+  if(targFid->e_inFidRegion(ve) && targFid->pFiducialCut(vLead)){
+    return true;
+  }
+  return false; 
 }
 
 double target_Info::e_acc(TVector3 p)
@@ -136,7 +157,7 @@ bool target_Info::vtxInRange(double eVTX, double leadVTX)
   if(leadVTX > vzMax){
     inRange = false;
   }
-  if(abs(eVTX-leadVTX) > 0.5){
+v  if(abs(eVTX-leadVTX) > 0.5){
     inRange = false;
   }
   return inRange;
@@ -164,7 +185,7 @@ void target_Info::setLum()
 void target_Info::fillRadArray()
 {
   double Theta,Eprime,Cross,CrossR,Corr,XB;
-  radFile.open("");
+  radFile.open(rad_Name);
   for(int i = 0; i < 51; i++){
     for(int j = 0; j < 37; j++){
       radFile >> Theta >> Eprime >> Cross >> CrossR >> Corr >> XB;

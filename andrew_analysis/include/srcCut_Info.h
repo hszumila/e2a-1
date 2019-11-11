@@ -9,6 +9,7 @@
 #include <cstdlib>
 
 #include "TVector3.h"
+#include "TRandom3.h"
 
 #include "e2a_constants.h"
 #include "event_Info.h"
@@ -24,6 +25,7 @@ class srcCut_Info
   void makeInclCut();
   void makeStandardSemiCut();
   void makeNewSemiCut();
+  void makeGausCut();
   void makeLightCut();
   //Check what it passed
   bool passECut(event_Info myEvent);
@@ -86,6 +88,6 @@ class srcCut_Info
   bool passPMissCut(double X);
   bool passMassCut(double X);
   
-  };
+};
 
 #endif

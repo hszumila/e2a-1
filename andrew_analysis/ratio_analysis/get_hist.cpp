@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <math.h> 
 #include <unistd.h> 
+#include <iterator>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -119,14 +120,16 @@ int main(int argc, char ** argv){
       }
   
   
-  cerr<<"Files have been opened\n";
+  cout<<"Files have been opened\n";
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxBIncl[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
-  int numbinxBIncl = 22;
-  double binxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
-  int numbinxB = 30;
+  double binxBIncl[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.32,1.58,1.79,2};
+  int numbinxBIncl = 20;
+  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.32,1.58,1.79,2};
+  int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
+  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
+  int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
   vector<TH1*> hist_list;
@@ -135,6 +138,10 @@ int main(int argc, char ** argv){
   twoD_list.push_back(poq_thetapq_0);
   TH2D * poq_thetapq_1 = new TH2D("poq_thetapq_1","poq_thetapq_1;poq;thetapq;Counts",24,0,1.2,60,0,60);
   twoD_list.push_back(poq_thetapq_1);
+  TH2D * xB_thetapMq_noCut = new TH2D("xB_thetapMq_noCut","xB_thetapMq_noCut;xB;thetapMq;Counts",finenumbinxB,finebinxB,18,0,180);
+  twoD_list.push_back(xB_thetapMq_noCut);
+  TH2D * xB_thetapMq_Cut = new TH2D("xB_thetapMq_Cut","xB_thetapMq_Cut;xB;thetapMq;Counts",finenumbinxB,finebinxB,18,0,180);
+  twoD_list.push_back(xB_thetapMq_Cut);
   TH2D * xB_mMiss_All[6][3];
   TH2D * xB_mMiss_cutPoQ[6][3];
   TH2D * xB_poq_All[6][3];
@@ -227,7 +234,7 @@ int main(int argc, char ** argv){
     
     //Do some things for all events
     if(((i%5000) == 0) && verbose){
-      cerr << (i*100.)/(inTree->GetEntries()) <<"% complete \n";
+      cout << (i*100.)/(inTree->GetEntries()) <<"% complete \n";
     }
     
     if(nPar > 19){
@@ -328,10 +335,13 @@ int main(int argc, char ** argv){
 	}
       }
 
+      xB_thetapMq_noCut->Fill(xB,thetapMq,weight);
+
       if( (mMiss > 0.9) && (mMiss < 1.1) ){
-	if( (poq > 0.62) && (poq < 0.96) ){
-	  if( (vMiss.Mag() > 0.3) && (vMiss.Mag() < 0.6) ){
-	    if( (xB > 1.2) && (xB < 2) ){
+	if( (vMiss.Mag() > 0.3) && (vMiss.Mag() < 0.6) ){
+	  xB_thetapMq_Cut->Fill(xB,thetapMq,weight);
+	  if( (xB > 1.2) && (xB < 2) ){
+	    if( (poq > 0.62) && (poq < 0.96) ){
 	      hist_xB->Fill(xB,weight);	  	  
 	    }
 	  }
