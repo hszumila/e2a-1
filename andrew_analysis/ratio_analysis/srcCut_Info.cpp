@@ -127,12 +127,22 @@ void srcCut_Info::makeGausCut()
   setMaxXBCut(2);
 
   TRandom3 myRand(0);
-  setMaxThetaCut(myRand.Gaus(25,5));
-  setMinPoQCut(myRand.Gaus(0.62,0.124));
-  setMinPMissCut(myRand.Gaus(0.3,0.05));
-  setMaxPMissCut(myRand.Gaus(0.6,0.05));
+  /*  setMaxThetaCut(myRand.Gaus(25,5));
+  setMinPoQCut(myRand.Gaus(0.62,0.05));
+  setMinPMissCut(myRand.Gaus(0.3,0.025));
+  setMaxPMissCut(myRand.Gaus(0.6,0.025));
   setMinMassCut(myRand.Gaus(0.9,0.05));
   setMaxMassCut(myRand.Gaus(1.1,0.05));
+  */
+
+  setMaxThetaCut(myRand.Uniform(20,30));
+  setMinThetaCut(myRand.Uniform(0,5));
+  setMinPoQCut(myRand.Uniform(0.57,0.67));
+  setMinPMissCut(myRand.Uniform(0.275,0.325));
+  setMaxPMissCut(myRand.Uniform(0.575,0.625));
+  setMinMassCut(myRand.Uniform(0.85,0.95));
+  setMaxMassCut(myRand.Uniform(1.05,1.15));
+
 }
 
 
@@ -292,6 +302,87 @@ void srcCut_Info::setMaxMassCut(double X)
   cutLead = true;
 }
 
+//Functions to get the cut values
+double srcCut_Info::getMinXB()
+{
+  if(doMinXBCut == true){return MinXBCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxXB()
+{
+  if(doMaxXBCut == true){return MaxXBCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMinQSq()
+{
+  if(doMinQSqCut == true){return MinQSqCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxQSq()
+{
+  if(doMaxQSqCut == true){return MaxQSqCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+double srcCut_Info::getMinTheta()
+{
+  if(doMinThetaCut == true){return MinThetaCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxTheta()
+{
+  if(doMaxThetaCut == true){return MaxThetaCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+double srcCut_Info::getMinPoQ()
+{
+  if(doMinPoQCut == true){return MinPoQCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxPoQ()
+{
+  if(doMaxPoQCut == true){return MaxPoQCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+double srcCut_Info::getMinPMiss()
+{
+  if(doMinPMissCut == true){return MinPMissCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxPMiss()
+{
+  if(doMaxPMissCut == true){return MaxPMissCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+double srcCut_Info::getMinMass()
+{
+  if(doMinMassCut == true){return MinMassCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+
+double srcCut_Info::getMaxMass()
+{
+  if(doMaxMassCut == true){return MaxMassCut;}
+  std::cerr<<"Attempting to retrieve a cut value that was not set.\n Returning 0.\n\n";
+  return 0;
+}
+//Check to see if the event passes the cut
 bool srcCut_Info::passXBCut(double X)
 {
   bool passCut = true;

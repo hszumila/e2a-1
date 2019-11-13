@@ -91,7 +91,7 @@ int main(int argc, char ** argv){
 	checkLeadD = true;
 	break;
       case 'g':
-	myCut.makeNewSemiCut();
+	myCut.makeGausCut();
 	break;
       case 'p':
 	myCut.setMinPMissCut(atof(optarg));

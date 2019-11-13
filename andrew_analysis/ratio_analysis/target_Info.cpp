@@ -2,7 +2,7 @@
 #include "Acceptance.h"
 target_Info::target_Info(int A)
 {
-  
+  e2adir = std::string(getenv("E2A_INSTALL"));  
   M_a=(double)A;
   
   if(A==3){
@@ -15,7 +15,7 @@ target_Info::target_Info(int A)
     acc_Name = "He3";
     fid_Name = "3He";
     //No 3He rad correction
-    rad_Name = "He4.dat";
+    rad_Name = "He4";
   }
   else if(A==4){
     trans = 0.75;
@@ -26,7 +26,7 @@ target_Info::target_Info(int A)
     thick=vzMax-vzMin;
     acc_Name = "He4";
     fid_Name = "4He";
-    rad_Name = "He4.dat";
+    rad_Name = "He4";
   }
   else if(A==12){
     trans = 0.53;
@@ -37,7 +37,7 @@ target_Info::target_Info(int A)
     thick=0.1;
     acc_Name = "solid";
     fid_Name = "12C";
-    rad_Name = "C12.dat";
+    rad_Name = "C12";
   }
   else{
     std::cerr << "The nucleus you have chosen could not be found\n\n Aborting...\n\n";
@@ -129,6 +129,33 @@ double target_Info::getLum()
   return lum;
 }
 
+double target_Info::getRadCorr(double Theta, double XB)
+{
+  if((Theta < 10) || (Theta > 60)){
+    std::cout<<"Theta out of bounds.\n";
+    return 1;
+  }
+  if((XB < 0.15) || (XB > 2)){
+    std::cout<<"XB out of bounds.\n";
+    return 1;
+  }
+
+  double bin_Theta = Theta - 10;
+  int b_T = bin_Theta;
+  int x_T = bin_Theta - b_T;
+  double bin_XB = (XB - 0.15) / 0.05;
+  int b_X = bin_XB;
+  int x_X = bin_XB - b_X;
+  
+  double rC = 0;
+  rC += (1-x_X) * (1-x_T) * radCorr[b_X][b_T];
+  rC += (x_X) * (1-x_T) * radCorr[b_X+1][b_T];
+  rC += (1-x_X) * (x_T) * radCorr[b_X][b_T+1];
+  rC += (x_X) * (x_T) * radCorr[b_X+1][b_T+1];
+  
+  return rC;
+}
+
 bool target_Info::evtxInRange(double eVTX)
 {
   bool inRange = true;
@@ -157,7 +184,7 @@ bool target_Info::vtxInRange(double eVTX, double leadVTX)
   if(leadVTX > vzMax){
     inRange = false;
   }
-v  if(abs(eVTX-leadVTX) > 0.5){
+  if(abs(eVTX-leadVTX) > 0.5){
     inRange = false;
   }
   return inRange;
@@ -184,16 +211,44 @@ void target_Info::setLum()
 
 void target_Info::fillRadArray()
 {
+  //Get the file opened
+  char radFileName[256]; 
+  sprintf(radFileName,"%s/%s.dat",e2adir.c_str(),rad_Name.c_str());
+  std::ifstream radFile(radFileName);                                                           
+  std::cout<<"Opening Radiation Correctoin File From: \n"<<radFileName<<"\n\n";
+  //Check file
+  if (!radFile.is_open())
+    {
+      std::cerr << "Failed to open Radiation Correction file \n"
+                << "\n\n Exiting...\n\n";
+      exit(-3);
+    }
+
   double Theta,Eprime,Cross,CrossR,Corr,XB;
-  radFile.open(rad_Name);
-  for(int i = 0; i < 51; i++){
-    for(int j = 0; j < 37; j++){
-      radFile >> Theta >> Eprime >> Cross >> CrossR >> Corr >> XB;
-      radCorr[j][i] = Corr;
-      if(i==0){
-	radXB[j] = XB;
-      }
-      radTheta[i] = Theta;
+  //Set to zero and check if it is overwritten
+  for(int j = 0; j < 51; j++){
+      radCorr[35][j] = 0;
+      radCorr[36][j] = 0;
+      radCorr[37][j] = 0;
+  }
+  //Fill with values you find
+  while(radFile >> Theta){
+    radFile >> Eprime >> Cross >> CrossR >> Corr >> XB;
+    if(XB > 2.02){ continue; }
+    int binXB = round((XB - 0.15) / 0.05);
+    int binTheta = round(Theta - 10);
+    radCorr[binXB][binTheta] = Corr;    
+  }
+  //Some of the files dont have this last bin for some reason
+  for(int j = 0; j < 51; j++){
+    if(radCorr[35][j] == 0){
+      radCorr[35][j] = radCorr[34][j];
+    }
+    if(radCorr[36][j] == 0){
+      radCorr[36][j] = radCorr[35][j];
+    }
+    if(radCorr[37][j] == 0){
+      radCorr[37][j] = radCorr[36][j];
     }
   }
 }

@@ -104,17 +104,11 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxBIncl[] = {0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.32,1.58,1.79,2};
-  int numbinxBIncl = 20;
-  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.32,1.58,1.79,2};
+  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.32,1.52,1.74,2};
   int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
-  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
-  int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
   vector<TH1*> hist_list;
- 
-  TH1D * hist_xB_q[4];
   TH1D * hist_Cross = new TH1D("totalCross","Cross;1;Value",1,0.5,1.5);
   hist_list.push_back(hist_Cross);
   TH1D * hist_xB =  new TH1D("hist_xB" ,"hist;xB;Counts",numbinxB,binxB);
@@ -166,6 +160,7 @@ int main(int argc, char ** argv){
     }
 
     TVector3 ve = myInfo.getVector(0);
+    double ThetaE = ve.Theta() * 180 / M_PI;
     TVector3 vq = vBeam - ve;
     double omega = vBeam.Mag() - ve.Mag();
     double phi = ve.Phi() * 180 / M_PI;
@@ -192,6 +187,8 @@ int main(int argc, char ** argv){
     if(doTrans){
       weight = weight / targInfo.getTrans();
     }
+    //Do ratiative corrections from misak
+    weight = weight / targInfo.getRadCorr(ThetaE,xB);
 
     hist_xB->Fill(xB,weight);	  	        
     hist_Cross->Fill(1,weight);

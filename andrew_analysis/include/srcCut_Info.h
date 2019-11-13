@@ -46,6 +46,20 @@ class srcCut_Info
   void setMaxPMissCut(double X);
   void setMinMassCut(double X);
   void setMaxMassCut(double X);
+  //Functions to get cut values
+  double getMinXB();
+  double getMaxXB();
+  double getMinQSq();
+  double getMaxQSq();
+  double getMinTheta();
+  double getMaxTheta();
+  double getMinPoQ();
+  double getMaxPoQ();
+  double getMinPMiss();
+  double getMaxPMiss();
+  double getMinMass();
+  double getMaxMass();
+
  
  private:
   bool cutE;
