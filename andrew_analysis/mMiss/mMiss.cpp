@@ -33,7 +33,6 @@ void help_message()
       <<"-v: Verbose\n"
       <<"-d: Merge nucleons and pions to deltas before the lead nucelon is found\n"
       <<"-c: Write out only if the lead nucleon was found to be in a delta\n"
-      <<"-g: Set the cuts to random values\n"
       <<"-x: Set minimum xB (default = 0)\n"
       <<"-p: Set minimum pMiss [GeV] (default = 0)\n\n";
 }
@@ -75,7 +74,7 @@ int main(int argc, char ** argv){
   bool checkLeadD = false;
    
   int c;
-  while ((c=getopt (argc-3, &argv[3], "hvdcgp:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-3, &argv[3], "hvdcp:x:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -89,9 +88,6 @@ int main(int argc, char ** argv){
 	break;
       case 'c':
 	checkLeadD = true;
-	break;
-      case 'g':
-	myCut.makeGausCut();
 	break;
       case 'p':
 	myCut.setMinPMissCut(atof(optarg));
