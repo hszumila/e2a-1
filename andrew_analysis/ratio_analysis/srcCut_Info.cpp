@@ -116,7 +116,7 @@ void srcCut_Info::makeNewSemiCut()
   setMaxXBCut(2);
   setMaxThetaCut(25);
   setMinPoQCut(0.62);
-  setMinPMissCut(0.3);
+  setMinPMissCut(0.4);
   setMaxPMissCut(0.6);
   setMinMassCut(0.9);
   setMaxMassCut(1.1);
