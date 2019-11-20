@@ -18,13 +18,13 @@
 #include "TGraphAsymmErrors.h"
 
 
+// The purpose of this code is to calculate the total missing mass from mean_field and SRC pseudodata
 
-// Call with: ./find_mass_combined DATA/pseudo_skim_tree.root DATA/find_mass_combined.root 
 int main(int argc, char** argv){
   if (argc != 4){
     std::cout << "wrong number of arguments\n";
-    std::cout << "Try ./pseudo_skim_tree /input/file_mean_field /input/file_SRC /output/file\n";
-    std::cout << "input and output file cannot be the same. Change weights in code if this causes a problem\n";
+    std::cout << "Try ./find_mass_combined [input MF Data = DATA/simulator_MF.root] [input SRC Data = DATA/simulator_SRC.root] [output = DATA/find_mass_combined.root]\n";
+    std::cout << "NOTE: MF and SRC input cannot be the same file. Change weights in code if this causes a problem\n";
     return -1;
   }
 
@@ -42,7 +42,7 @@ int main(int argc, char** argv){
   const int Mass_x_max = 1000.; // make sure it can work with total sections
   const double mean_field_weight = 0.8;
   const double SRC_weight = 0.2;
-  const double tree_weight[2] = { mean_field_weight, SRC_weight};
+  const double tree_weight[2] = { mean_field_weight, SRC_weight };
   
 //Make trees and histograms for the nuclei
   TTree * Mean_Tree = (TTree*)input_file_mean->Get("T");
@@ -52,26 +52,50 @@ int main(int argc, char** argv){
   TH2D * his_P1_Mtf = new TH2D("P1_VS_Mtf","P1_VS_Mtf;P1;Mtf", total_bins, Mass_x_min, Mass_x_max, total_bins, Mass_y_min, Mass_y_max); // bin #, min1, min2, max
   TH2D * his_theta_P1prime_q = new TH2D("theta_VS_P1prime_q","theta_VS_P1prime_q;P1prime/q;theta", 1000, 0, 1.5, 1000, 0, 200); // bin #, min1, min2, max
   TH1D * his_Q2_weight = new TH1D("Q2_weight","Q2 [GeV^2];Counts", 20, 0., 4.1);
+  TH1D * his_Xb = new TH1D("Xb","Xb;Counts", 20, 1., 2.);
+  TH1D * his_P1_before = new TH1D("P1 before: no cuts","P1;Counts", 20, 0., 1000.);
+  TH1D * his_P1_after = new TH1D("P1 after: with cuts","P1;Counts", 20, 0., 1000.);
   // SRC contribution
   TH2D * his_P1_Mtf_SRC = new TH2D("P1_VS_Mtf_SRC","P1_VS_Mtf;P1;Mtf", total_bins, Mass_x_min, Mass_x_max, total_bins, Mass_y_min, Mass_y_max); // bin #, min1, min2, max
   TH2D * his_theta_P1prime_q_SRC = new TH2D("theta_VS_P1prime_q_SRC","theta_VS_P1prime_q;P1prime/q;theta", 1000, 0, 1.5, 1000, 0, 200); // bin #, min1, min2, max
   TH1D * his_Q2_weight_SRC = new TH1D("Q2_weight_SRC","Q2 [GeV^2];Counts", 20, 0., 4.1);
+  TH1D * his_Xb_SRC = new TH1D("Xb: SRC","Xb;Counts", 20, 1., 2.);
+  TH1D * his_P1_before_SRC = new TH1D("P1 before, SRC: no cuts","P1;Counts", 20, 0., 1000.);
+  TH1D * his_P1_after_SRC = new TH1D("P1 after, SRC: with cuts","P1;Counts", 20, 0., 1000.);
   // Mean Contribution
-  TH2D * his_P1_Mtf_mean = new TH2D("P1_VS_Mtf_mean","P1_VS_Mtf;P1;Mtf", total_bins, Mass_x_min, Mass_x_max, total_bins, Mass_y_min, Mass_y_max); // bin #, min1, min2, max
-  TH2D * his_theta_P1prime_q_mean = new TH2D("theta_VS_P1prime_q_mean","theta_VS_P1prime_q;P1prime/q;theta", 1000, 0, 1.5, 1000, 0, 200); // bin #, min1, min2, max
-  TH1D * his_Q2_weight_mean = new TH1D("Q2_weight_mean","Q2 [GeV^2];Counts", 20, 0., 4.1);
+  TH2D * his_P1_Mtf_MF = new TH2D("P1_VS_Mtf_mean","P1_VS_Mtf;P1;Mtf", total_bins, Mass_x_min, Mass_x_max, total_bins, Mass_y_min, Mass_y_max); // bin #, min1, min2, max
+  TH2D * his_theta_P1prime_q_MF = new TH2D("theta_VS_P1prime_q_mean","theta_VS_P1prime_q;P1prime/q;theta", 1000, 0, 1.5, 1000, 0, 200); // bin #, min1, min2, max
+  TH1D * his_Q2_weight_MF = new TH1D("Q2_weight_mean","Q2 [GeV^2];Counts", 20, 0., 4.1);
+  TH1D * his_Xb_MF = new TH1D("Xb: MF","Xb;Counts", 20, 1., 2.);
+  TH1D * his_P1_before_MF = new TH1D("P1 before, MF: no cuts","P1;Counts", 20, 0., 1000.);
+  TH1D * his_P1_after_MF = new TH1D("P1 after, MF: with cuts","P1;Counts", 20, 0., 1000.);
 
 // Sum of squares (error)
+  // MTF
   his_P1_Mtf->Sumw2();
-  his_theta_P1prime_q->Sumw2();
-  his_Q2_weight->Sumw2();
   his_P1_Mtf_av->Sumw2();
   his_P1_Mtf_SRC->Sumw2();
+  his_P1_Mtf_MF->Sumw2();
+  // Theta
+  his_theta_P1prime_q->Sumw2();
+  his_theta_P1prime_q_MF->Sumw2();
   his_theta_P1prime_q_SRC->Sumw2();
-  his_Q2_weight_SRC->Sumw2();
-  his_P1_Mtf_mean->Sumw2();
-  his_theta_P1prime_q_mean->Sumw2();
-  his_Q2_weight_mean->Sumw2();
+  // Q2
+  his_Q2_weight->Sumw2();  
+  his_Q2_weight_SRC->Sumw2(); 
+  his_Q2_weight_MF->Sumw2();
+  // Xb
+  his_Xb->Sumw2();
+  his_Xb_SRC->Sumw2();
+  his_Xb_MF ->Sumw2();
+  // P1
+  his_P1_before->Sumw2();
+  his_P1_after->Sumw2();
+  his_P1_before_SRC->Sumw2();
+  his_P1_after_SRC->Sumw2();
+  his_P1_before_MF->Sumw2();
+  his_P1_after_MF->Sumw2();
+
   
 // Define Variables from massT
   double Pbz = 4.461; // THIS SHOULD BE BEAM ENERGY, GeV! CHANGE GENERATOR IF NOT
@@ -101,18 +125,27 @@ int main(int argc, char** argv){
 
   
 // Define Variables for Loop
-  double Mn, theta_P1_prime_q;
+  double Mn, theta_P1_prime_q, weighted;
   TVector3 P1_prime_TVec;
   TTree *tree_array[2];
   tree_array[0] = Mean_Tree;
   tree_array[1] = SRC_Tree;
-  double SRC_events, Mean_field_events = 0;
+  double SRC_events, MF_events = 0;
 
 // Loop over all entries in all trees
   for (int tree_type = 0; tree_type < 2; tree_type++){
     std::cout << "looping through events \n";
   for (int i = 0; i < tree_array[tree_type]->GetEntries(); i++){   
     tree_array[tree_type]->GetEvent(i);
+
+    // delete later
+    TVector3 P1_holder(mom_x[1] + mom_x[0], mom_y[1] + mom_y[0], mom_z[1] - (Pbz - mom_z[0]));
+    if ( tree_type == 0. ){
+      his_P1_before_MF->Fill(P1_holder.Mag()*1000, weighted * tree_weight[tree_type]);}
+    else{
+      his_P1_before_SRC->Fill(P1_holder.Mag()*1000, weighted * tree_weight[tree_type]);}
+    // end delete later
+      
     if (Xb < 1.15) continue;
     TVector3 q_TVec(-mom_x[0], -mom_y[0], Pbz - mom_z[0]); //turn to TVector, transfered momentum
     double w = sqrt(q_TVec.Mag2() - Q2);
@@ -120,7 +153,7 @@ int main(int argc, char** argv){
 // Find out which of the pair is viable; if both: take first viable one (unsure how to deal with both now)
     bool nucleon_test = false;
     int recorded_nucleon;
-    for (int i = 1; i < 2./**nParticles**/; i++){ // look at ejected particles for one event
+    for (int i = 1; i < 2./**nParticles**/; i++){ // look at ejected particles for one event for now
       P1_prime_TVec.SetX(mom_x[i]); P1_prime_TVec.SetY(mom_y[i]); P1_prime_TVec.SetZ(mom_z[i]);             //turn to TVector, final nucleon momentum
       if ((P1_prime_TVec.Mag()/q_TVec.Mag()) > 0.96 or (P1_prime_TVec.Mag()/q_TVec.Mag()) < 0.62) continue; // selection criterion; taofeng    
       theta_P1_prime_q = P1_prime_TVec.Angle(q_TVec);                                                       //give angle between vectors, Radians    
@@ -174,27 +207,39 @@ int main(int argc, char** argv){
 // Create histograms
     TVector3 P1_TVec = P1_prime_TVec - q_TVec;
     if ( tree_type == 0. ){
-      SRC_events += 1.;
-      his_P1_Mtf_mean->Fill(P1_TVec.Mag()*1000.,Mtf*1000., weight * tree_weight[tree_type]);
-      his_theta_P1prime_q_mean->Fill((P1_prime_TVec.Mag()/q_TVec.Mag()), theta_P1_prime_q*(180/M_PI), weight * tree_weight[tree_type]);
-      his_Q2_weight_mean->Fill(Q2, weight * tree_weight[tree_type]);}
+      MF_events += 1.;
+      his_P1_Mtf_MF->Fill(P1_TVec.Mag()*1000., Mtf*1000., weight * tree_weight[tree_type]);
+      his_theta_P1prime_q_MF->Fill((P1_prime_TVec.Mag()/q_TVec.Mag()), theta_P1_prime_q*(180/M_PI), weight * tree_weight[tree_type]);
+      his_Q2_weight_MF->Fill(Q2, weight * tree_weight[tree_type]);
+      his_Xb_MF->Fill(Xb, weight * tree_weight[tree_type]);
+      his_P1_after_MF->Fill(P1_TVec.Mag()*1000, weight * tree_weight[tree_type]);}
     else if ( tree_type == 1. ){
-      Mean_field_events += 1.;
-      his_P1_Mtf_SRC->Fill(P1_TVec.Mag()*1000.,Mtf*1000., weight * tree_weight[tree_type]);
+      SRC_events += 1.;
+      his_P1_Mtf_SRC->Fill(P1_TVec.Mag()*1000., Mtf*1000., weight * tree_weight[tree_type]);
       his_theta_P1prime_q_SRC->Fill((P1_prime_TVec.Mag()/q_TVec.Mag()), theta_P1_prime_q*(180/M_PI), weight * tree_weight[tree_type]);
-      his_Q2_weight_SRC->Fill(Q2, weight * tree_weight[tree_type]);}
+      his_Q2_weight_SRC->Fill(Q2, weight * tree_weight[tree_type]);
+      his_Xb_SRC->Fill(Xb, weight * tree_weight[tree_type]);
+      his_P1_after_SRC->Fill(P1_TVec.Mag()*1000, weight * tree_weight[tree_type]);}
   }}
 
 // Combine Graphs with weights:
-  his_P1_Mtf->Add(his_P1_Mtf_SRC, Mean_field_events/(SRC_events+Mean_field_events)); // add histogram, weight those values
-  his_theta_P1prime_q->Add(his_theta_P1prime_q_SRC, Mean_field_events/(SRC_events+Mean_field_events));
-  his_Q2_weight->Add(his_Q2_weight_SRC, Mean_field_events/(SRC_events+Mean_field_events));
+  // Add SRC (scaled up to MF number)
+  his_P1_Mtf->Add(his_P1_Mtf_SRC, MF_events); // add histogram, weight those values
+  his_theta_P1prime_q->Add(his_theta_P1prime_q_SRC, MF_events);
+  his_Q2_weight->Add(his_Q2_weight_SRC, MF_events);
+  his_Xb->Add(his_Xb_SRC, MF_events);
+  his_P1_before->Add(his_P1_before_SRC, MF_events);
+  his_P1_after->Add(his_P1_after_SRC, MF_events);
 
-  his_P1_Mtf->Add(his_P1_Mtf_mean, SRC_events/(SRC_events+Mean_field_events));
-  his_theta_P1prime_q->Add(his_theta_P1prime_q_mean, SRC_events/(SRC_events+Mean_field_events));
-  his_Q2_weight->Add(his_Q2_weight_mean, SRC_events/(SRC_events+Mean_field_events));
+  // Add MF (scaled up to SRC number)
+  his_P1_Mtf->Add(his_P1_Mtf_MF, SRC_events);
+  his_theta_P1prime_q->Add(his_theta_P1prime_q_MF, SRC_events);
+  his_Q2_weight->Add(his_Q2_weight_MF, SRC_events);
+  his_Xb->Add(his_Xb_MF, SRC_events);
+  his_P1_before->Add(his_P1_before_MF, SRC_events);
+  his_P1_after->Add(his_P1_after_MF, SRC_events);
   
-  std::cout << "SRC events: " << SRC_events << "     Mean Field events: " << Mean_field_events << "\n";
+  std::cout << "SRC events: " << SRC_events << "     Mean Field events: " << MF_events << "\n";
 
   // ------------------------------------------------------------------------------------------------------------------- //
 
@@ -285,6 +330,18 @@ for (int round = 0.; round < total_sections; round++){
     his_theta_P1prime_q->Write();
     his_Q2_weight->Write();
     Mtf_error->Write();
+    
+    his_Xb->Write();
+    his_Xb_SRC->Write();
+    his_Xb_MF ->Write();
+    // P1
+    his_P1_before->Write();
+    his_P1_after->Write();
+    his_P1_before_SRC->Write();
+    his_P1_after_SRC->Write();
+    his_P1_before_MF->Write();
+    his_P1_after_MF->Write();
+  
     c2->Update();
     output_file->Close();
     return 0;
