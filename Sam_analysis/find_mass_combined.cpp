@@ -1,9 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include <cmath>
-
 #include <string>
 #include <vector>
-#include <math.h>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -256,7 +255,9 @@ int main(int argc, char** argv){
 
 // Create Histograms for every section (projection section) of the graph
 for (int round = 0.; round < total_sections; round++){
-  std::string histogramName = "projection_from_" + std::to_string(section_width*round) + "_to_" + std::to_string(section_width*(round+1.));
+  std::stringstream histogramNameStream;
+  histogramNameStream << "projection_from_" << (section_width*round) << "_to_" << (section_width*(round+1.));
+  std::string histogramName = histogramNameStream.str();
   proj_histo[round] = new TH1F( histogramName.c_str() , ":(" ,  total_bins, Mass_y_min, Mass_y_max);
  }
 
