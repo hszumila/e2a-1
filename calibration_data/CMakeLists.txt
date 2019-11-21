@@ -11,7 +11,12 @@ INSTALL (FILES
 	PIMFID_1161_1500.dat PIMFID_1161_750.dat
 	run_table.dat
 	prot_mom_corr_18338_18438.dat
-	vz_4461_4He.root vz_4461_12C.root vz_1161_3He.root
-	vz_2261_4He.root vz_2261_12C.root vz_2261_3He.root vz_2261_56Fe.root
+	vz_4461_4He.dat vz_4461_12C.dat vz_4461_3He.dat vz_1161_3He.dat
+	vz_2261_4He.dat vz_2261_12C.dat vz_2261_3He.dat vz_2261_56Fe.dat
 	n_pathlength_corr_4461.dat
         DESTINATION "$ENV{E2A_INSTALL}")
+
+
+#	These were the old root file vertex corrections. Now replaced with 2-param text files.
+#	vz_4461_4He.root vz_4461_12C.root vz_1161_3He.root
+#	vz_2261_4He.root vz_2261_12C.root vz_2261_3He.root vz_2261_56Fe.root
