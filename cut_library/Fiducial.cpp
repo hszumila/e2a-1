@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cmath>
 #include <iostream>
+#include <fstream>
+using namespace std;
 
 #include "TF1.h"
 #include "TFile.h"
