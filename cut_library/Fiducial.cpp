@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cmath>
 #include <iostream>
+#include <fstream>
+using namespace std;
 
 #include "TF1.h"
 #include "TFile.h"
@@ -20,7 +22,6 @@ Fiducial::Fiducial(int E_beam, int torus, int mini, std::string target, bool dat
   pip_deltat_mean  = NULL;
   pim_deltat_sig   = NULL;
   pim_deltat_mean  = NULL;
-  vz_corr_func     = NULL;
   
   // Initialize the key run settings
   E1=E_beam;
@@ -73,7 +74,6 @@ Fiducial::~Fiducial()
   if (pim_deltat_mean )   delete pim_deltat_mean;
 	if (el_Ep_ratio_sig )	delete el_Ep_ratio_sig;
 	if (el_Ep_ratio_mean)	delete el_Ep_ratio_mean;
-	if (vz_corr_func    )	delete vz_corr_func;
 }
 // ===================================================================================================================================
 bool Fiducial::pim_inFidRegion(TVector3 mom)
@@ -969,45 +969,27 @@ bool Fiducial::read_e_fid_params()
 // ===================================================================================================================================
 bool Fiducial::read_vz_cor_params()
 {
+  // Create file name
+  char param_file_name[256];
+  sprintf(param_file_name,"%s/vz_%d_%s.dat",e2adir.c_str(),E1,tar.c_str());	
 
-	std::string effective_tar;
-	if ((E1==4461)&&((tar=="3He"))) effective_tar = "4He"; // Using 4He parameters for 3He in case of 4.4GeV data
-	else effective_tar = tar;
-
-	char param_file_name[256];
-	sprintf(param_file_name,"%s/vz_%d_%s.root",e2adir.c_str(),E1,effective_tar.c_str());	
-
-	TFile * old_gfile = gFile;
-	TFile * cal_file = new TFile(param_file_name);
-
-	if(cal_file->IsZombie()){
-		std::cerr << "File " << param_file_name << " called by Fiducial::read_vz_cor_params() does not exist. Check it and fix it!\n";
-		exit(-2);
-	}
-
-	// If we previously set these, we should clean up their memory
-	if (vz_corr_func)
+  // open file
+  ifstream cal_file(param_file_name);
+  
+  // test that it's actually open
+  if (! cal_file.is_open())
     {
-      std::cerr << "in loop" << std::endl;
-      delete vz_corr_func;
+      std::cerr << "File " << param_file_name << " called by Fiducial::read_vz_cor_params() does not exist. Check it and fix it!\n";
+      exit(-2);
     }
-  std::cerr << cal_file << " " << vz_corr_func << std::endl;
-	// Pull from file
-  TF1 * temp = (TF1*)cal_file->Get("f_vz");
-  std::cerr << temp << "\n";
-	vz_corr_func=(TF1*)temp->Clone();
+  
+  // Read in the two parameters
+  cal_file >> vz_params[0] >> vz_params[1];
 
-  std::cerr << cal_file << " " << vz_corr_func << std::endl;
-
-	// Put the root global file pointer back to where it was. I hate ROOT. (me too) 
-	cal_file->Close();
-	gFile = old_gfile;	
-  std::cerr << "after gFile" << std::endl;
-	// Test that the histograms were pulled successfully
-	if (!vz_corr_func)
-		return false;
-
-	return true;
+  // close the file. 
+  cal_file.close();
+  
+  return true;
 }
 
 // ===================================================================================================================================
@@ -1954,11 +1936,15 @@ double Fiducial::vz_corr(TVector3 T3_mom)
 	double phi_mod = phi+30.;
 	if(phi_mod<0) phi_mod+=360;
 
-	return (-(vz_corr_func->GetParameter(1)))*cos((phi_mod-(vz_corr_func->GetParameter(2)))*M_PI/180.)/tan(theta); 
+	//return (-(vz_corr_func->GetParameter(1)))*cos((phi_mod-(vz_corr_func->GetParameter(2)))*M_PI/180.)/tan(theta); 
+	return -vz_params[0]*cos((phi_mod - vz_params[1])*M_PI/180.)/tan(theta);
 
 	//Vertex Correction Parameters:
 	//E1 = 2.2GeV: obtained from empty run 18283, for 4He
 	//E1 = 4.4GeV: obtained from empty run 18522, for 4He (works fine for 3He)
+
+	// Axel: uh hello, this correction is time-dependent, not target or beam energy dependent! This should
+	//       eventually get moved to Run_Dependent.cpp
 }
 // ===================================================================================================================================
 TVector3 Fiducial::FindUVW(TVector3 xyz)

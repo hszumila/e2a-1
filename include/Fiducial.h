@@ -121,7 +121,7 @@ class Fiducial
 		double fgPar_Pimfid_Theta_S5_extra[8][4];
 
 		// Vertex Corrections ////////////////////////////
-		TF1 *vz_corr_func;		 
+		double vz_params[2];
 
 		// Momentum Corrections //////////////////////////
 		

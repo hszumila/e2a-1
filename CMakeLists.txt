@@ -3,6 +3,7 @@
 # Set up
 cmake_minimum_required (VERSION 2.6)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+set(andrew_include ${CMAKE_SOURCE_DIR}/andrew_analysis/include ${CMAKE__SOURCE_DIR}/andrew_analysis/ratio_analysis)
 find_package(ROOT REQUIRED)
 
 # Project name
@@ -25,6 +26,7 @@ add_subdirectory(andrew_analysis)
 add_subdirectory(Adin_analysis)
 add_subdirectory(Axel_analysis)
 add_subdirectory(Rey_neutrons)
+add_subdirectory(Sam_analysis)
 
 # If on the farm, compile programs that require CLASTOOL
 option(Build_Farm "Builds programs that require ifarm libraries" OFF )
@@ -33,8 +35,12 @@ if(Build_Farm)
 	add_subdirectory(write_tree)
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${andrew_include})
 
 # Add executable for making skim code
 add_executable(skim_tree skim_tree.cpp) 
 target_link_libraries(skim_tree ${ROOT_LIBRARIES} e2aCuts)
+
+#simulator
+add_executable(simulator simulator.cpp andrew_analysis/ratio_analysis/target_Info.cpp maps/Acceptance.cpp)
+target_link_libraries(simulator ${ROOT_LIBRARIES} target_Info Acceptance e2aCuts)
