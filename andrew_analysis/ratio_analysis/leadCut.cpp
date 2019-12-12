@@ -23,11 +23,15 @@ double sq(double x){ return x*x; };
 
 void help_message()
 {
-  cerr<< "Argumets: ./leadCut /path/to/input/skim/file /path/to/output/root/file [nucleon of interest]\n\n"
+  cerr<< "Argumets: ./leadCut /path/to/input/skim/file /path/to/output/root/file [nucleon of interest] [cut type]\n\n"
       <<"Nucleon of Interest:\n"
       <<"1: Protons\n"
       <<"0: Neutons\n"
       <<"-1: Both\n"
+      <<"Cut Type:\n"
+      <<"0: No kinematic cut\n"
+      <<"1: New SRC cuts (no lower bound on xB)\n"
+      <<"2: Standard SRC cuts\n"    
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-v: Verbose\n"
@@ -51,7 +55,7 @@ int main(int argc, char ** argv){
       help_message();
       return -1;
     }
-  if (argc < 4)
+  if (argc < 5)
     {
       cerr << "Wrong number of arguments. Insteady try\n\n";
       help_message();
@@ -62,7 +66,7 @@ int main(int argc, char ** argv){
   TFile * inputFile = new TFile(argv[1]);
   TFile * outputFile = new TFile(argv[2],"RECREATE");
   srcCut_Info myCut;
-  myCut.makeLightCut();
+  
   if(atoi(argv[3]) == 1){
     myCut.setOnlyLeadProton();
   }
@@ -70,12 +74,20 @@ int main(int argc, char ** argv){
     myCut.setOnlyLeadNeutron();
   }
 
+  if( atoi(argv[4]) == 1 ){
+    myCut.makeStandardSemiCut();
+  }
+  else if( atoi(argv[4]) == 2 ){
+    myCut.makeNewSemiCut();
+  }
+
+
   bool verbose = false;
   bool mergeD = false;
   bool checkLeadD = false;
    
   int c;
-  while ((c=getopt (argc-3, &argv[3], "hvdcgp:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "hvdcgp:x:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -118,7 +130,6 @@ int main(int argc, char ** argv){
   Int_t parID[19];
   Double_t xB,QSq;
   Double_t momx[19],momy[19],momz[19],vtxZCorr[19];
-  const Double_t Ebeam = 4.461;
   inTree->SetBranchAddress("nParticles",&nPar);
   inTree->SetBranchAddress("Xb",&xB);
   inTree->SetBranchAddress("Q2",&QSq);
