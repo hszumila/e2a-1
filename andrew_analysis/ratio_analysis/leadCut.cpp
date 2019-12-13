@@ -75,10 +75,10 @@ int main(int argc, char ** argv){
   }
 
   if( atoi(argv[4]) == 1 ){
-    myCut.makeStandardSemiCut();
+    myCut.makeNewSemiCut();
   }
   else if( atoi(argv[4]) == 2 ){
-    myCut.makeNewSemiCut();
+    myCut.makeStandardSemiCut();
   }
 
 
