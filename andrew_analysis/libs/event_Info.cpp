@@ -51,7 +51,7 @@ return parList.at(i).isDelta();
 
 int event_Info::getDeltaType(int j, int k){
   int nucleonID = parList.at(j).getParID();
-  int pionID = parList.at(j).getParID();
+  int pionID = parList.at(k).getParID();
   
   if((nucleonID==pCode) && (pionID==pipCode) ){
     return dppCode;
@@ -201,19 +201,23 @@ void event_Info::setRec(int i)
 //Matched and the search continues. If two pions match a nucleon, then the
 //Match is not made. If two nucleons match with a pion, then the first pion
 //To match is joined with the pion
-void event_Info::findAndMergeDeltas()
+double event_Info::findAndMergeDeltas()
 {
+  double delMass = -1;
   for(int i = 1; i < nPar; i++){
     int l = getWhichPionMatch(i);
     if(l > 0){
+      delMass = getMassNucleonPion(i,l);
       addDelta(i,l);
     }
   }
+  return delMass;
 }
 
 //Adds a delta to the end of the list of particles by merging entry j and k
 void event_Info::addDelta(int j, int k)
 {
+  //std::cerr<< "Nuc Id = "<< getParID(j) <<"\n Pion Id = "<< getParID(k) <<"\n";
   int dType = getDeltaType(j,k);
   combineParticle(j,k,dType);
   nDeltas++;
@@ -252,7 +256,7 @@ double event_Info::getMassNucleonPion(int j, int k){
   double epi = sqrt(vpi.Mag2()+(mpc*mpc));
   double eD_test = eN + epi;
   double mD_test = sqrt((eD_test*eD_test)-vD_test.Mag2());
-  
+  //  std::cout<<mD_test<<"\n";
   return mD_test;    
 }
 //Checks to see if a nucleon(j) and pion(k) could be considered a delta
@@ -263,6 +267,14 @@ bool event_Info::checkDeltaWithIndex(int j, int k){
     }
   }
   return false;
+}
+//Clears all events that are not deltas
+void event_Info::clearNonDelta(){
+  for(int i = 1; i < nPar; i++){
+    if(!parList.at(i).isDelta()){
+      clearEntry(i);
+    }
+  }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Private Functions
@@ -277,8 +289,8 @@ bool event_Info::vtxMatch(int j, int k)
 }
 
 bool event_Info::checkDeltaWithMass(const double dMass){
-if((dMass > (mD-wD)) && (dMass < (mD+wD))){
-      return true;
+  if((dMass > (mD-wD))  &&  (dMass < (mD+wD))){
+    return true;
     }
   return false;
 }
@@ -288,7 +300,7 @@ void event_Info::combineParticle(int j, int k, int newParID)
   changeNPar(nPar-1);
   TVector3 vDelta = parList.at(j).getVector() + parList.at(k).getVector();
   double new_vtx = (parList.at(j).getVTX()+parList.at(k).getVTX())/2;
-  part_Info merged(newParID, vDelta.X(), vDelta.X(), vDelta.X(), new_vtx);
+  part_Info merged(newParID, vDelta.X(), vDelta.Y(), vDelta.Z(), new_vtx);
   mergeParInArrays(j,k,merged);
 }
 
@@ -303,9 +315,14 @@ void event_Info::moveEntry(int startIndex, int endIndex)
 void event_Info::clearAbove(int startIndex)
 {
   for(int i = startIndex; i < nPar; i++){
-    parList.erase(parList.begin()+startIndex);
+    clearEntry(i);
   }
-  nPar = startIndex;
+}
+
+void event_Info::clearEntry(int i)
+{
+    parList.erase(parList.begin()+i);
+    nPar--;
 }
 
 void event_Info::changeNPar(int new_nPar)

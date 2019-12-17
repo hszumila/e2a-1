@@ -26,7 +26,7 @@ target_Info::target_Info(int A)
     thick=vzMax-vzMin;
     acc_Name = "He4";
     fid_Name = "4He";
-    rad_Name = "He4";
+    rad_Name = fid_Name;
   }
   else if(A==12){
     trans = 0.53;
@@ -37,7 +37,7 @@ target_Info::target_Info(int A)
     thick=0.1;
     acc_Name = "solid";
     fid_Name = "12C";
-    rad_Name = "C12";
+    rad_Name = fid_Name;
   }
   else{
     std::cerr << "The nucleus you have chosen could not be found\n\n Aborting...\n\n";

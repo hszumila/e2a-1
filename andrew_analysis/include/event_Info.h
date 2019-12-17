@@ -48,13 +48,13 @@ class event_Info
   void setLeadandClear(int i);
   void setRec(int i);
   //Functions related to the delta
-  void findAndMergeDeltas();
+  double findAndMergeDeltas();
   void addDelta(int j, int k);
   bool doesNucleonMatchPion(int i);
   int getWhichPionMatch(int i);
   double getMassNucleonPion(int j, int k);
   bool checkDeltaWithIndex(int j, int k);
-
+  void clearNonDelta();
  
  private:
   int nPar;
@@ -69,6 +69,7 @@ class event_Info
   void combineParticle(int j, int k, int newParID);
   void moveEntry(int startIndex, int endIndex);
   void clearAbove(int startIndex);
+  void clearEntry(int i);
   void copy(int indexOverWrite, int indexCopy);
   void changeNPar(int new_nPar);
   void mergeParInArrays(int j, int k, part_Info merged);
