@@ -32,6 +32,7 @@ void help_message()
       <<"0: No kinematic cut\n"
       <<"1: New SRC cuts (no lower bound on xB)\n"
       <<"2: Standard SRC cuts\n"    
+      <<"3: Make Light cuts\n"    
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-v: Verbose\n"
