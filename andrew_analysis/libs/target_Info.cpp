@@ -15,7 +15,7 @@ target_Info::target_Info(int A)
     acc_Name = "He3";
     fid_Name = "3He";
     //No 3He rad correction
-    rad_Name = "He4";
+    rad_Name = "4He";
   }
   else if(A==4){
     trans = 0.75;
@@ -137,6 +137,7 @@ double target_Info::getRadCorr(double Theta, double XB)
   }
   if((XB < 0.15) || (XB > 2)){
     std::cout<<"XB out of bounds.\n";
+    std::cout<<"XB="<< XB <<"\n";
     return 1;
   }
 

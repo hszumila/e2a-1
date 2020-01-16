@@ -25,6 +25,7 @@ class srcCut_Info
   void makeInclCut();
   void makeStandardSemiCut();
   void makeNewSemiCut();
+  void makeNewSemiCutNoPMiss();
   void makeGausCut();
   void makeLightCut();
   //Check what it passed

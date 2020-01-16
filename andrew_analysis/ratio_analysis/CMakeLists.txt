@@ -10,6 +10,11 @@ target_link_libraries(leadCut ${ROOT_LIBRARIES} event_Info srcCut_Info)
 add_executable(get_hist get_hist.cpp)
 target_link_libraries(get_hist ${ROOT_LIBRARIES} target_Info event_Info)
 
+
+# Add executable for calculating inclusive histograms
+add_executable(incl_hist incl_hist.cpp)
+target_link_libraries(incl_hist ${ROOT_LIBRARIES} target_Info event_Info)
+
 # Add executable for calculating simple histograms
 add_executable(get_Simple get_Simple.cpp)
 target_link_libraries(get_Simple ${ROOT_LIBRARIES} target_Info event_Info)

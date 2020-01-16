@@ -23,7 +23,7 @@ double sq(double x){
 
 void help_message()
 {
-  cerr<< "Argumets: ./get_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
+  cerr<< "Argumets: ./incl_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-n: Set a custom minimum to the Z vertex [cm]\n"
@@ -53,7 +53,7 @@ int main(int argc, char ** argv){
 
   //Read in arguments
 
-  TFile * inputFile = new TFile(argv[1]);
+   TFile * inputFile = new TFile(argv[1]);
   TFile * outputFile = new TFile(argv[2],"RECREATE");
   int A = atoi(argv[3]);
   target_Info secondTargInfo(atoi(argv[4]));
@@ -85,44 +85,20 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.79,2};
-  int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
-  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
+  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.40,1.50,1.62,1.76,1.88,2};
   int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
   vector<TH1*> hist_list;
   TH1D * hist_Cross = new TH1D("totalCross","Cross;1;Value",1,0.5,1.5);
   hist_list.push_back(hist_Cross);
+  TH1D * hist_xB_noRad =  new TH1D("hist_xB_noRad_Incl" ,"hist;xB;Counts",finenumbinxB,finebinxB);
+  hist_list.push_back(hist_xB_noRad);
   TH1D * hist_xB =  new TH1D("hist_xB_Incl" ,"hist;xB;Counts",finenumbinxB,finebinxB);
   hist_list.push_back(hist_xB);
   TH1D * hist_QSq =  new TH1D("hist_QSq" ,"hist;QSq;Counts",40,0,5);
   hist_list.push_back(hist_QSq);
-  TH1D * hist_pMiss =  new TH1D("hist_pMiss" ,"hist;pMiss;Counts",40,0,2);
-  hist_list.push_back(hist_QSq);
 
-  TH1D * hist_xB_p[6];
-  char temp[100];
-  for(int i = 0; i<5; i++){
-    sprintf(temp,"hist_xB_p_%d",i);
-    hist_xB_p[i] = new TH1D(temp,"x_B Distribution;xB;counts",finenumbinxB,finebinxB);
-    hist_list.push_back(hist_xB_p[i]);
-  }
-  sprintf(temp,"hist_xB_p_%d",5);
-  hist_xB_p[5] = new TH1D(temp,"x_B Distribution;xB;counts",numbinxB,binxB);
-  hist_list.push_back(hist_xB_p[5]);
-
-  vector<TH2*> hist_list_2D;
-  TH2D * mMiss_mX =  new TH2D("hist_mMiss_mX" ,"hist;mMiss;mX;Counts",100,0.8,1.6,400,0,4);
-  hist_list_2D.push_back(mMiss_mX);  
-  TH2D * xB_mMiss =  new TH2D("hist_xB_mMiss" ,"hist;xB;mMiss;Counts",finenumbinxB,finebinxB,100,0.8,1.6);
-  hist_list_2D.push_back(xB_mMiss); 
-  TH2D * xB_mX =  new TH2D("hist_xB_mX" ,"hist;xB;mX;Counts",finenumbinxB,finebinxB,400,0,4);
-  hist_list_2D.push_back(xB_mX);  
-  
-  for(int i=0; i<hist_list_2D.size(); i++){
-    hist_list_2D[i]->Sumw2();
-  }
   for(int i=0; i<hist_list.size(); i++){
     hist_list[i]->Sumw2();
   }
@@ -160,19 +136,6 @@ int main(int argc, char ** argv){
     double omega = vBeam.Mag() - ve.Mag();
     double phi = ve.Phi() * 180 / M_PI;
     double theta = ve.Theta() * 180 / M_PI;
-    TVector3 vLead = myInfo.getVector(1);
-    TVector3 vMiss = vq - vLead;
-    double massLead = mP;
-    double eLead = sqrt( vLead.Mag2() + (massLead*massLead) );
-    //double eMiss = massLead + omega - eLead;
-    //double mX = (vMiss.Mag2() - (eMiss*eMiss))/(2 * eMiss);
-    double mMiss = myInfo.getMassMiss(1);
-    double eMiss = sqrt(vMiss.Mag2()+(mP*mP));
-    double mX = eLead + eMiss - omega;
-    double poq = myInfo.getPoQ(1);
-    double thetapq = myInfo.getThetaPQ(1);
-    double thetapMq = vq.Angle(vMiss) * (180/M_PI);
-       
     
     //Do some things for all events
     if(((i%5000) == 0) && verbose){
@@ -183,45 +146,24 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
+    if(!targInfo.evtxInRange(vtxZCorr[0])){continue;}
+    if(targInfo.e_acc(ve) < accMin){continue;}
+    if(secondTargInfo.e_acc(ve) < accMin){continue;}
+    if(QSq < 1){continue;}
+    if(xB < 0.15){continue;}
+    if(xB > 2.001){continue;}
+    double eff = 1;
+    eff = targInfo.incl_acc(ve);
+    weight = weight / eff;
+    weight = weight/(targInfo.getLum() * A);
 
-    
-    //Get the correct efficiency for the specific particle
-    if(myInfo.isProton(1)){
-      if(targInfo.e_acc(ve) < accMin){continue;}
-      if(targInfo.p_acc(vLead) < accMin){continue;}
-      if(secondTargInfo.e_acc(ve) < accMin){continue;}
-      if(secondTargInfo.p_acc(vLead) < accMin){continue;}
-    }
+    hist_xB_noRad->Fill(xB,weight);	  	  
 
-
-    if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1])){
-      continue;
-    }
- 
-    weight = weight / targInfo.semi_acc(ve,vLead);
-    weight = weight / targInfo.getTrans();
-    weight = weight / (targInfo.getLum() * A);
     weight = weight / targInfo.getRadCorr(theta,xB);
-    
-    hist_xB_p[0]->Fill(xB,weight);
-    if(vMiss.Mag() < 0.1){continue;}
-    hist_xB_p[1]->Fill(xB,weight);
-    if(vMiss.Mag() < 0.13){continue;}
-    hist_xB_p[2]->Fill(xB,weight);
-    if(vMiss.Mag() < 0.16){continue;}
-    hist_xB_p[3]->Fill(xB,weight);
-    if(vMiss.Mag() < 0.2){continue;}
-    hist_xB_p[4]->Fill(xB,weight);
-    if(vMiss.Mag() < 0.3){continue;}
-    hist_xB_p[5]->Fill(xB,weight);
-
-    xB_mX->Fill(xB,mX,weight);
-    mMiss_mX->Fill(mMiss,mX,weight);
-    xB_mMiss->Fill(xB,mMiss,weight);
+    hist_xB->Fill(xB,weight);	  	      
     hist_Cross->Fill(1,1);
-    hist_xB->Fill(xB,weight);	  	  
     hist_QSq->Fill(QSq,weight);
-    hist_pMiss->Fill(vMiss.Mag(),weight);
+    
     counter++;
     	
   }
@@ -238,9 +180,6 @@ int main(int argc, char ** argv){
   outputFile->cd();
   for(int i=0; i<hist_list.size(); i++){
     hist_list[i]->Write();
-  }
-  for(int i=0; i<hist_list_2D.size(); i++){
-    hist_list_2D[i]->Write();
   }
   outputFile->Close();
   cerr<< argv[2]<<" has been completed. \n\n\n";

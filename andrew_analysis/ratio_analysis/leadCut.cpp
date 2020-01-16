@@ -32,7 +32,8 @@ void help_message()
       <<"0: No kinematic cut\n"
       <<"1: New SRC cuts (no lower bound on xB)\n"
       <<"2: Standard SRC cuts\n"    
-      <<"3: Make Light cuts\n"    
+      <<"3: New SRC cuts w/o PMiss\n"    
+      <<"4: Make Light cuts\n"    
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-v: Verbose\n"
@@ -80,6 +81,12 @@ int main(int argc, char ** argv){
   }
   else if( atoi(argv[4]) == 2 ){
     myCut.makeStandardSemiCut();
+  }
+  else if( atoi(argv[4]) == 3 ){
+    myCut.makeNewSemiCutNoPMiss();
+  }
+  else if( atoi(argv[4]) == 4 ){
+    myCut.makeLightCut();
   }
 
 
