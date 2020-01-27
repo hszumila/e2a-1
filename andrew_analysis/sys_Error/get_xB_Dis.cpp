@@ -104,7 +104,7 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.32,1.52,1.74,2};
+  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.77,2};
   int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
@@ -171,23 +171,26 @@ int main(int argc, char ** argv){
     double thetapq = myInfo.getThetaPQ(1);
     double thetapMq = vq.Angle(vMiss) * (180/M_PI);
 
-    double weight = 1/(targInfo.getLum() * A);
+    double weight = 1;
     
-    //Check to see if they pass fiducials
-    if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }
-    //Check to see if it would have passed the other fiducials
+    //Only take particles that pass fiducials and acceptances for both targets
+    if(targInfo.e_acc(ve) < accMin){continue;}
+    if(targInfo.p_acc(vLead) < accMin){continue;}
+    if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }      
+    if(secondTargInfo.e_acc(ve) < accMin){continue;}
+    if(secondTargInfo.p_acc(vLead) < accMin){continue;}
     if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
-    //Apply the maps
-    double eff = 1;
-    if(myInfo.isProton(1) && doMaps){
-      eff = targInfo.semi_acc(ve,vLead);
+
+    //Now vertex cut
+    if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1])){
+      continue;
     }
-    weight = weight / eff;
-    //Weight related transparency and acceptances
-    if(doTrans){
-      weight = weight / targInfo.getTrans();
-    }
-    //Do ratiative corrections from misak
+
+    //This is to get the cross section and a2
+    weight = weight / (targInfo.getLum() * A);
+    //These are the corrections
+    weight = weight / targInfo.semi_acc(ve,vLead);
+    weight = weight / targInfo.getTrans();
     weight = weight / targInfo.getRadCorr(ThetaE,xB);
 
     hist_xB->Fill(xB,weight);	  	        

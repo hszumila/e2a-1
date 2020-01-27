@@ -19,8 +19,8 @@ target_Info::target_Info(int A)
   }
   else if(A==4){
     trans = 0.75;
-    vzMax = 0.5;
-    vzMin = -1.5;
+    vzMax = 1.5;
+    vzMin = -2.5;
     density = 0.1375;
     ltcc=6895323.02;
     thick=vzMax-vzMin;

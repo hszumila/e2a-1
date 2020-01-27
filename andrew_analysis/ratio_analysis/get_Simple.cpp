@@ -85,7 +85,7 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.79,2};
+  double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.77,2};
   int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
   double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
   int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
@@ -100,6 +100,12 @@ int main(int argc, char ** argv){
   hist_list.push_back(hist_QSq);
   TH1D * hist_pMiss =  new TH1D("hist_pMiss" ,"hist;pMiss;Counts",40,0,2);
   hist_list.push_back(hist_QSq);
+
+  TH1D * hist_eVTX =  new TH1D("hist_eVTX" ,"hist;eVTX;Counts",100,-10,10);
+  hist_list.push_back(hist_eVTX);
+  TH1D * hist_pVTX =  new TH1D("hist_pVTX" ,"hist;pVTX;Counts",100,-10,10);
+  hist_list.push_back(hist_pVTX);
+
 
   TH1D * hist_xB_p[6];
   char temp[100];
@@ -185,15 +191,19 @@ int main(int argc, char ** argv){
     }    
 
     
-    //Get the correct efficiency for the specific particle
+    //Only take particles that pass fiducials and acceptances for both targets
     if(myInfo.isProton(1)){
       if(targInfo.e_acc(ve) < accMin){continue;}
       if(targInfo.p_acc(vLead) < accMin){continue;}
+      if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }
+      
       if(secondTargInfo.e_acc(ve) < accMin){continue;}
       if(secondTargInfo.p_acc(vLead) < accMin){continue;}
+      if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
     }
 
-
+    hist_eVTX->Fill(vtxZCorr[0]);
+    hist_pVTX->Fill(vtxZCorr[1]);
     if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1])){
       continue;
     }
