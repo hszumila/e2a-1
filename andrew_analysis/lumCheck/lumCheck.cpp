@@ -87,15 +87,16 @@ int main(int argc, char ** argv){
     for(int i = 0; i < t1->GetEntries(); i++){
       t1->GetEntry(i);
       
-      if(!myInfo.evtxInRange(vtxCorr)){
-	continue;
-      }
 
 
       //Get varibles needed for cuts
       TVector3 ve(px[0],py[0],pz[0]);
       double theta = ve.Theta() * 180 / M_PI;
       double p = ve.Mag();
+
+      //if(!myInfo.evtxInRange(vtxCorr)){
+      //	continue;
+      //}
       
       //Check histograms and values in the forward and backward direction
       if((theta>18) && (theta<22)){

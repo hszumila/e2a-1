@@ -25,9 +25,7 @@ void help_message()
 {
   cerr<< "Argumets: ./get_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
       <<"Optional flags:\n"
-      <<"-h: Help\n"
-      <<"-n: Set a custom minimum to the Z vertex [cm]\n"
-      <<"-x: Set a custom maximum to the Z vertex [cm]\n\n";
+      <<"-h: Help\n\n";
 }
 
 
@@ -62,18 +60,12 @@ int main(int argc, char ** argv){
   bool verbose = true;
   
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hn:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "h")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
 	help_message();
 	return -1;
-      case 'n':
-	targInfo.change_vtxMin(atof(optarg));
-	break;
-      case 'x':
-	targInfo.change_vtxMax(atof(optarg));
-	break;
       case '?':
 	return -1;
       default:
@@ -87,7 +79,7 @@ int main(int argc, char ** argv){
   TTree * inTree = (TTree*)inputFile->Get("T");
   double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.77,2};
   int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
-  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
+  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.4,1.58,1.77,2};
   int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
@@ -125,7 +117,9 @@ int main(int argc, char ** argv){
   hist_list_2D.push_back(xB_mMiss); 
   TH2D * xB_mX =  new TH2D("hist_xB_mX" ,"hist;xB;mX;Counts",finenumbinxB,finebinxB,400,0,4);
   hist_list_2D.push_back(xB_mX);  
-  
+  TH2D * hist_vtx = new TH2D("hist_VTX" ,"hist;eVTX;pVTX;Counts",100,-10,10,100,-10,10);
+  hist_list_2D.push_back(hist_vtx);
+
   for(int i=0; i<hist_list_2D.size(); i++){
     hist_list_2D[i]->Sumw2();
   }
@@ -167,6 +161,7 @@ int main(int argc, char ** argv){
     double phi = ve.Phi() * 180 / M_PI;
     double theta = ve.Theta() * 180 / M_PI;
     TVector3 vLead = myInfo.getVector(1);
+    double thetaLead = vLead.Theta() * 180 / M_PI;
     TVector3 vMiss = vq - vLead;
     double massLead = mP;
     double eLead = sqrt( vLead.Mag2() + (massLead*massLead) );
@@ -202,16 +197,24 @@ int main(int argc, char ** argv){
       if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
     }
 
-    hist_eVTX->Fill(vtxZCorr[0]);
-    hist_pVTX->Fill(vtxZCorr[1]);
-    if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1])){
-      continue;
-    }
- 
+
+
     weight = weight / targInfo.semi_acc(ve,vLead);
     weight = weight / targInfo.getTrans();
     weight = weight / (targInfo.getLum() * A);
     weight = weight / targInfo.getRadCorr(theta,xB);
+
+
+
+
+    hist_eVTX->Fill(vtxZCorr[0],weight);
+    hist_pVTX->Fill(vtxZCorr[1],weight);
+    //if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[0],theta,thetaLead)){
+    //  continue;
+    //}
+    hist_vtx->Fill(vtxZCorr[0],vtxZCorr[1],weight);
+
+ 
     
     hist_xB_p[0]->Fill(xB,weight);
     if(vMiss.Mag() < 0.1){continue;}

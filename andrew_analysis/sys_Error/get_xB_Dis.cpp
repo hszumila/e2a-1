@@ -29,8 +29,6 @@ void help_message()
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-v: Verbose\n"
-      <<"-n: Set a custom minimum to the Z vertex [cm]\n"
-      <<"-x: Set a custom maximum to the Z vertex [cm]\n"
       <<"-t: Do not apply transparency factors for the lead proton\n"
       <<"-m: Do not apply maps to weight\n\n";
 }
@@ -72,7 +70,7 @@ int main(int argc, char ** argv){
   int secChoice = -1;
   
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hvn:x:ms:tQ:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "hvms:tQ:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -80,12 +78,6 @@ int main(int argc, char ** argv){
 	return -1;
       case 'v':
 	verbose = true;
-	break;
-      case 'n':
-	targInfo.change_vtxMin(atof(optarg));
-	break;
-      case 'x':
-	targInfo.change_vtxMax(atof(optarg));
 	break;
       case 'm':
 	doMaps = false;
@@ -155,9 +147,6 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0])){
-      continue;
-    }
 
     TVector3 ve = myInfo.getVector(0);
     double ThetaE = ve.Theta() * 180 / M_PI;
@@ -165,11 +154,16 @@ int main(int argc, char ** argv){
     double omega = vBeam.Mag() - ve.Mag();
     double phi = ve.Phi() * 180 / M_PI;
     TVector3 vLead = myInfo.getVector(1);
+    double ThetaP = vLead.Theta() * 180 / M_PI;
     TVector3 vMiss = vLead - vq;
     double mMiss = myInfo.getMassMiss(1);
     double poq = myInfo.getPoQ(1);
     double thetapq = myInfo.getThetaPQ(1);
     double thetapMq = vq.Angle(vMiss) * (180/M_PI);
+
+    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){
+      continue;
+    }
 
     double weight = 1;
     
@@ -182,9 +176,9 @@ int main(int argc, char ** argv){
     if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
 
     //Now vertex cut
-    if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1])){
-      continue;
-    }
+    //if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1],ThetaE,ThetaP)){
+    //  continue;
+    //}
 
     //This is to get the cross section and a2
     weight = weight / (targInfo.getLum() * A);

@@ -25,9 +25,7 @@ void help_message()
 {
   cerr<< "Argumets: ./incl_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
       <<"Optional flags:\n"
-      <<"-h: Help\n"
-      <<"-n: Set a custom minimum to the Z vertex [cm]\n"
-      <<"-x: Set a custom maximum to the Z vertex [cm]\n\n";
+      <<"-h: Help\n\n";
 }
 
 
@@ -62,18 +60,12 @@ int main(int argc, char ** argv){
   bool verbose = true;
   
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hn:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "h")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
 	help_message();
 	return -1;
-      case 'n':
-	targInfo.change_vtxMin(atof(optarg));
-	break;
-      case 'x':
-	targInfo.change_vtxMax(atof(optarg));
-	break;
       case '?':
 	return -1;
       default:
@@ -85,7 +77,7 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.40,1.50,1.62,1.76,1.88,2};
+  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.4,1.50,1.62,1.76,1.88,2};
   int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
   //Make a histogram list to make things easier
@@ -146,20 +138,20 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0])){continue;}
+    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){continue;}
     if(targInfo.e_acc(ve) < accMin){continue;}
     if(secondTargInfo.e_acc(ve) < accMin){continue;}
     if(QSq < 1){continue;}
     if(xB < 0.15){continue;}
-    if(xB > 2.001){continue;}
-    double eff = 1;
-    eff = targInfo.incl_acc(ve);
-    weight = weight / eff;
+    if(xB > 2){continue;}
+
+    weight = weight / targInfo.incl_acc(ve);
     weight = weight/(targInfo.getLum() * A);
 
     hist_xB_noRad->Fill(xB,weight);	  	  
 
     weight = weight / targInfo.getRadCorr(theta,xB);
+
     hist_xB->Fill(xB,weight);	  	      
     hist_Cross->Fill(1,1);
     hist_QSq->Fill(QSq,weight);

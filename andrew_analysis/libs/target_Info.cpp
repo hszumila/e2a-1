@@ -7,37 +7,40 @@ target_Info::target_Info(int A)
   
   if(A==3){
     trans = 0.82;
-    vzMax = -0.5;
-    vzMin = -2.5;
+    //vzMax = -0.5;
+    //vzMin = -2.5;
     density = 0.0655;
     ltcc=10224579.8;
-    thick=vzMax-vzMin;
+    thick=3.25;
     acc_Name = "He3";
     fid_Name = "3He";
     //No 3He rad correction
     rad_Name = "4He";
+    vtx_Name = fid_Name;
   }
   else if(A==4){
     trans = 0.75;
-    vzMax = 1.5;
-    vzMin = -2.5;
-    density = 0.1375;
+    //vzMax = 1.5;
+    //vzMin = -2.5;
+    density = 0.1370;
     ltcc=6895323.02;
-    thick=vzMax-vzMin;
+    thick=4.5;
     acc_Name = "He4";
     fid_Name = "4He";
     rad_Name = fid_Name;
+    vtx_Name = fid_Name;
   }
   else if(A==12){
     trans = 0.53;
-    vzMax = 7.0;
-    vzMin = 4.0;
+    //vzMax = 7.0;
+    //vzMin = 4.0;
     density = 1.786;
     ltcc=17962592.69;
     thick=0.1;
     acc_Name = "solid";
     fid_Name = "12C";
     rad_Name = fid_Name;
+    vtx_Name = fid_Name;
   }
   else{
     std::cerr << "The nucleus you have chosen could not be found\n\n Aborting...\n\n";
@@ -48,6 +51,9 @@ target_Info::target_Info(int A)
   pipMap = new Acceptance(acc_Name,4461,2250,"pip");
   targFid = new Fiducial(4461,2250,5996,fid_Name,true);
   fillRadArray();
+  fillVTXArray();
+  //fillVTXArrayElectron();
+  //fillVTXArrayProton();
   setLum();
 
 }
@@ -143,10 +149,10 @@ double target_Info::getRadCorr(double Theta, double XB)
 
   double bin_Theta = Theta - 10;
   int b_T = bin_Theta;
-  int x_T = bin_Theta - b_T;
+  double x_T = bin_Theta - b_T;
   double bin_XB = (XB - 0.15) / 0.05;
   int b_X = bin_XB;
-  int x_X = bin_XB - b_X;
+  double x_X = bin_XB - b_X;
   
   double rC = 0;
   rC += (1-x_X) * (1-x_T) * radCorr[b_X][b_T];
@@ -157,41 +163,52 @@ double target_Info::getRadCorr(double Theta, double XB)
   return rC;
 }
 
-bool target_Info::evtxInRange(double eVTX)
+
+bool target_Info::evtxInRange(double eVTX, TVector3 ve)
+{
+  double ePhi = ve.Phi() * 180 / M_PI;
+  return evtxInRange(eVTX,ePhi);
+}
+bool target_Info::evtxInRange(double eVTX, double ePhi)
 {
   bool inRange = true;
+  int sector = getSec(ePhi);
+  if(eVTX < vzMin[sector]){
+    inRange = false;
+  }
+  if(eVTX > vzMax[sector]){
+    inRange = false;
+  }
+  return inRange;
+}
+
+/*bool target_Info::vtxInRange(double eVTX, double leadVTX, double eTheta, double pTheta)
+{
+  bool inRange = true;
+  double diff = eVTX - leadVTX;
+  
   if(eVTX < vzMin){
     inRange = false;
   }
   if(eVTX > vzMax){
     inRange = false;
   }
-  return inRange;
-}
-
-
-bool target_Info::vtxInRange(double eVTX, double leadVTX)
-{
-  bool inRange = true;
-  if(eVTX < vzMin){
+  if(diff < getVTXMinElectron(eTheta)){
     inRange = false;
   }
-  if(eVTX > vzMax){
+  if(diff > getVTXMaxElectron(eTheta)){
     inRange = false;
   }
-  if(leadVTX < vzMin){
+  if(diff < getVTXMinProton(pTheta)){
     inRange = false;
   }
-  if(leadVTX > vzMax){
-    inRange = false;
-  }
-  if(abs(eVTX-leadVTX) > 0.5){
+  if(diff > getVTXMaxProton(pTheta)){
     inRange = false;
   }
   return inRange;
-}
+  }*/
 
-void target_Info::change_vtxMin(double newMin)
+/*void target_Info::change_vtxMin(double newMin)
 {
   vzMin = newMin;
   thick=vzMax-vzMin;
@@ -204,7 +221,7 @@ void target_Info::change_vtxMax(double newMax)
   thick=vzMax-vzMin;
   setLum();
 }
-
+*/
 void target_Info::setLum()
 {
   lum = density * thick * ltcc / M_a;
@@ -214,7 +231,7 @@ void target_Info::fillRadArray()
 {
   //Get the file opened
   char radFileName[256]; 
-  sprintf(radFileName,"%s/%s.dat",e2adir.c_str(),rad_Name.c_str());
+  sprintf(radFileName,"%s/%s_rad_corr.dat",e2adir.c_str(),rad_Name.c_str());
   std::ifstream radFile(radFileName);                                                           
   std::cout<<"Opening Radiation Correctoin File From: \n"<<radFileName<<"\n\n";
   //Check file
@@ -252,4 +269,171 @@ void target_Info::fillRadArray()
       radCorr[37][j] = radCorr[36][j];
     }
   }
+}
+
+double target_Info::getVTXMinElectron(double Theta)
+{
+  int k = 0;
+  while(Theta > eVTX[0][k]){
+    k++;
+  }
+  double x = (Theta-eVTX[0][k])/(eVTX[0][k+1]-eVTX[0][k]);
+  double min = ((1-x) * eVTX[1][k]) + (x * eVTX[1][k+1]);
+  
+  return min;
+}
+
+double target_Info::getVTXMaxElectron(double Theta)
+{
+  int k = 0;
+  while(Theta > eVTX[0][k]){
+    k++;
+  }
+  double x = (Theta-eVTX[0][k])/(eVTX[0][k+1]-eVTX[0][k]);
+  double max = ((1-x) * eVTX[2][k]) + (x * eVTX[2][k+1]);
+  
+  return max;
+}
+
+double target_Info::getVTXMinProton(double Theta)
+{
+  int k = 0;
+  while(Theta > pVTX[0][k]){
+    k++;
+  }
+  double x = (Theta-pVTX[0][k])/(pVTX[0][k+1]-pVTX[0][k]);
+  double min = ((1-x) * pVTX[1][k]) + (x * pVTX[1][k+1]);
+  
+  return min;
+}
+
+double target_Info::getVTXMaxProton(double Theta)
+{
+  int k = 0;
+  while(Theta > pVTX[0][k]){
+    k++;
+  }
+  double x = (Theta-pVTX[0][k])/(pVTX[0][k+1]-pVTX[0][k]);
+  double max = ((1-x) * pVTX[2][k]) + (x * pVTX[2][k+1]);
+  
+  return max;
+}
+
+void target_Info::fillVTXArray()
+{
+  //Get the file opened
+  char vtxFileName[256]; 
+  sprintf(vtxFileName,"%s/%s_VTX_cut.txt",e2adir.c_str(),vtx_Name.c_str());
+  std::ifstream vtxFile(vtxFileName);                                                           
+  std::cout<<"Opening Electron Vertex Cut File From: \n"<<vtxFileName<<"\n\n";
+  //Check file
+  if (!vtxFile.is_open())
+    {
+      std::cerr << "Failed to open Electron Vertex Cut file \n"
+                << "\n\n Exiting...\n\n";
+      exit(-3);
+    }
+
+  double sector,vtxMin,vtxMax;
+
+  //Fill with values you find
+  for(int l = 0; l < 6; l++){
+    vtxFile >> sector >> vtxMin >> vtxMax;
+    double x = sector - l;
+    if((x<0.0001) && (x>-0.0001)){
+      vzMin[l]=vtxMin;
+      vzMax[l]=vtxMax;
+    }
+    else{
+      std::cerr << "Electron Vertex Cut file is not structured properly\n"
+                << "\n\n Exiting...\n\n";
+      exit(-3);    
+    }
+  }
+
+}
+
+int target_Info::getSec(const double phi){
+  
+  double nphi=phi;
+  if(nphi<=-150) return 0;
+  else if(nphi<=-90) return 1;
+  else if(nphi<=-30) return 2;
+  else if(nphi<=30) return 3;
+  else if(nphi<=90) return 4;
+  else if(nphi<=150) return 5;
+  else return 0; 
+
+}
+
+void target_Info::fillVTXArrayElectron()
+{
+  //Get the file opened
+  char vtxFileName[256]; 
+  sprintf(vtxFileName,"%s/%s_et_VTX_cut.txt",e2adir.c_str(),vtx_Name.c_str());
+  std::ifstream vtxFile(vtxFileName);                                                           
+  std::cout<<"Opening Electron Angle Dependent Vertex Cut File From: \n"<<vtxFileName<<"\n\n";
+  //Check file
+  if (!vtxFile.is_open())
+    {
+      std::cerr << "Failed to open Electron Angle Dependent Vertex Cut file \n"
+                << "\n\n Exiting...\n\n";
+      exit(-3);
+    }
+
+  double Theta,vtxMin,vtxMax;
+  //Set to zero and check if it is overwritten
+  for(int j = 0; j < 50; j++){
+    eVTX[0][j]=0;
+    eVTX[1][j]=0;
+    eVTX[2][j]=0;
+  }
+  //Fill with values you find
+  int k =0;
+  while(vtxFile >> Theta){
+    vtxFile >> vtxMin >> vtxMax;
+    eVTX[0][k]=Theta;
+    eVTX[1][k]=vtxMin;
+    eVTX[2][k]=vtxMax;
+    k++;
+  }
+  eVTX[0][k]=180;
+  eVTX[1][k]=vtxMin;
+  eVTX[2][k]=vtxMax;  
+}
+
+void target_Info::fillVTXArrayProton()
+{
+  //Get the file opened
+  char vtxFileName[256]; 
+  sprintf(vtxFileName,"%s/%s_pt_VTX_cut.txt",e2adir.c_str(),vtx_Name.c_str());
+  std::ifstream vtxFile(vtxFileName);                                                           
+  std::cout<<"Opening Proton Angle Dependent Vertex Cut File From: \n"<<vtxFileName<<"\n\n";
+  //Check file
+  if (!vtxFile.is_open())
+    {
+      std::cerr << "Failed to open Proton Angle Dependent Vertex Cut file \n"
+                << "\n\n Exiting...\n\n";
+      exit(-3);
+    }
+
+  double Theta,vtxMin,vtxMax;
+  //Set to zero and check if it is overwritten
+  for(int j = 0; j < 50; j++){
+    pVTX[0][j]=0;
+    pVTX[1][j]=0;
+    pVTX[2][j]=0;
+  }
+  //Fill with values you find
+  int k =0;
+  while(vtxFile >> Theta){
+    vtxFile >> vtxMin >> vtxMax;
+    pVTX[0][k]=Theta;
+    pVTX[1][k]=vtxMin;
+    pVTX[2][k]=vtxMax;
+    k++;
+  }
+  pVTX[0][k]=180;
+  pVTX[1][k]=vtxMin;
+  pVTX[2][k]=vtxMax;  
 }

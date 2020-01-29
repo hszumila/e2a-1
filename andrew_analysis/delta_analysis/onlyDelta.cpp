@@ -86,6 +86,13 @@ int main(int argc, char ** argv){
   hist_list.push_back(hist_Mass_p);
   TH1D * hist_Mass_pp =  new TH1D("hist_Mass_pp" ,"hist;Mass_pp;Counts",100,1,1.9);
   hist_list.push_back(hist_Mass_pp);
+  vector<TH2*> hist_list_2D;
+  TH2D * hist_xB_mMiss_Dpp =  new TH2D("hist_mMiss_Dpp" ,"hist;xB;mMiss;Counts",40,0,2,250,0,2.5);
+  hist_list_2D.push_back(hist_xB_mMiss_Dpp);
+  TH2D * hist_xB_pMiss_Dpp =  new TH2D("hist_pMiss_Dpp" ,"hist;xB;pMiss;Counts",40,0,2,400,0,4);
+  hist_list_2D.push_back(hist_xB_pMiss_Dpp);
+  TH2D * hist_xB_thetapq =  new TH2D("hist_thetapq" ,"hist;xB;thetapq;Counts",40,0,2,180,0,180);
+  hist_list_2D.push_back(hist_xB_thetapq);
 
 
   cerr<<"Nucleus file has been opened from input file. \n";
@@ -156,6 +163,18 @@ int main(int argc, char ** argv){
       momz[l] = myInfo.getPZ(l);
       vtxZCorr[l] = myInfo.getVTX(l);
     }
+    TVector3 vDel = myInfo.getVector(1);
+    double eDel = sqrt(vDel.Mag2() + (delMass*delMass));
+    TVector3 vq = vBeam - myInfo.getVector(0);
+    double omega = vBeam.Mag() - myInfo.getVector(0).Mag();
+    TVector3 vMiss = vDel - vq;
+    double eMiss = sqrt(vMiss.Mag2()+(mD*mD));
+    double mMiss = eDel + eMiss - omega;
+    /*
+    double eMiss = omega + delMass  - eDel;
+    double mMiss = sqrt((eMiss*eMiss)-vMiss.Mag2());
+    */
+    double thetapq = vDel.Angle(vq) * 180 / M_PI;
     //Now apply some counting
     if(myInfo.getParID(1) == dmCode){
       numDelm++;
@@ -171,7 +190,13 @@ int main(int argc, char ** argv){
     }
     if(myInfo.getParID(1) == dppCode){
       numDelpp++;
+      hist_xB_pMiss_Dpp->Fill(xB,vMiss.Mag());
+      hist_xB_thetapq->Fill(xB,thetapq);
       hist_Mass_pp->Fill(delMass);
+      if(vMiss.Mag()<0.3){ continue; }
+      if(vMiss.Mag()<1){ continue; }
+      if(thetapq>25){ continue; }
+      hist_xB_mMiss_Dpp->Fill(xB,mMiss);
     }
     outTree->Fill();
     nEvents++;
@@ -186,6 +211,9 @@ int main(int argc, char ** argv){
   outTree->Write();
   for(int k=0; k<hist_list.size(); k++){
     hist_list[k]->Write();
+  }
+  for(int k=0; k<hist_list_2D.size(); k++){
+    hist_list_2D[k]->Write();
   }
   inputFile->Close();
   outputFile->Close();
