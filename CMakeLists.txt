@@ -44,3 +44,7 @@ target_link_libraries(skim_tree ${ROOT_LIBRARIES} e2aCuts)
 #simulator
 add_executable(simulator simulator.cpp andrew_analysis/ratio_analysis/target_Info.cpp maps/Acceptance.cpp)
 target_link_libraries(simulator ${ROOT_LIBRARIES} target_Info Acceptance e2aCuts)
+
+# Normalize SRC and Mean Field DATA
+add_executable(scale_weight scale_weight.cpp)
+target_link_libraries(scale_weight ${ROOT_LIBRARIES})

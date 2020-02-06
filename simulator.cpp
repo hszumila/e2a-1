@@ -9,39 +9,54 @@
 #include "target_Info.h"
 #include "e2a_constants.h"
 #include "constants.h"
-//#include "Fiducial.h"
 
 
 // NOTE: Not doing anything with Vtx Cor YET
 // NOTE: You can input any nucleus to scatter off of, but it should match the ones the SRC and Mean Field generator was run off of
 // The purpose of this file is to add smearing, acceptances, and fiducial cuts to pseudodata for the Clas12 E2A reactor
+// Code will add new weights to the data if new weights provided. Skip if not applicable
 
 int main(int argc, char** argv){
-  if (argc != 5){
-    std::cout << "wrong number of arguments\n";
-    std::cout << "Try ./simulator [Mean Field (1) or SRC (2)] [Atomic Number] [input = ../../SRC_Project/Build/DATA/gen_file.root] [output = Sam_analysis/DATA/simulator_(SRC or MF).root]\n";
+  bool new_weight;
+  if (argc > 6. or argc < 5.){
+    std::cout << "Wrong number of arguments\n";
+    std::cout << "Try ./simulator [Mean Field (1) or SRC (2)] [Atomic Number] [input DATA as Root File] [output DATA as Root File] [Add Updated Weight Branch (as Root File) or skip]\n";
+    std::cout << "The Pupose of this code is to add smearing, acceptances, and fidicial cuts to pseudodata for Clas12 E2A reactor\n";
     return -1;
   }
+  if (argc == 5){
+    std::cout << "Using Weight in Root File. No Variables Changed\n";
+    new_weight = false;}
+  if (argc == 6.){
+    std::cout << "Using Weight in Updated Root File. No Other Variables Changed\n";
+    new_weight = true;}
+  
 
 // TTree to save values during the loop
-  TFile * input_file = new TFile(argv[3]);          // MF or SRC input file
+  TFile * input_file_DATA = new TFile(argv[3]);     // MF or SRC input file
+  TFile * input_file_updated_weights;
   TFile * outfile = new TFile(argv[4],"RECREATE");  // New file with smearing, acceptances, and fiducials
+  TTree * updated_weight_MF_tree, * updated_weight_SRC_tree;     // MF or SRC pseudodata tree 
   TTree * generator_tree;                           // MF or SRC pseudodata tree 
   TTree * outtree;                                  // New tree with smearing, acceptances, and fiducials
   // take in the correct input/output tree for Mean Field data
   if (atoi(argv[1]) == 1.){
     std::cout << "Performing smearing, acceptances, and fiducial cuts for Mean Field Data \n";
-    generator_tree = (TTree*)input_file->Get("genT");
+    generator_tree = (TTree*)input_file_DATA->Get("genT");
     outtree = new TTree("T", "Mass Tree");}
   // take in the correct input/output tree for SRC data
   else if (atoi(argv[1]) == 2.){
     std::cout << "Performing smearing, acceptances, and fiducial cuts for SRC Data \n";
-    generator_tree = (TTree*)input_file->Get("genT");
+    generator_tree = (TTree*)input_file_DATA->Get("genT");
     outtree = new TTree("T", "SRC Tree");}
   // If none specified
   else{
     std::cout << "Input 1 for Mean Field data and 2 for SRC data\n";
     return -1;}
+  if (new_weight){
+    input_file_updated_weights = new TFile(argv[5]);
+    updated_weight_MF_tree = (TTree*)input_file_updated_weights->Get("updated_MF_weights");
+    updated_weight_SRC_tree = (TTree*)input_file_updated_weights->Get("updated_SRC_weights");}
     
 
 // Define New Tree Variables for massT
@@ -64,36 +79,43 @@ int main(int argc, char** argv){
   
 
 // Define Old Tree Variables I need from genT
-  double QSq, weight, p_acc, e_acc;
+  double weight, p_acc, e_acc;
   double pLead[3],  pRec[3], pe[3];
   int lead_type, rec_type;  
   
 // Get branch (values) from MF_generator.cpp (MEAN FIELD) or gen_weight.cpp (SRC)
+  // Variables to take from both MF or SRC DATA
+  generator_tree->SetBranchAddress("lead_type", &lead_type);    // type of ejected nucleon (1rst nucleon in SRC pair)
+  generator_tree->SetBranchAddress("pLead", pLead);             // momentum vector of ejected nucleon (1rst nucleon in SRC pair)
+  generator_tree->SetBranchAddress("pe", pe);                   // momentum vector of scattered electron (final)
   // Mean Field trees
   if (atoi(argv[1]) == 1.){
-    generator_tree->SetBranchAddress("lead_type",&lead_type);  // type of ejected nucleon
-    generator_tree->SetBranchAddress("pLead",pLead);           // momentum vector of ejected nucleon
-    generator_tree->SetBranchAddress("pe",pe);                 // momentum vector of scattered electron (final)
-    generator_tree->SetBranchAddress("weight",&weight);        // weighted differential cross section
-    pRec[0] = pRec[1] = pRec[2] = 0.001;}                      // deleted at end of code-> Placeholder for math
+    pRec[0] = pRec[1] = pRec[2] = 0.0001;}                      // deleted at end of code-> Placeholder for math
   // SRC trees
   else if (atoi(argv[1]) == 2.){
-    generator_tree->SetBranchAddress("lead_type",&lead_type);  // type of ejected nucleon (1rst nucleon in SRC pair)
-    generator_tree->SetBranchAddress("rec_type",&rec_type);    // type of ejected nucleon (2nd nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pLead",pLead);           // momentum vector of ejected nucleon (1rst nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pRec",pRec);             // momentum vector of ejected nucleon (2nd nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pe",pe);                 // momentum vector of scattered electron (final)
-    generator_tree->SetBranchAddress("weight",&weight);}       // weighted differential cross section
-
+    generator_tree->SetBranchAddress("rec_type", &rec_type);    // type of ejected nucleon (2nd nucleon in SRC pair)
+    generator_tree->SetBranchAddress("pRec", pRec);}            // momentum vector of ejected nucleon (2nd nucleon in SRC pair)'
+  // Get Weight if Scaled
+  if (new_weight){
+    // MF Weight
+    if (atoi(argv[1]) == 1.){
+      updated_weight_MF_tree->SetBranchAddress("updated_weight_MF", &weight);
+      generator_tree->AddFriend(updated_weight_MF_tree);}
+    if (atoi(argv[1]) == 2.){
+      updated_weight_SRC_tree->SetBranchAddress("updated_weight_SRC", &weight);
+      generator_tree->AddFriend(updated_weight_SRC_tree);}}
+  // Get Weight if not scaled
+  else{
+    generator_tree->SetBranchAddress("weight", &weight);}       // unscaled weighted differential cross section
+  
   
 //Initialize CLasses:
     const int A = atoi(argv[2]);  // Takes in the atomic number of the nucleus we scattered off of
     TRandom3 myRand(0);           // Initializes a random number generator
     target_Info find_acc(A);      // Initializes the acceptance and fiducial class in target_info.cpp
-    // Fiducial *targFid = new Fiducial(4461,2250,5996,"4He", true);  // Beam energy, Magnetic Field Strength, Minature Magnetic Field Strength, Target_String, ??
-    
+
 // Loop over all entries
-  for (int i = 0; i < generator_tree->GetEntries(); i++){   
+  for (int i = 0; i < generator_tree->GetEntries(); i++){
     generator_tree->GetEvent(i);
     vtx_z_cor[1] = -1.;  // tbd later on
     p_acc = e_acc = 0;   // Set to zero after every loop
@@ -158,14 +180,11 @@ int main(int argc, char** argv){
 
     
     // Fiducial Cut    
-    //if (not find_acc.pass_semi_fid(pe_TVec_smear, pLead_TVec_smear)) continue; // fiducial cut of smears electron, lead nucleon
+    if (not find_acc.pass_semi_fid(pe_TVec_smear, pLead_TVec_smear)) continue; // fiducial cut of smears electron, lead nucleon
 
     
     // Find New Weights
-    if (p_acc > 0.75 and e_acc > 0){
-      weighted = weight/(p_acc*e_acc);}
-    else{
-      weighted = 0;}
+    weighted = weight*(p_acc*e_acc);
     // Fill Tree
     if (weighted != 0){
       outtree->Fill();}
@@ -173,10 +192,12 @@ int main(int argc, char** argv){
 
 
 // Clean up
-  input_file->Close();
+  input_file_DATA->Close();
   outfile->cd();
   outtree->Write();
   outfile->Close();
+  if (new_weight){
+    input_file_updated_weights->Close();}
   return 0;
   
 }
