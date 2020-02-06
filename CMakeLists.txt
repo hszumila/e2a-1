@@ -40,11 +40,3 @@ include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${andrew_inc
 # Add executable for making skim code
 add_executable(skim_tree skim_tree.cpp) 
 target_link_libraries(skim_tree ${ROOT_LIBRARIES} e2aCuts)
-
-#simulator
-add_executable(simulator simulator.cpp andrew_analysis/ratio_analysis/target_Info.cpp maps/Acceptance.cpp)
-target_link_libraries(simulator ${ROOT_LIBRARIES} target_Info Acceptance e2aCuts)
-
-# Normalize SRC and Mean Field DATA
-add_executable(scale_weight scale_weight.cpp)
-target_link_libraries(scale_weight ${ROOT_LIBRARIES})
