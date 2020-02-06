@@ -14,6 +14,8 @@ INSTALL (FILES
 	vz_4461_4He.dat vz_4461_12C.dat vz_4461_3He.dat vz_1161_3He.dat
 	vz_2261_4He.dat vz_2261_12C.dat vz_2261_3He.dat vz_2261_56Fe.dat
 	n_pathlength_corr_4461.dat
+	12C_rad_corr.dat 4He_rad_corr.dat
+	12C_VTX_cut.txt	4He_VTX_cut.txt	3He_VTX_cut.txt
         DESTINATION "$ENV{E2A_INSTALL}")
 
 

@@ -39,10 +39,11 @@ class target_Info
   double getTrans();
   double getLum();
   double getRadCorr(double Theta, double XB);
-  bool evtxInRange(double eVTX);
-  bool vtxInRange(double eVTX, double leadVTX);
-  void change_vtxMin(double newMin);
-  void change_vtxMax(double newMax);
+  bool evtxInRange(double eVTX, TVector3 ve);
+  bool evtxInRange(double eVTX, double ePhi);
+  //bool vtxInRange(double eVTX, double leadVTX, double eTheta, double pTheta);
+  //void change_vtxMin(double newMin);
+  //void change_vtxMax(double newMax);
   
   
  private:
@@ -51,14 +52,17 @@ class target_Info
   double density;
   double M_a;
   double ltcc; //live-time-corrected-charge
-  double vzMax;
-  double vzMin;
+  double vzMax[6];
+  double vzMin[6];
   double thick;
   std::string e2adir;
   std::string acc_Name;
   std::string fid_Name;
   std::string rad_Name;
+  std::string vtx_Name;
   double radCorr[38][51];
+  double eVTX[3][50];
+  double pVTX[3][50];
   Acceptance * eMap = NULL; 
   Acceptance * pMap = NULL;
   Acceptance * pipMap = NULL;
@@ -66,6 +70,16 @@ class target_Info
   void setLum();
   std::ifstream radFile;
   void fillRadArray();
+
+  void fillVTXArray();
+  int getSec(const double phi);
+
+  double getVTXMinElectron(double Theta);
+  double getVTXMaxElectron(double Theta);
+  double getVTXMinProton(double Theta);
+  double getVTXMaxProton(double Theta);
+  void fillVTXArrayElectron();
+  void fillVTXArrayProton();
   
 };
 

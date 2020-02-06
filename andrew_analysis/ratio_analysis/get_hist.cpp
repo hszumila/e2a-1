@@ -39,8 +39,6 @@ void help_message()
       <<"Optional flags:\n"
       <<"-h: Help\n"
       <<"-v: Verbose\n"
-      <<"-n: Set a custom minimum to the Z vertex [cm]\n"
-      <<"-x: Set a custom maximum to the Z vertex [cm]\n"
       <<"-s: Look at one sector [0-5]\n"
       <<"-Q: Set minimum QSq value [GeV] (default = 1.4)\n"
       <<"-t: Do not apply transparency factors for the lead proton\n"
@@ -85,7 +83,7 @@ int main(int argc, char ** argv){
   int secChoice = -1;
   
   int c;
-  while ((c=getopt (argc-5, &argv[5], "hvn:x:ms:tQ:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-5, &argv[5], "hvms:tQ:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -93,12 +91,6 @@ int main(int argc, char ** argv){
 	return -1;
       case 'v':
 	verbose = true;
-	break;
-      case 'n':
-	targInfo.change_vtxMin(atof(optarg));
-	break;
-      case 'x':
-	targInfo.change_vtxMax(atof(optarg));
 	break;
       case 'm':
 	doMaps = false;
@@ -241,7 +233,7 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0])){
+    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){
       continue;
     }
     if(oneSec && (secChoice != getSec(phi))){

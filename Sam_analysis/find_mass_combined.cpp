@@ -1,10 +1,8 @@
 #include <iostream>
+#include <sstream>
 #include <cmath>
-
 #include <string>
-#include <iostream>
 #include <vector>
-#include <math.h>
 
 #include "TTree.h"
 #include "TFile.h"
@@ -252,13 +250,15 @@ int main(int argc, char** argv){
   double y[(int) total_sections];
   double ex[(int) total_sections];
   double ey[(int) total_sections];
-  TH1F *proj_histo[total_sections] = { NULL };
+  TH1F *proj_histo[total_sections];
+  for (int i=0 ; i<total_sections ; i++) proj_histo[i]=NULL;
 
 // Create Histograms for every section (projection section) of the graph
 for (int round = 0.; round < total_sections; round++){
-  std::ostringstream histogramNameStream;
-  histogramNameStream << "projection_from_" << section_width*round << "_to_" << section_width*(round+1.);
-  proj_histo[round] = new TH1F( histogramNameStream.str().c_str() , ":(" ,  total_bins, Mass_y_min, Mass_y_max);
+  std::stringstream histogramNameStream;
+  histogramNameStream << "projection_from_" << (section_width*round) << "_to_" << (section_width*(round+1.));
+  std::string histogramName = histogramNameStream.str();
+  proj_histo[round] = new TH1F( histogramName.c_str() , ":(" ,  total_bins, Mass_y_min, Mass_y_max);
  }
 
 // Recreate graph with mean plotted

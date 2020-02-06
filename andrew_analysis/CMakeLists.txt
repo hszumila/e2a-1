@@ -2,6 +2,7 @@
 
 set(andrew_include ${CMAKE_SOURCE_DIR}/andrew_analysis/include )
 
+add_subdirectory(libs)
 add_subdirectory(ratio_analysis)
 add_subdirectory(momCorr_analysis)
 add_subdirectory(lumCheck)

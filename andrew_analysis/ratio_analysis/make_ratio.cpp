@@ -80,12 +80,12 @@ int main(int argc, char ** argv){
   cerr<<"Ratio made\n";
  
   //Now use ttrees to get the total cross section
-  TH1D * numHist = (TH1D*)inputNumFile->Get("totalCross");
+  /*TH1D * numHist = (TH1D*)inputNumFile->Get("totalCross");
   double numCross = numHist->GetBinContent(1);
   TH1D * denHist = (TH1D*)inputDenFile->Get("totalCross");
   double denCross = denHist->GetBinContent(1);
   cout<<"The cross section for this ratio is: "<<(numCross/denCross)<<"\n";
-  
+  */
   //Close Files
   outputFile->Close();
   inputNumFile->cd();

@@ -23,25 +23,10 @@ double sq(double x){ return x*x; };
 
 void help_message()
 {
-  cerr<< "Argumets: ./leadCut /path/to/input/skim/file /path/to/output/root/file [nucleon of interest] [cut type]\n\n"
-      <<"Nucleon of Interest:\n"
-      <<"1: Protons\n"
-      <<"0: Neutons\n"
-      <<"-1: Both\n"
-      <<"Cut Type:\n"
-      <<"0: No kinematic cut\n"
-      <<"1: New SRC cuts (no lower bound on xB)\n"
-      <<"2: Standard SRC cuts\n"    
-      <<"3: New SRC cuts w/o PMiss\n"    
-      <<"4: Make Light cuts\n"    
+  cerr<< "Argumets: ./leadCut /path/to/input/skim/file /path/to/output/root/file\n\n"
       <<"Optional flags:\n"
       <<"-h: Help\n"
-      <<"-v: Verbose\n"
-      <<"-d: Merge nucleons and pions to deltas before the lead nucelon is found\n"
-      <<"-c: Write out only if the lead nucleon was found to be in a delta\n"
-      <<"-g: Set the cuts to random values\n"
-      <<"-x: Set minimum xB (default = 0)\n"
-      <<"-p: Set minimum pMiss [GeV] (default = 0)\n\n";
+      <<"-v: Verbose\n\n";
 }
 
 int main(int argc, char ** argv){
@@ -57,7 +42,7 @@ int main(int argc, char ** argv){
       help_message();
       return -1;
     }
-  if (argc < 5)
+  if (argc < 3)
     {
       cerr << "Wrong number of arguments. Insteady try\n\n";
       help_message();
@@ -67,35 +52,12 @@ int main(int argc, char ** argv){
   //Read in arguments.
   TFile * inputFile = new TFile(argv[1]);
   TFile * outputFile = new TFile(argv[2],"RECREATE");
-  srcCut_Info myCut;
-  
-  if(atoi(argv[3]) == 1){
-    myCut.setOnlyLeadProton();
-  }
-  else if(atoi(argv[3]) == 0){
-    myCut.setOnlyLeadNeutron();
-  }
-
-  if( atoi(argv[4]) == 1 ){
-    myCut.makeNewSemiCut();
-  }
-  else if( atoi(argv[4]) == 2 ){
-    myCut.makeStandardSemiCut();
-  }
-  else if( atoi(argv[4]) == 3 ){
-    myCut.makeNewSemiCutNoPMiss();
-  }
-  else if( atoi(argv[4]) == 4 ){
-    myCut.makeLightCut();
-  }
 
 
   bool verbose = false;
-  bool mergeD = false;
-  bool checkLeadD = false;
    
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hvdcgp:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-2, &argv[2], "hv")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -103,21 +65,6 @@ int main(int argc, char ** argv){
 	return -1;
       case 'v':
 	verbose = true;
-	break;
-      case 'd':
-	mergeD = true;
-	break;
-      case 'c':
-	checkLeadD = true;
-	break;
-      case 'g':
-	myCut.makeGausCut();
-	break;
-      case 'p':
-	myCut.setMinPMissCut(atof(optarg));
-	break;
-      case 'x':
-	myCut.setMinXBCut(atof(optarg));
 	break;
       case '?':
 	return -1;
@@ -129,6 +76,24 @@ int main(int argc, char ** argv){
   //Make trees and histograms for data
   TTree * inTree = (TTree*)inputFile->Get("T");
   TTree * outTree = new TTree("T","Reduced Tree");
+
+  vector<TH1*> hist_list;
+  TH1D * hist_Mass_m =  new TH1D("hist_Mass_m" ,"hist;Mass_m;Counts",100,1,1.9);
+  hist_list.push_back(hist_Mass_m);
+  TH1D * hist_Mass_0 =  new TH1D("hist_Mass_0" ,"hist;Mass_0;Counts",100,1,1.9);
+  hist_list.push_back(hist_Mass_0);
+  TH1D * hist_Mass_p =  new TH1D("hist_Mass_p" ,"hist;Mass_p;Counts",100,1,1.9);
+  hist_list.push_back(hist_Mass_p);
+  TH1D * hist_Mass_pp =  new TH1D("hist_Mass_pp" ,"hist;Mass_pp;Counts",100,1,1.9);
+  hist_list.push_back(hist_Mass_pp);
+  vector<TH2*> hist_list_2D;
+  TH2D * hist_xB_mMiss_Dpp =  new TH2D("hist_mMiss_Dpp" ,"hist;xB;mMiss;Counts",40,0,2,250,0,2.5);
+  hist_list_2D.push_back(hist_xB_mMiss_Dpp);
+  TH2D * hist_xB_pMiss_Dpp =  new TH2D("hist_pMiss_Dpp" ,"hist;xB;pMiss;Counts",40,0,2,400,0,4);
+  hist_list_2D.push_back(hist_xB_pMiss_Dpp);
+  TH2D * hist_xB_thetapq =  new TH2D("hist_thetapq" ,"hist;xB;thetapq;Counts",40,0,2,180,0,180);
+  hist_list_2D.push_back(hist_xB_thetapq);
+
 
   cerr<<"Nucleus file has been opened from input file. \n";
 
@@ -162,9 +127,10 @@ int main(int argc, char ** argv){
   
  int fin = inTree->GetEntries();
  int nEvents = 0;
- int numLeadP = 0;
- int numLeadN = 0;
- int numDouble = 0;
+ int numDelm = 0;
+ int numDel0 = 0;
+ int numDelp = 0;
+ int numDelpp = 0;
   
   //Loop over TTree
   for(int i = 0; i < fin; i++){
@@ -182,12 +148,9 @@ int main(int argc, char ** argv){
     }
 
     event_Info myInfo(nPar,parID,xB,QSq,momx,momy,momz,vtxZCorr);
-    int passCut = myCut.passCutReorder(myInfo);
-    if(passCut == 0){ continue; }
-    if(passCut == 2){
-      numDouble++;
-      continue;
-    }
+    double delMass = myInfo.findAndMergeDeltas();
+    if(delMass < 0){ continue; }
+    myInfo.clearNonDelta();
 
     //Now fill variables that have changed for writting out
     nPar=myInfo.getNPar();
@@ -200,19 +163,58 @@ int main(int argc, char ** argv){
       momz[l] = myInfo.getPZ(l);
       vtxZCorr[l] = myInfo.getVTX(l);
     }
+    TVector3 vDel = myInfo.getVector(1);
+    double eDel = sqrt(vDel.Mag2() + (delMass*delMass));
+    TVector3 vq = vBeam - myInfo.getVector(0);
+    double omega = vBeam.Mag() - myInfo.getVector(0).Mag();
+    TVector3 vMiss = vDel - vq;
+    double eMiss = sqrt(vMiss.Mag2()+(mD*mD));
+    double mMiss = eDel + eMiss - omega;
+    /*
+    double eMiss = omega + delMass  - eDel;
+    double mMiss = sqrt((eMiss*eMiss)-vMiss.Mag2());
+    */
+    double thetapq = vDel.Angle(vq) * 180 / M_PI;
     //Now apply some counting
-    if(myInfo.isProton(1)){numLeadP++;}
-    if(myInfo.isNeutron(1)){numLeadN++;}
+    if(myInfo.getParID(1) == dmCode){
+      numDelm++;
+      hist_Mass_m->Fill(delMass);
+    }
+    if(myInfo.getParID(1) == d0Code){
+      numDel0++;
+      hist_Mass_0->Fill(delMass);
+    }
+    if(myInfo.getParID(1) == dpCode){
+      numDelp++;      
+      hist_Mass_p->Fill(delMass);
+    }
+    if(myInfo.getParID(1) == dppCode){
+      numDelpp++;
+      hist_xB_pMiss_Dpp->Fill(xB,vMiss.Mag());
+      hist_xB_thetapq->Fill(xB,thetapq);
+      hist_Mass_pp->Fill(delMass);
+      if(vMiss.Mag()<0.3){ continue; }
+      if(vMiss.Mag()<1){ continue; }
+      if(thetapq>25){ continue; }
+      hist_xB_mMiss_Dpp->Fill(xB,mMiss);
+    }
     outTree->Fill();
     nEvents++;
   }
 
   cout<<"Finished filling tree for output"<<endl;
-  cout<<"Number of Events with lead Nucleons: "<<nEvents<<endl;
-  cout<<"Number of Events with Lead Proton: "<<numLeadP<<endl;
-  cout<<"Number of Events with Lead Neutron: "<<numLeadN<<endl;
-  cout<<"Number of Events with more than one Lead Nucleon: "<<numDouble<<endl;
+  cout<<"Number of Events with Deltas: "<<nEvents<<endl;
+  cout<<"Number of Events with Delta Minus: "<<numDelm<<endl;
+  cout<<"Number of Events with Delta Naught: "<<numDel0<<endl;
+  cout<<"Number of Events with Delta Plus: "<<numDelp<<endl;
+  cout<<"Number of Events with Delta Plus Plus: "<<numDelpp<<endl;
   outTree->Write();
+  for(int k=0; k<hist_list.size(); k++){
+    hist_list[k]->Write();
+  }
+  for(int k=0; k<hist_list_2D.size(); k++){
+    hist_list_2D[k]->Write();
+  }
   inputFile->Close();
   outputFile->Close();
 

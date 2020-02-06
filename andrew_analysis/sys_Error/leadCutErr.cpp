@@ -54,8 +54,8 @@ int main(int argc, char ** argv){
 
   srcCut_Info myCut;
   myCut.setOnlyLeadProton();
-  //myCut.makeGausCut();
-  myCut.makeNewSemiCut();
+  myCut.makeGausCut();
+  //myCut.makeNewSemiCut();
   //Save text file
   std::ofstream textFile(argv[1]);
   textFile << "Min TPQ \t Max TPQ \t Min P/Q \t Min p_Miss \t Max p_Miss \t Min m_Miss \t Max m_Miss \n";
