@@ -69,8 +69,8 @@ int main(int argc, char** argv){
 // Create Histograms of Missing Mass
   // Mass graph
   const int total_bins = 20.;    // Histogram bins. Later on, you want to make sure you can divide by section width
-  const int M_miss_y_min = 800.;     
-  const int M_miss_y_max = 1200.;
+  const int M_miss_y_min = 0.;     
+  const int M_miss_y_max = 2500.;
   const int M_miss_y_av_min = 860.;     
   const int M_miss_y_av_max = 1040.;
   const int P_miss_x_min = 0.;
