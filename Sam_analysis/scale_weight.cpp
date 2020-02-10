@@ -39,7 +39,7 @@ int main(int argc, char** argv){
   const int upper_bound = 600.;         //P_miss axis
   const int start_p_scale = 300.;       // Initial P_miss value to consider in scaling (DATA comparison between real data)
   const int end_p_scale = upper_bound;  // Final P_miss calue to consider in scaling (DATA comparison between real data)
-  const double xB_max_cut = 1.5;        // xB cut for data
+  const double xB_max_cut = 2.;         // xB cut for data
   const double xB_min_cut = 1.;         // xB cut for data
   const double QSq_max_cut = 4.1;       // Q2 cut for data
   const double QSq_min_cut = 0.5;       // Q2 cut for data
