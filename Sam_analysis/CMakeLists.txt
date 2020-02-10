@@ -5,8 +5,8 @@ set(andrew_include ${CMAKE_SOURCE_DIR}/andrew_analysis/include ${CMAKE_SOURCE_DI
 include_directories(${INCLUDES} ${andrew_include})
 
 # Add executable for event counting
-add_executable(find_mass_combined find_mass_combined.cpp) 
-target_link_libraries(find_mass_combined ${ROOT_LIBRARIES} target_Info)
+add_executable(find_missing_mass find_missing_mass.cpp) 
+target_link_libraries(find_missing_mass ${ROOT_LIBRARIES} target_Info)
 
 # Add executable for CLAS simulator
 add_executable(simulator simulator.cpp )

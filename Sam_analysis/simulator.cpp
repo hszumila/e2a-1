@@ -16,6 +16,8 @@
 // The purpose of this file is to add smearing, acceptances, and fiducial cuts to pseudodata for the Clas12 E2A reactor
 // Code will add new weights to the data if new weights provided. Skip if not applicable
 
+// If error occurs, check/comment out radiative correction and vtx in target_info.cpp (under andrew_analysis)
+
 int main(int argc, char** argv){
   bool new_weight;
   if (argc > 6. or argc < 5.){
@@ -268,40 +270,3 @@ int main(int argc, char** argv){
   outtree->Branch("Mass"      ,  Mass      , "Mass[nParticles]/D"      );
 
 **/
-
-
-
-
-
-
-
-// Taking out for now:
-    /**
-    // lead nucleon
-    double P1_prime_lead_mag = P1_prime_TVec_lead.Mag()*(1. + myRand.Gaus(0, 0.02));
-    double_t theta_P1_prime_lead = P1_prime_TVec_lead.Theta();
-    double_t Phi_P1_prime_lead = P1_prime_TVec_lead.Phi();
-    // recoil nucleon
-    double P1_prime_recoil_mag = P1_prime_TVec_recoil.Mag()*(1. + myRand.Gaus(0, 0.02));
-    double_t theta_P1_prime_recoil = P1_prime_TVec_recoil.Theta();
-    double_t Phi_P1_prime_recoil = P1_prime_TVec_recoil.Phi();
-    // final electron
-    double Pk_mag = Pk_TVec.Mag()*(1. + myRand.Gaus(0, 0.0125));
-    double_t theta_Pk = Pk_TVec.Theta();
-    double_t Phi_Pk = Pk_TVec.Phi();
-    
-    mom_x[0] = Pk_mag*sin(theta_Pk)*cos(Phi_Pk);      // Scattered electron's X-momentum; Gev  
-    mom_y[0] = Pk_mag*sin(theta_Pk)*sin(Phi_Pk);      // Scattered electron's Y-momentum; Gev
-    mom_z[0] = Pk_mag*cos(theta_Pk);                  // Scattered electron's Z-momentum; Gev
-    TVector3 Pk_TVec_smear(mom_x[0], mom_y[0], mom_z[0]);
-    mom_x[1] = P1_prime_lead_mag*sin(theta_P1_prime_lead)*cos(Phi_P1_prime_lead); // Scattered nucleon's X-momentum; Gev  
-    mom_y[1] = P1_prime_lead_mag*sin(theta_P1_prime_lead)*sin(Phi_P1_prime_lead); // Scattered nucleon's Y-momentum; Gev
-    mom_z[1] = P1_prime_lead_mag*cos(theta_P1_prime_lead);                        // Scattered nucleon's Z-momentum; Gev
-    TVector3 P1_prime_TVec_lead_smear(mom_x[1], mom_y[1], mom_z[1]);
-    // Now only if SRC Pair do we record the second recoil nucleon
-    if (atoi(argv[1]) == 2.){
-      mom_x[2] = P1_prime_recoil_mag*sin(theta_P1_prime_recoil)*cos(Phi_P1_prime_recoil); // Scattered nucleon's X-momentum; Gev  
-      mom_y[2] = P1_prime_recoil_mag*sin(theta_P1_prime_recoil)*sin(Phi_P1_prime_recoil); // Scattered nucleon's Y-momentum; Gev
-      mom_z[2] = P1_prime_recoil_mag*cos(theta_P1_prime_recoil);                          // Scattered nucleon's Z-momentum; Gev
-      TVector3 P1_prime_TVec_recoil_smear(mom_x[2], mom_y[2], mom_z[2]);}
-    **/
