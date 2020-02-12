@@ -76,7 +76,6 @@ int main(int argc, char** argv){
   outtree->Branch("mom_y"     ,  mom_y     , "mom_y[nParticles]/D"     ); // array of final momentum of ejected particles in z direction, length of nParticles, GeV
   outtree->Branch("mom_z"     ,  mom_z     , "mom_z[nParticles]/D"     ); // array of final momentum of ejected particles in y direction, length of nParticles, GeV
   outtree->Branch("Xb"        , &Xb        , "Xb/D"                    ); // Bjorken X
-  outtree->Branch("Q2"        , &Q2        , "Q2/D"                    ); // Q^2
   outtree->Branch("weighted"  , &weighted , "weighted/D"               ); // weighted differential cross section
   
 

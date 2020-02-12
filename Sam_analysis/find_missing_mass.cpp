@@ -66,15 +66,20 @@ int main(int argc, char** argv){
   TTree * SRC_Tree = (TTree*)input_file_SRC->Get("T");
 
 
+  
 // Create Histograms of Missing Mass
   // Mass graph
-  const int total_bins = 20.;    // Histogram bins. Later on, you want to make sure you can divide by section width
+  const int total_bins = 30.;    // Histogram bins. Make sure you can divide by section width
   const int M_miss_y_min = 0.;     
   const int M_miss_y_max = 2500.;
   const int M_miss_y_av_min = 860.;     
   const int M_miss_y_av_max = 1040.;
-  const int P_miss_x_min = 0.;
-  const int P_miss_x_max = 1000.; // make sure it can work with total sections
+  const int P_miss_x_min = 50.;
+  const int P_miss_x_max = 950; // make sure it can work with total sections
+  // Variables Ranges of Missing Mass Projections to edit in Program:
+  const int section_width = 60.;
+  const int total_sections = (P_miss_x_max - P_miss_x_min)/section_width;
+  const double bin_per_section = total_bins/total_sections; // check to make sure divides
   // theta graph
   const int total_bins_theta = 20.;
   const int theta_min = 0.;     
@@ -122,21 +127,19 @@ int main(int argc, char** argv){
   const int maxPart = 50.;
   double mom_x[maxPart], mom_y[maxPart], mom_z[maxPart];
   int Part_type[maxPart];
-  double Xb, Q2, weighted; 
+  double Xb, weighted; 
 
 //Variables we are taking from pseudo_skim_tree for Mean Field
   Mean_Tree->SetBranchAddress("Part_type" ,  Part_type ); //neutron (2112) or proton (2212) or pion (0: 111 ; -: -211 ; +: 211) or electron (-11)
   Mean_Tree->SetBranchAddress("mom_x"     ,  mom_x     ); //momentum in x direction, arrays of double, length of nParticles, GeV, final nucleon momentum
   Mean_Tree->SetBranchAddress("mom_y"     ,  mom_y     ); //momentum in z direction, arrays of double, length of nParticles, GeV, final nucleon momentum
   Mean_Tree->SetBranchAddress("mom_z"     ,  mom_z     ); //momentum in y direction, arrays of double, length of nParticles, GeV, final nucleon momentum
-  Mean_Tree->SetBranchAddress("Q2", &Q2);  // Q_Squared
   Mean_Tree->SetBranchAddress("Xb"        , &Xb        ); // Bjorken X
 //Variables we are taking for SRC
   SRC_Tree->SetBranchAddress("Part_type" ,  Part_type ); //neutron (2112) or proton (2212) or pion (0: 111 ; -: -211 ; +: 211) or electron (-11)
   SRC_Tree->SetBranchAddress("mom_x"     ,  mom_x     ); //momentum in x direction, arrays of double, length of nParticles, GeV, final nucleon momentum
   SRC_Tree->SetBranchAddress("mom_y"     ,  mom_y     ); //momentum in z direction, arrays of double, length of nParticles, GeV, final nucleon momentum
   SRC_Tree->SetBranchAddress("mom_z"     ,  mom_z     ); //momentum in y direction, arrays of double, length of nParticles, GeV, final nucleon momentum
-  SRC_Tree->SetBranchAddress("Q2", &Q2);  // Q_Squared
   SRC_Tree->SetBranchAddress("Xb"        , &Xb        ); // Bjorken X
 //Variables we are taking from Real tree is provided
   if (use_real_data){
@@ -144,7 +147,6 @@ int main(int argc, char** argv){
     Real_Tree->SetBranchAddress("mom_x"     ,  mom_x     );  //momentum in x direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     Real_Tree->SetBranchAddress("mom_y"     ,  mom_y     );  //momentum in z direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     Real_Tree->SetBranchAddress("mom_z"     ,  mom_z     );  //momentum in y direction, arrays of double, length of nParticles, GeV, final nucleon momentum
-    Real_Tree->SetBranchAddress("Q2", &Q2);  // Q_Squared
     Real_Tree->SetBranchAddress("Xb"        , &Xb        );} // Bjorken X
 // If Using updated weights
   if (new_weight){
@@ -184,7 +186,6 @@ int main(int argc, char** argv){
 
 // Apply SRC-like Kinematic Selection Criteria from Taofeng     
     if (Xb < 1.15) continue;
-    if (Q2 > 4.1 or Q2 < 0.5) continue;
 // Find out which of the pair is viable; if both: take first viable proton (unsure how to deal with both now)
     bool nucleon_test = false;
     int recorded_nucleon_index;
@@ -252,7 +253,6 @@ int main(int argc, char** argv){
       his_theta_P1prime_q_REAL->Fill(Pprime_over_Q, theta_P1_prime_q*(180/M_PI), weighted);}
  }}
 
-
   
 // End of Data Mining
   // ------------------------------------------------------------------------------------------------------------------- //
@@ -260,9 +260,6 @@ int main(int argc, char** argv){
   
   
 // Find mean for every x point and replot
-  int section_width = 50.;
-  int total_sections = P_miss_x_max/section_width;
-  double bin_per_section = total_bins/total_sections; // check to make sure divides
   double x[(int) total_sections];
   double y[(int) total_sections];
   double ex[(int) total_sections];

@@ -39,10 +39,7 @@ int main(int argc, char** argv){
   const int upper_bound = 600.;         //P_miss axis
   const int start_p_scale = 300.;       // Initial P_miss value to consider in scaling (DATA comparison between real data)
   const int end_p_scale = upper_bound;  // Final P_miss calue to consider in scaling (DATA comparison between real data)
-  const double xB_max_cut = 2.;         // xB cut for data
-  const double xB_min_cut = 1.;         // xB cut for data
-  const double QSq_max_cut = 4.1;       // Q2 cut for data
-  const double QSq_min_cut = 0.5;       // Q2 cut for data
+  const double xB_min_cut = 1.15;         // xB cut for data
   
 // Make Histograms of Missing Momentum to Compare
   TH1D * P_miss_REAL_hist = new TH1D("P_miss From REAL DATA","Missing Momentum [MeV]; Counts", total_bins,  lower_bound, upper_bound);
@@ -78,7 +75,7 @@ int main(int argc, char** argv){
   double Pbz = 4.461;      // Beam Energy GeV
   const int maxPart = 50.; // theoretical max length of momentum arrays (defined below)
   double pLead[3], pe[3], mom_x[maxPart], mom_y[maxPart], mom_z[maxPart];
-  double updated_weight_SRC, updated_weight_MF, weight, Xb, Q2;
+  double updated_weight_SRC, updated_weight_MF, weight, Xb;
   int nParticles, Part_type[maxPart], lead_type;
   
 // Get Data from Real Data Set
@@ -88,7 +85,6 @@ int main(int argc, char** argv){
   Real_Tree->SetBranchAddress("nParticles", &nParticles);  //number of particles detected, integer
   Real_Tree->SetBranchAddress("Part_type" ,  Part_type );  //neutron (2112); proton (2212); pion (0: 111 ; -: -211 ; +: 211); electron (-11)
   Real_Tree->SetBranchAddress("Xb", &Xb);                  // Bjorken X
-  Real_Tree->SetBranchAddress("Q2", &Q2);                  // Q_Squared
 
 // Get Data from Mean Tree
   MF_Tree_Weights->Branch("updated_weight_MF",&updated_weight_MF,"updated_weight_MF/D");
@@ -98,14 +94,12 @@ int main(int argc, char** argv){
     Mean_Tree->SetBranchAddress("mom_x"     , mom_x);     // momentum in x direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     Mean_Tree->SetBranchAddress("mom_y"     , mom_y);     // momentum in y direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     Mean_Tree->SetBranchAddress("mom_z"     , mom_z);     // momentum in z direction, arrays of double, length of nParticles, GeV, final nucleon momentum
-    Mean_Tree->SetBranchAddress("Q2", &Q2);               // Q_Squared
     Mean_Tree->SetBranchAddress("Xb", &Xb);}              // Bjorken Scaling Parameter
   else{
     Mean_Tree->SetBranchAddress("lead_type", &lead_type); // Code for Lead Nucleon
     Mean_Tree->SetBranchAddress("weight",&weight);
     Mean_Tree->SetBranchAddress("pLead", pLead);          // momentum vector of ejected nucleon (initial nucleon)
     Mean_Tree->SetBranchAddress("pe", pe);                // momentum vector of scattered electron (final)
-    Mean_Tree->SetBranchAddress("QSq", &Q2);              // Q_Squared
     Mean_Tree->SetBranchAddress("xB", &Xb);}              // Bjorken Scaling Parameter
   
 // Get Data from SRC Tree
@@ -116,14 +110,12 @@ int main(int argc, char** argv){
     SRC_Tree->SetBranchAddress("mom_x"     , mom_x);      // momentum in x direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     SRC_Tree->SetBranchAddress("mom_y"     , mom_y);      // momentum in y direction, arrays of double, length of nParticles, GeV, final nucleon momentum
     SRC_Tree->SetBranchAddress("mom_z"     , mom_z);      // momentum in z direction, arrays of double, length of nParticles, GeV, final nucleon momentum
-    SRC_Tree->SetBranchAddress("Q2", &Q2);                // Q_Squared
     SRC_Tree->SetBranchAddress("Xb", &Xb);}               // Bjorken Scaling Parameter
   else{
     SRC_Tree->SetBranchAddress("lead_type", &lead_type);  // Code for Lead Nucleon
     SRC_Tree->SetBranchAddress("weight",&weight);
     SRC_Tree->SetBranchAddress("pLead", pLead);           // momentum vector of ejected nucleon (1rst nucleon in SRC pair)
     SRC_Tree->SetBranchAddress("pe", pe);                 // momentum vector of scattered electron (final)
-    SRC_Tree->SetBranchAddress("QSq", &Q2);               // Q_Squared
     SRC_Tree->SetBranchAddress("xB", &Xb);}               // Bjorken Scaling Parameter
 
 
@@ -153,8 +145,7 @@ int main(int argc, char** argv){
   for(int i = 0; i < Real_Tree->GetEntries(); i++){
     Real_Tree->GetEntry(i);
     if (nParticles > 3. or nParticles < 2.) continue;
-    if (Xb > xB_max_cut or Xb < xB_min_cut) continue;
-    if (Q2 > QSq_max_cut or Q2 < QSq_min_cut) continue;
+    if (Xb < xB_min_cut) continue;
     if (Part_type[1] != 2212.) continue;
     TVector3 P_miss_real(mom_x[1] + mom_x[0], mom_y[1] + mom_y[0], mom_z[1] - (Pbz - mom_z[0]));
     P_miss_REAL_hist->Fill(P_miss_real.Mag()*1000.);
@@ -171,8 +162,7 @@ int main(int argc, char** argv){
     tree_array[tree_type]->GetEvent(i);
     // Get missing momentum (MF label is arbitrary, for both SRC/MF)
     // Adding Same cuts as to Real DATA
-    if (Xb > xB_max_cut or Xb < xB_min_cut) continue;
-    if (Q2 > QSq_max_cut or Q2 < QSq_min_cut) continue;
+    if (Xb < xB_min_cut) continue;
     if (applied_simulator){
       if (Part_type[1] != 2212.) continue;
       P_miss_MF.SetXYZ(mom_x[1] + mom_x[0], mom_y[1] + mom_y[0], mom_z[1] - (Pbz - mom_z[0]));}
@@ -198,8 +188,7 @@ int main(int argc, char** argv){
   for (int i = 0; i < total_entries; i++){   
     tree_array[tree_type]->GetEvent(i);
     // Adding Same cuts as to Real DATA
-    if (Xb > xB_max_cut or Xb < xB_min_cut) continue;
-    if (Q2 > QSq_max_cut or Q2 < QSq_min_cut) continue;
+    if (Xb < xB_min_cut) continue;
     // Mean Field Route
     if (tree_type == 0.){
       // Get missing momentum
