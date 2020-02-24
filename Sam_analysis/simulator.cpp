@@ -9,39 +9,56 @@
 #include "target_Info.h"
 #include "e2a_constants.h"
 #include "constants.h"
-//#include "Fiducial.h"
 
 
 // NOTE: Not doing anything with Vtx Cor YET
 // NOTE: You can input any nucleus to scatter off of, but it should match the ones the SRC and Mean Field generator was run off of
 // The purpose of this file is to add smearing, acceptances, and fiducial cuts to pseudodata for the Clas12 E2A reactor
+// Code will add new weights to the data if new weights provided. Skip if not applicable
+
+// If error occurs, check/comment out radiative correction and vtx in target_info.cpp (under andrew_analysis)
 
 int main(int argc, char** argv){
-  if (argc != 5){
-    std::cout << "wrong number of arguments\n";
-    std::cout << "Try ./simulator [Mean Field (1) or SRC (2)] [Atomic Number] [input = ../../SRC_Project/Build/DATA/gen_file.root] [output = Sam_analysis/DATA/simulator_(SRC or MF).root]\n";
+  bool new_weight;
+  if (argc > 6. or argc < 5.){
+    std::cout << "Wrong number of arguments\n";
+    std::cout << "Try ./simulator [Mean Field (1) or SRC (2)] [Atomic Number] [input DATA as Root File] [output DATA as Root File] [Add Updated Weight Branch (as Root File) or skip]\n";
+    std::cout << "The Pupose of this code is to add smearing, acceptances, and fidicial cuts to pseudodata for Clas12 E2A reactor\n";
     return -1;
   }
+  if (argc == 5){
+    std::cout << "Using Weight in Root File. No Variables Changed\n";
+    new_weight = false;}
+  if (argc == 6.){
+    std::cout << "Using Weight in Updated Root File. No Other Variables Changed\n";
+    new_weight = true;}
+  
 
 // TTree to save values during the loop
-  TFile * input_file = new TFile(argv[3]);          // MF or SRC input file
+  TFile * input_file_DATA = new TFile(argv[3]);     // MF or SRC input file
+  TFile * input_file_updated_weights;
   TFile * outfile = new TFile(argv[4],"RECREATE");  // New file with smearing, acceptances, and fiducials
+  TTree * updated_weight_MF_tree, * updated_weight_SRC_tree;     // MF or SRC pseudodata tree 
   TTree * generator_tree;                           // MF or SRC pseudodata tree 
   TTree * outtree;                                  // New tree with smearing, acceptances, and fiducials
   // take in the correct input/output tree for Mean Field data
   if (atoi(argv[1]) == 1.){
     std::cout << "Performing smearing, acceptances, and fiducial cuts for Mean Field Data \n";
-    generator_tree = (TTree*)input_file->Get("genT");
+    generator_tree = (TTree*)input_file_DATA->Get("genT");
     outtree = new TTree("T", "Mass Tree");}
   // take in the correct input/output tree for SRC data
   else if (atoi(argv[1]) == 2.){
     std::cout << "Performing smearing, acceptances, and fiducial cuts for SRC Data \n";
-    generator_tree = (TTree*)input_file->Get("genT");
+    generator_tree = (TTree*)input_file_DATA->Get("genT");
     outtree = new TTree("T", "SRC Tree");}
   // If none specified
   else{
     std::cout << "Input 1 for Mean Field data and 2 for SRC data\n";
     return -1;}
+  if (new_weight){
+    input_file_updated_weights = new TFile(argv[5]);
+    updated_weight_MF_tree = (TTree*)input_file_updated_weights->Get("updated_MF_weights");
+    updated_weight_SRC_tree = (TTree*)input_file_updated_weights->Get("updated_SRC_weights");}
     
 
 // Define New Tree Variables for massT
@@ -59,41 +76,47 @@ int main(int argc, char** argv){
   outtree->Branch("mom_y"     ,  mom_y     , "mom_y[nParticles]/D"     ); // array of final momentum of ejected particles in z direction, length of nParticles, GeV
   outtree->Branch("mom_z"     ,  mom_z     , "mom_z[nParticles]/D"     ); // array of final momentum of ejected particles in y direction, length of nParticles, GeV
   outtree->Branch("Xb"        , &Xb        , "Xb/D"                    ); // Bjorken X
-  outtree->Branch("Q2"        , &Q2        , "Q2/D"                    ); // Q^2
   outtree->Branch("weighted"  , &weighted , "weighted/D"               ); // weighted differential cross section
   
 
 // Define Old Tree Variables I need from genT
-  double QSq, weight, p_acc, e_acc;
+  double weight, p_acc, e_acc;
   double pLead[3],  pRec[3], pe[3];
   int lead_type, rec_type;  
   
 // Get branch (values) from MF_generator.cpp (MEAN FIELD) or gen_weight.cpp (SRC)
+  // Variables to take from both MF or SRC DATA
+  generator_tree->SetBranchAddress("lead_type", &lead_type);    // type of ejected nucleon (1rst nucleon in SRC pair)
+  generator_tree->SetBranchAddress("pLead", pLead);             // momentum vector of ejected nucleon (1rst nucleon in SRC pair)
+  generator_tree->SetBranchAddress("pe", pe);                   // momentum vector of scattered electron (final)
   // Mean Field trees
   if (atoi(argv[1]) == 1.){
-    generator_tree->SetBranchAddress("lead_type",&lead_type);  // type of ejected nucleon
-    generator_tree->SetBranchAddress("pLead",pLead);           // momentum vector of ejected nucleon
-    generator_tree->SetBranchAddress("pe",pe);                 // momentum vector of scattered electron (final)
-    generator_tree->SetBranchAddress("weight",&weight);        // weighted differential cross section
-    pRec[0] = pRec[1] = pRec[2] = 0.001;}                      // deleted at end of code-> Placeholder for math
+    pRec[0] = pRec[1] = pRec[2] = 0.0001;}                      // deleted at end of code-> Placeholder for math
   // SRC trees
   else if (atoi(argv[1]) == 2.){
-    generator_tree->SetBranchAddress("lead_type",&lead_type);  // type of ejected nucleon (1rst nucleon in SRC pair)
-    generator_tree->SetBranchAddress("rec_type",&rec_type);    // type of ejected nucleon (2nd nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pLead",pLead);           // momentum vector of ejected nucleon (1rst nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pRec",pRec);             // momentum vector of ejected nucleon (2nd nucleon in SRC pair)
-    generator_tree->SetBranchAddress("pe",pe);                 // momentum vector of scattered electron (final)
-    generator_tree->SetBranchAddress("weight",&weight);}       // weighted differential cross section
-
+    generator_tree->SetBranchAddress("rec_type", &rec_type);    // type of ejected nucleon (2nd nucleon in SRC pair)
+    generator_tree->SetBranchAddress("pRec", pRec);}            // momentum vector of ejected nucleon (2nd nucleon in SRC pair)'
+  // Get Weight if Scaled
+  if (new_weight){
+    // MF Weight
+    if (atoi(argv[1]) == 1.){
+      updated_weight_MF_tree->SetBranchAddress("updated_weight_MF", &weight);
+      generator_tree->AddFriend(updated_weight_MF_tree);}
+    if (atoi(argv[1]) == 2.){
+      updated_weight_SRC_tree->SetBranchAddress("updated_weight_SRC", &weight);
+      generator_tree->AddFriend(updated_weight_SRC_tree);}}
+  // Get Weight if not scaled
+  else{
+    generator_tree->SetBranchAddress("weight", &weight);}       // unscaled weighted differential cross section
+  
   
 //Initialize CLasses:
     const int A = atoi(argv[2]);  // Takes in the atomic number of the nucleus we scattered off of
     TRandom3 myRand(0);           // Initializes a random number generator
     target_Info find_acc(A);      // Initializes the acceptance and fiducial class in target_info.cpp
-    // Fiducial *targFid = new Fiducial(4461,2250,5996,"4He", true);  // Beam energy, Magnetic Field Strength, Minature Magnetic Field Strength, Target_String, ??
-    
+
 // Loop over all entries
-  for (int i = 0; i < generator_tree->GetEntries(); i++){   
+  for (int i = 0; i < generator_tree->GetEntries(); i++){
     generator_tree->GetEvent(i);
     vtx_z_cor[1] = -1.;  // tbd later on
     p_acc = e_acc = 0;   // Set to zero after every loop
@@ -158,14 +181,11 @@ int main(int argc, char** argv){
 
     
     // Fiducial Cut    
-    //if (not find_acc.pass_semi_fid(pe_TVec_smear, pLead_TVec_smear)) continue; // fiducial cut of smears electron, lead nucleon
+    if (not find_acc.pass_semi_fid(pe_TVec_smear, pLead_TVec_smear)) continue; // fiducial cut of smears electron, lead nucleon
 
     
     // Find New Weights
-    if (p_acc > 0.75 and e_acc > 0){
-      weighted = weight/(p_acc*e_acc);}
-    else{
-      weighted = 0;}
+    weighted = weight*(p_acc*e_acc);
     // Fill Tree
     if (weighted != 0){
       outtree->Fill();}
@@ -173,10 +193,12 @@ int main(int argc, char** argv){
 
 
 // Clean up
-  input_file->Close();
+  input_file_DATA->Close();
   outfile->cd();
   outtree->Write();
   outfile->Close();
+  if (new_weight){
+    input_file_updated_weights->Close();}
   return 0;
   
 }
@@ -247,40 +269,3 @@ int main(int argc, char** argv){
   outtree->Branch("Mass"      ,  Mass      , "Mass[nParticles]/D"      );
 
 **/
-
-
-
-
-
-
-
-// Taking out for now:
-    /**
-    // lead nucleon
-    double P1_prime_lead_mag = P1_prime_TVec_lead.Mag()*(1. + myRand.Gaus(0, 0.02));
-    double_t theta_P1_prime_lead = P1_prime_TVec_lead.Theta();
-    double_t Phi_P1_prime_lead = P1_prime_TVec_lead.Phi();
-    // recoil nucleon
-    double P1_prime_recoil_mag = P1_prime_TVec_recoil.Mag()*(1. + myRand.Gaus(0, 0.02));
-    double_t theta_P1_prime_recoil = P1_prime_TVec_recoil.Theta();
-    double_t Phi_P1_prime_recoil = P1_prime_TVec_recoil.Phi();
-    // final electron
-    double Pk_mag = Pk_TVec.Mag()*(1. + myRand.Gaus(0, 0.0125));
-    double_t theta_Pk = Pk_TVec.Theta();
-    double_t Phi_Pk = Pk_TVec.Phi();
-    
-    mom_x[0] = Pk_mag*sin(theta_Pk)*cos(Phi_Pk);      // Scattered electron's X-momentum; Gev  
-    mom_y[0] = Pk_mag*sin(theta_Pk)*sin(Phi_Pk);      // Scattered electron's Y-momentum; Gev
-    mom_z[0] = Pk_mag*cos(theta_Pk);                  // Scattered electron's Z-momentum; Gev
-    TVector3 Pk_TVec_smear(mom_x[0], mom_y[0], mom_z[0]);
-    mom_x[1] = P1_prime_lead_mag*sin(theta_P1_prime_lead)*cos(Phi_P1_prime_lead); // Scattered nucleon's X-momentum; Gev  
-    mom_y[1] = P1_prime_lead_mag*sin(theta_P1_prime_lead)*sin(Phi_P1_prime_lead); // Scattered nucleon's Y-momentum; Gev
-    mom_z[1] = P1_prime_lead_mag*cos(theta_P1_prime_lead);                        // Scattered nucleon's Z-momentum; Gev
-    TVector3 P1_prime_TVec_lead_smear(mom_x[1], mom_y[1], mom_z[1]);
-    // Now only if SRC Pair do we record the second recoil nucleon
-    if (atoi(argv[1]) == 2.){
-      mom_x[2] = P1_prime_recoil_mag*sin(theta_P1_prime_recoil)*cos(Phi_P1_prime_recoil); // Scattered nucleon's X-momentum; Gev  
-      mom_y[2] = P1_prime_recoil_mag*sin(theta_P1_prime_recoil)*sin(Phi_P1_prime_recoil); // Scattered nucleon's Y-momentum; Gev
-      mom_z[2] = P1_prime_recoil_mag*cos(theta_P1_prime_recoil);                          // Scattered nucleon's Z-momentum; Gev
-      TVector3 P1_prime_TVec_recoil_smear(mom_x[2], mom_y[2], mom_z[2]);}
-    **/
