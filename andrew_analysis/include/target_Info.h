@@ -16,6 +16,7 @@
 #include "Acceptance.h"
 #include "Fiducial.h"
 #include "e2a_constants.h"
+#include "event_Info.h"
 
 class TH3D;
 class TFile;
@@ -38,12 +39,14 @@ class target_Info
   double pip_acc(TVector3 p);
   double getTrans();
   double getLum();
+  double getMass();
   double getRadCorr(double Theta, double XB);
-  bool evtxInRange(double eVTX, TVector3 ve);
-  bool evtxInRange(double eVTX, double ePhi);
-  //bool vtxInRange(double eVTX, double leadVTX, double eTheta, double pTheta);
-  //void change_vtxMin(double newMin);
-  //void change_vtxMax(double newMax);
+  bool eVTXInRange(double eVTX);
+  bool semiVTXInRange(double eVTX, double leadVTX, double eTheta, double pTheta);
+  bool semiVTXInRange(const event_Info myEvent, int leadIndex);
+  void change_vtxMin(double newMin);
+  void change_vtxMax(double newMax);
+  double returnInRangeVTX();
   
   
  private:
@@ -51,9 +54,10 @@ class target_Info
   double lum;
   double density;
   double M_a;
+  double massA;
   double ltcc; //live-time-corrected-charge
-  double vzMax[6];
-  double vzMin[6];
+  double vzMax;
+  double vzMin;
   double thick;
   std::string e2adir;
   std::string acc_Name;
@@ -71,7 +75,6 @@ class target_Info
   std::ifstream radFile;
   void fillRadArray();
 
-  void fillVTXArray();
   int getSec(const double phi);
 
   double getVTXMinElectron(double Theta);

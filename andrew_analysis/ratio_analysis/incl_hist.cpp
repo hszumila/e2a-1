@@ -138,7 +138,7 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){continue;}
+    if(!targInfo.eVTXInRange(vtxZCorr[0])){continue;}
     if(targInfo.e_acc(ve) < accMin){continue;}
     if(secondTargInfo.e_acc(ve) < accMin){continue;}
     if(QSq < 1){continue;}

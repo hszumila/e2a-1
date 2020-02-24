@@ -127,13 +127,14 @@ void srcCut_Info::makeNewSemiCutNoPMiss()
   setMaxXBCut(2);
   setMaxThetaCut(25);
   setMinPoQCut(0.62);
-  setMaxPMissCut(0.6);
+  setMaxPMissCut(2);
   setMinMassCut(0.9);
   setMaxMassCut(1.1);
 }
 
 void srcCut_Info::makeGausCut()
 {
+  setMinXBCut(0.15);
   setMaxXBCut(2);
 
   TRandom3 myRand(0);
