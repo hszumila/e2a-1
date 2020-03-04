@@ -2017,18 +2017,17 @@ bool Fiducial::CutUVW_e(TVector3 ecxyz)
 // ===================================================================================================================================
 bool Fiducial::CutUVW(TVector3 ecuvw, double dist)
 {
-
         double angle, x_rot, y_rot, d_intercept, abs_y_rot;
         double X_EC = ecuvw.X();
         double Y_EC = ecuvw.Y();
-        double n_phi= atan2(Y_EC,X_EC)*180./3.14159;
+        double n_phi= atan2(Y_EC,X_EC)*180./M_PI;
 
         if (n_phi < -30.) n_phi += 360.;
         int sec = (int)(n_phi+30)/60;
         if (sec>5) sec = 5;
         if (sec<0) sec = 0;
 
-        angle = 3.14159/180.*60.*(sec);
+        angle = M_PI/180.*60.*(sec);
         d_intercept = dist/cos(atan(1.73));
 
         x_rot = X_EC*cos(angle) + Y_EC*sin(angle);
