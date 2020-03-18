@@ -50,8 +50,8 @@ Fiducial::Fiducial(int E_beam, int torus, int mini, std::string target, bool dat
   std::cerr << "after vz_cor" << " " << all_ok << "\n";
   all_ok &= read_p_fid_params      (); // Proton fiducial regions
   std::cerr << "after p_fid" << " " << all_ok << "\n";
-  all_ok &= read_pim_fid_params      (); // Piminus fiducial regions
-  std::cerr << "after pim_fid" << " " << all_ok << "\n";
+  //all_ok &= read_pim_fid_params      (); // Piminus fiducial regions
+  //std::cerr << "after pim_fid" << " " << all_ok << "\n";
   all_ok &= read_n_pathlength_corr (); // Neutron pathlength correction params
   std::cerr << "after n_path" << " " << all_ok << "\n";
   if (all_ok)
