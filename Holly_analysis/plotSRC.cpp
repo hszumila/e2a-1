@@ -31,7 +31,6 @@
 #include "Fiducial.h"
 
 
-
 //define some constants
 const double amu     = 0.931494;
 const double Me      = .000511;         	// Electron mass in GeV
@@ -45,6 +44,32 @@ const double M4He    = 2*(Mp+Mn)-BE_4He;        // 4He mass in GeV
 const double M12C    = 6*(Mp+Mn)-BE_12C;        // 12C mass in GeV
 const double pi      = 3.14159;
 const double cc      = 2.99792458E+8;
+
+//SRC cuts defined:
+const double vtx_min_C = 4.0;//cm
+const double vtx_max_C = 7.0;//cm
+const double vtx_min_He = -2.5;//cm
+const double vtx_max_He = -0.5;//cm
+const double xb_cut = 1.1;
+const double thetapq_cut = 25.0;//deg
+const double pq_min = 0.62;
+const double pq_max_n = 1.1;
+const double pq_max_p = 0.96;
+const double mmiss_nomCut = 1.1;
+const double pmiss_nomCut = 0.3;
+
+
+double fn_Mmiss(double omega, double Mnuc, double Enuc, TVector3 q_vector, TVector3 p_vector){
+  return sqrt(pow(omega+2*Mnuc-Enuc,2.0) - (q_vector - p_vector).Mag2());
+}
+
+double fn_Emiss(double Pmiss, double omega, double M_tar, double Enuc, double Mnuc){
+	// Calculates missing energy
+	// Takes as input: missing momentum, transfer energy, struck nucleon energy, and struck nucleon mass.
+	double Tb   = omega + M_tar - Enuc - sqrt(pow(omega + M_tar - Enuc,2)- Pmiss*Pmiss );	// Kinetic energy of A-1 system
+	double Tnuc = Enuc - Mnuc;								// Kinetic energy of struck neutron
+	return omega - Tnuc - Tb;								// Missing energy
+}
 
 double f_delta_p(double p){
 	// Returns value of delta_p as a function of p.
@@ -120,11 +145,32 @@ bool p_points_to_EC_fid(TVector3 pm, double vtx_z, double dist){
 
 }
 
-int main(){
+//input is 3He, 4He, or 12C
+int main(int argc, char ** argv){
 
+  //////////////////////////////////
+  // Set some target dep parameters
+  /////////////////////////////////
+  TString target = argv[1];
+  cout<<"Target is: "<<target<<endl;
+
+  double tgt_min, tgt_max, tgt_M;
+  int tgt_Z, tgt_A;
+  if (target=="12C"){tgt_min = vtx_min_C; tgt_max = vtx_max_C; tgt_Z = 6; tgt_A = 12; tgt_M = M12C;}
+  else if (target=="3He"){tgt_min = vtx_min_He; tgt_max = vtx_max_He; tgt_Z = 2; tgt_A = 3; tgt_M = M3He;}
+  else if (target=="4He"){tgt_min = vtx_min_He; tgt_max = vtx_max_He; tgt_Z = 2; tgt_A = 4; tgt_M = M4He;}
+
+  cout<<"target min: "<<tgt_min<<" target max: "<<tgt_max<<endl;
+  //Change for fiducial cuts
+  Fiducial fid_params(4461,2250,5996,"3He",true);
+  
   gROOT->SetBatch(true);
   gStyle->SetOptStat(0);
 
+  
+  //////////////////////////////////
+  // Plots/////////////////////////
+  /////////////////////////////////
   //plot theta vs phi before
   TH2F *hfid_pre = new TH2F("hfid_pre","no p fid cut;#phi [deg];#theta [deg]",200,-100,360,200,0,70);
   //plot theta vs phi after
@@ -190,8 +236,8 @@ int main(){
   
 
   //read in the data and make output file  
-  TFile *f = new TFile("../../../data/1apr20/skim_C12_p.root");
-  TFile *fout = new TFile("output/out_c12_p.root","RECREATE");
+  TFile *f = new TFile("../../../data/1apr20/skim_He4_p.root");
+  TFile *fout = new TFile("output/out_he4_p.root","RECREATE");
 
   //read in the Pmiss plots from eg2
   TFile *f2 = new TFile("../../../pmiss_eg2.root");
@@ -199,14 +245,14 @@ int main(){
   TCanvas *c1 = (TCanvas*)f2->Get("Canvas_1");
   eg2_pmiss = (TH1F*)c1->GetPrimitive("h1");
 
-  TCanvas *canvas = new TCanvas("canvas","output c12 p plots", 700, 700);
+  TCanvas *canvas = new TCanvas("canvas","output he4 p plots", 700, 700);
   canvas->SetFillColor(0);
   canvas->SetBorderMode(0);
   canvas->SetBorderSize(0);
   canvas->SetFrameFillColor(0);
   canvas->SetFrameBorderMode(0);
   //canvas->SetLogy();
-  std::string pdf_file_name = "output/out_c12_p.pdf";
+  std::string pdf_file_name = "output/out_he4_p.pdf";
 
   TTree * intree = (TTree*)f->Get("T");
   const int maxParticles=50;
@@ -233,28 +279,22 @@ int main(){
 
   const int counts = 100000;
   double pmissO[counts];
-  double pmissSmear[counts];
+  double pmissSm[counts];
   double mmissO[counts];
-  double mmissSmear[counts];
+  double mmissSm[counts];
   int counter = 0;
   gRandom = new TRandom3();
   double p_over_q_O[counts];
   double p_over_q_sm[counts];
   double thetaPQ[counts];
   double thetaPQsm[counts];
-
-
-  //where run table stored:
-  //"../../calibration_data/run_table.dat"
-  Fiducial fid_params(4461,2250,5996,"12C",true);
   double p_over_q_prev = 0;
   double theta_prev = 0;
 
   for (int event =0 ; event < intree->GetEntries() ; event++)
   //for (int event =0 ; event < 100000 ; event++)
     {
-      if (event%10000==0)
-      	cout << "Working on event " << event <<endl;
+      if (event%10000==0){cout << "Working on event " << event <<endl;}
 
       intree->GetEvent(event);
 
@@ -264,7 +304,7 @@ int main(){
       TVector3 q = TVector3(0.,0.,Ebeam) - mom_e;
       
       //cut on xB
-      if (xB<1.1){continue;}
+      if (xB<xb_cut){continue;}
 
       // Loop over particles looking for a proton most likely to pass lead cuts
       int leadingID = -1;
@@ -275,18 +315,18 @@ int main(){
 	    continue;
 
 	  //vertex cut-target dep.
-	  if (vtxZ[part]<4 || vtxZ[part]>7){continue;}
+	  if (vtxZ[part]<tgt_min || vtxZ[part]>tgt_max){continue;}
 	  
 	  // Get a 3-vector for this proton's momentum
 	  TVector3 this_mom(mom_x[part],mom_y[part],mom_z[part]);
 
 	  // Ratio of p/q
 	  double p_over_q = this_mom.Mag() / q.Mag();
-	  //if ((p_over_q < 0.62)||(p_over_q > 0.96)) {continue;}
+	  //if ((p_over_q < pq_min)||(p_over_q > pq_max_p)) {continue;}
 
 	  // Angle between p and q
 	  double theta_pq = this_mom.Angle(q)*180.0/M_PI;
-	  if (theta_pq>25.0){continue;}
+	  if (theta_pq> thetapq_cut){continue;}
 
 	  //if (leadingID != -1){cout<<"already lead particle!"<<endl;}
 	  
@@ -299,10 +339,10 @@ int main(){
 	  if ((p_over_q>p_over_q_prev) && (theta_pq<theta_prev)){leadingID=part;}
 
 	  //one passes p/q cut
-	  else if ((p_over_q<0.62 || p_over_q_prev<0.62) && (p_over_q>p_over_q_prev)){leadingID=part;}
+	  else if ((p_over_q<pq_min || p_over_q_prev<pq_min) && (p_over_q>p_over_q_prev)){leadingID=part;}
 
 	  //both pass p/q cut or neither pass p/q cut
-	  else if (abs(p_over_q-0.62)/0.62*abs(theta_pq-25)/25.0 < abs(p_over_q_prev-0.62)/0.62*abs(theta_prev-25)/25.0)
+	  else if (abs(p_over_q-pq_min)/pq_min*abs(theta_pq-thetapq_cut)/thetapq_cut < abs(p_over_q_prev-pq_min)/pq_min*abs(theta_prev-thetapq_cut)/thetapq_cut)
 	    {leadingID=part;}
 	  	  
 	  /*
@@ -316,39 +356,39 @@ int main(){
 	  /////////////////////////////////////////////////////////////////////	  
 	}
 
-      // If we have a proton passing the leading cuts, then fill the histogram
+      //Now we have a leading proton!
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,6.0,12.0);
+	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
-	  
+	  //calculate the nominal values
 	  TVector3 mom_miss = mom_lead - q;
 	  double theta = mom_lead.Theta()*180./M_PI;
 	  double phi = mom_lead.Phi();
-	  double ep = sqrt(pow(Mp,2.0)+mom_lead.Mag2());
-
-	  double emiss =  Nu - (ep-Mp) - (Nu + M12C - ep - sqrt(pow(Nu + M12C - ep,2)- mom_miss.Mag2()));
-	  double mmiss = sqrt(pow(Nu+2*Mp-ep,2.0) - (q - mom_lead).Mag2());
+	  double ep = sqrt(pow(Mp,2.0)+mom_lead.Mag2());	  
+	  double emiss = fn_Emiss(mom_miss.Mag(), Nu, tgt_M, ep, Mp);
+	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
 	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
-	  
-	  TVector3 mom_missSmear = mom_smear - q;
-	  double epsmear = sqrt(pow(Mp,2.0)+mom_smear.Mag2());
-	  double emissSmear = Nu - (epsmear-Mp) - (Nu + M12C - epsmear - sqrt(pow(Nu+ M12C-epsmear,2.0)-mom_missSmear.Mag2()));
-	  double mmissSm = sqrt(pow(Nu+2*Mp-epsmear,2.0) - (q - mom_smear).Mag2());
 
-	  TVector3 pECUVW(ec_u[leadingID],ec_v[leadingID],ec_w[leadingID]);
+	  //recalculate the smeared factors
+	  TVector3 mom_missSmear = mom_smear - q;
+	  double epSmear = sqrt(pow(Mp,2.0)+mom_smear.Mag2());
+	  double emissSmear = fn_Emiss(mom_missSmear.Mag(), Nu, tgt_M, epSmear, Mp);
+	  double mmissSmear = fn_Mmiss(Nu, Mp, epSmear, q, mom_smear);
 	  
 	  if (phi < -M_PI/6.) phi+= 2.*M_PI;
 	  phi *= 180./M_PI; 
 
+	  //cut at Pmiss>1:
+	  if (mom_miss.Mag()>1.0 || mom_missSmear.Mag()>1.0){continue;}
 	  
+	  //apply proton fiducial cuts:
 	  hfid_pre->Fill(phi, theta);
-	  //proton fiducial cuts:
 	  if (!fid_params.pFiducialCut(mom_lead)) {continue;}
 	  hec_pre->Fill(ec_x[leadingID],ec_y[leadingID]);
 
@@ -363,13 +403,12 @@ int main(){
 
 	  //passing lead proton cuts
 	  double p_over_q = mom_lead.Mag() / q.Mag();
-	  double theta_curr = mom_lead.Angle(q)*180.0/M_PI;
-	  if (p_over_q>0.62&&p_over_q<1.1&&mom_miss.Mag()<1.0&&mmiss<1.1){
+	  if (p_over_q>pq_min && p_over_q<pq_max_n &&mmiss<mmiss_nomCut){
 	      h_xb->Fill(xB);
 	      h_nu->Fill(Nu);
 	      h_etheta->Fill(mom_e.Theta()*180./M_PI);
 	      h_emom->Fill(mom_e.Mag());
-	      if (xB>=1.2 && mom_miss.Mag()>0.3&&p_over_q<0.96 ){h_q2->Fill(QSq);}
+	      if (xB>=1.2 && mom_miss.Mag()>pmiss_nomCut&&p_over_q<0.96 ){h_q2->Fill(QSq);}
 	      h_pmissCut->Fill(mom_miss.Mag());
 	      h_mmissCut->Fill(mmiss);
 	      h_pmissCut->Fill(mom_miss.Mag());
@@ -393,9 +432,9 @@ int main(){
 	    h_timeres->Fill(sc_time[leadingID]-ec_time[leadingID]-(sc_path[leadingID]-ec_path[leadingID])/cc);
 
 	    pmissO[counter] = mom_miss.Mag();
-	    pmissSmear[counter] = mom_missSmear.Mag();
+	    pmissSm[counter] = mom_missSmear.Mag();
 	    mmissO[counter] = mmiss;
-	    mmissSmear[counter] = mmissSm;
+	    mmissSm[counter] = mmissSmear;
 	    p_over_q_O[counter] = mom_lead.Mag() / q.Mag();
 	    p_over_q_sm[counter] = mom_smear.Mag() / q.Mag();
 	    thetaPQsm[counter] = mom_smear.Angle(q);
@@ -405,7 +444,7 @@ int main(){
 	    h_smear->Fill(mom_lead.Mag()-mom_smear.Mag());
 	    h_pmissSmear->Fill(mom_missSmear.Mag());
 	    h_emissSmear->Fill(emissSmear);
-	    h_mmissSmear->Fill(mmissSm);
+	    h_mmissSmear->Fill(mmissSmear);
 	    h_nmomSmear->Fill(mom_smear.Mag());
 	    h_emVpmSm->Fill(mom_missSmear.Mag(),emissSmear);
 	    pvps->Fill(mom_miss.Mag(),mom_missSmear.Mag());
@@ -416,50 +455,53 @@ int main(){
 	}//end leading
     }//end event
 
-  double pmiss_cut[30];
-  for (int ii=0; ii<30; ii++){
+  //Calculate the false positives and false negatives.
+  const int n_pmiss_cut = 30;
+  const int n_mmiss_cut = 7;
+  //make the Pmiss cuts:
+  double pmiss_cut[n_pmiss_cut];
+  for (int ii=0; ii<n_pmiss_cut; ii++){
     pmiss_cut[ii] = (double)ii*2.0/100.0;
   }
-  
-  double mmiss_val[7] = {1.1,1.15,1.175,1.2,1.225,1.25,1.3};
-  double falsePos[7][30];
-  double falseNeg[7][30];
+
+  //make Mmiss cuts:
+  double mmiss_val[n_mmiss_cut] = {1.1,1.15,1.175,1.2,1.225,1.25,1.3};
+  double falsePos[n_mmiss_cut][n_pmiss_cut];
+  double falseNeg[n_mmiss_cut][n_pmiss_cut];
   double minimum = 9999;
   int mmissCut = 0;
   int pmissCut = 0;
-  double falsePosSub[7][30];
-  double falseNegSub[7][30];
-  double falsePosOff[7][30];
-  double falseNegOff[7][30];
+  double falsePosSub[n_mmiss_cut][n_pmiss_cut];
+  double falseNegSub[n_mmiss_cut][n_pmiss_cut];
+  double falsePosOff[n_mmiss_cut][n_pmiss_cut];
+  double falseNegOff[n_mmiss_cut][n_pmiss_cut];
 
   cout<<"pmiss "<<" mmiss "<<" false neg "<<" false pos "<<" false neg offset "<<" false pos offset "<<" false neg offSub "<<" false pos offSub "<<endl;
   
   //loop missing mass
-  for (int ii=0;ii<7; ii++){
-    for (int jj=0; jj<30; jj++){
+  for (int ii=0;ii<n_mmiss_cut; ii++){
+    for (int jj=0; jj<n_pmiss_cut; jj++){
       double fneg = 0;
       double fpos = 0;
       double den = 0;
       double fnegSub = 0;
       double fposSub = 0;
-      double denSub = 0;
-
+ 
       for (int kk=0;kk<counter; kk++){
-	///////////////////////////////////////////////////////////////////
-	//Traditional Calculation//////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	//Smeared false +/- Calculation///////////////////////////////////
+	//////////////////////////////////////////////////////////////////
 	//count smeared events that pass total (p/q, pmiss, mmiss, theta_pq)
-	if (pmissSmear[kk]>pmiss_cut[jj] && pmissSmear[kk]<1.0 && mmissSmear[kk]<mmiss_val[ii] && p_over_q_sm[kk] >= 0.62 && p_over_q_sm[kk] <= 1.1){
+	if (pmissSm[kk]>pmiss_cut[jj] && mmissSm[kk]<mmiss_val[ii] && p_over_q_sm[kk] >= pq_min && p_over_q_sm[kk] <= pq_max_n){
 	  den++;
 	  //false positive: non-smeared fails, smeared passes
-	  if(pmissO[kk]<0.3 || pmissO[kk]>1.0 || mmissO[kk]>1.1 || p_over_q_O[kk] < 0.62|| p_over_q_O[kk] > 1.1){
+	  if (pmissO[kk]<pmiss_nomCut || mmissO[kk]>mmiss_nomCut || p_over_q_O[kk] < pq_min|| p_over_q_O[kk] > pq_max_n){
 	    fpos++;
-	  }
-	  
+	  }	  
 	}
 	//false negative: smeared fails, non-smeared passes
-	if((pmissO[kk]>0.3 && pmissO[kk]<1.0 && mmissO[kk]<1.1 && p_over_q_O[kk] >= 0.62 && p_over_q_O[kk] <= 1.1)
-	   &&  (pmissSmear[kk]<pmiss_cut[jj] || mmissSmear[kk]>mmiss_val[ii]|| pmissSmear[kk]>1.0 || p_over_q_sm[kk] < 0.62 || p_over_q_sm[kk] > 1.1)){
+	if((pmissO[kk]>pmiss_nomCut && mmissO[kk]<mmiss_nomCut && p_over_q_O[kk] >= pq_min && p_over_q_O[kk] <= pq_max_n)
+	   &&  (pmissSm[kk]<pmiss_cut[jj] || mmissSm[kk]>mmiss_val[ii] || p_over_q_sm[kk] < pq_min || p_over_q_sm[kk] > pq_max_n)){
 	  fneg++;
 	}
 
@@ -467,31 +509,29 @@ int main(){
 	///////////////////////////////////////////////////////////////////
 	//Offset Calculation///////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////
-	if (pmissO[kk]>pmiss_cut[jj] && pmissO[kk]<1.0 && mmissO[kk]<mmiss_val[ii] && p_over_q_O[kk] >= 0.62 && p_over_q_O[kk] <= 1.1){
-	  denSub++;
+	if (pmissO[kk]>pmiss_cut[jj] && mmissO[kk]<mmiss_val[ii] && p_over_q_O[kk] >= pq_min && p_over_q_O[kk] <= pq_max_n){
 	  //false positive: non-smeared fails, smeared passes
-	  if(pmissO[kk]<0.3 || pmissO[kk]>1.0 || mmissO[kk]>1.1 || p_over_q_O[kk] < 0.62|| p_over_q_O[kk] > 1.1){
+	  if(pmissO[kk]<pmiss_nomCut || mmissO[kk]>mmiss_nomCut || p_over_q_O[kk] < pq_min || p_over_q_O[kk] > pq_max_n){
 	    fposSub++;
 	  }
 	  
 	}
 	//false negative: smeared fails, non-smeared passes
-	if((pmissO[kk]>0.3 && pmissO[kk]<1.0 && mmissO[kk]<1.1 && p_over_q_O[kk] >= 0.62 && p_over_q_O[kk] <= 1.1)
-	   &&  (pmissO[kk]<pmiss_cut[jj] || mmissO[kk]>mmiss_val[ii]|| pmissO[kk]>1.0 || p_over_q_O[kk] < 0.62 || p_over_q_O[kk] > 1.1)){
+	if((pmissO[kk]>pmiss_nomCut && mmissO[kk]<mmiss_nomCut && p_over_q_O[kk] >= pq_min && p_over_q_O[kk] <= pq_max_n)
+	   &&  (pmissO[kk]<pmiss_cut[jj] || mmissO[kk]>mmiss_val[ii] || p_over_q_O[kk] < pq_min || p_over_q_O[kk] > pq_max_n)){
 	  fnegSub++;
 	}
 	
-      }//end kk 
-
+      }//end kk
       
       //false +ive: events that should not pass do pass
       falsePos[ii][jj] = fpos*100.0/den;
-      falsePosSub[ii][jj] = fpos*100.0/den - fposSub*100.0/den;//Sub;
-      falsePosOff[ii][jj] = fposSub*100.0/den;//Sub;
+      falsePosSub[ii][jj] = fpos*100.0/den - fposSub*100.0/den;
+      falsePosOff[ii][jj] = fposSub*100.0/den;
       //false -ive: events that should pass do not pass
       falseNeg[ii][jj] = fneg*100.0/den;
-      falseNegSub[ii][jj] = fneg*100.0/den - fnegSub*100.0/den;//Sub;
-      falseNegOff[ii][jj] = fnegSub*100.0/den;//Sub;
+      falseNegSub[ii][jj] = fneg*100.0/den - fnegSub*100.0/den;
+      falseNegOff[ii][jj] = fnegSub*100.0/den;
 
       cout<<"  "<<pmiss_cut[jj]<<"  "<<mmiss_val[ii]<<"  "<<falseNeg[ii][jj]<<"  "<<falsePos[ii][jj]<<"  "<<falseNegOff[ii][jj]<<"  "<<falsePosOff[ii][jj]<<"  "<<falseNegSub[ii][jj]<<"  "<<falsePosSub[ii][jj]<<endl;
 
@@ -506,11 +546,9 @@ int main(){
   cout<<endl;
   cout<<"optimal pmiss cut: "<<pmiss_cut[pmissCut]<<" optimal mmiss cut: "<<mmiss_val[mmissCut]<<" false Pos: "<<falsePos[mmissCut][pmissCut]<<" false Neg: "<<falseNeg[mmissCut][pmissCut]<<" corrected false Pos: "<<falsePosSub[mmissCut][pmissCut]<<" corrected false Neg: "<<falseNegSub[mmissCut][pmissCut]<<" offset false Pos: "<<falsePosOff[mmissCut][pmissCut]<<" offset false Neg: "<<falseNegOff[mmissCut][pmissCut]<<endl;
 
-  
-
   //normal false pos and false neg plot
-  TGraph *grP[7];
-  TGraph *grN[7];
+  TGraph *grP[n_mmiss_cut];
+  TGraph *grN[n_mmiss_cut];
   TMultiGraph *mgP = new TMultiGraph();
   TMultiGraph *mgN = new TMultiGraph();
   TLegend* legendP = new TLegend(0.7,0.6,0.8,0.8);
@@ -521,14 +559,14 @@ int main(){
   legendN->SetBorderSize(0);
   mgP->SetTitle("False Positive;P_{miss} lower bound;False Positive [%]");
   mgN->SetTitle("False Negative;P_{miss} lower bound;False Negative [%]");
-  for (int ii=0; ii<7; ii++){
-    grP[ii] = new TGraph(30,pmiss_cut,falsePos[ii]);
+  for (int ii=0; ii<n_mmiss_cut; ii++){
+    grP[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falsePos[ii]);
     grP[ii]->SetMarkerStyle(20+ii);
     grP[ii]->SetMarkerColor(1+ii);
     mgP->Add(grP[ii],"p");
     legendP->AddEntry(grP[ii],Form("%.3f",mmiss_val[ii]),"p");
   
-    grN[ii] = new TGraph(30,pmiss_cut,falseNeg[ii]);
+    grN[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falseNeg[ii]);
     grN[ii]->SetMarkerStyle(20+ii);
     grN[ii]->SetMarkerColor(1+ii);
     mgN->Add(grN[ii],"p");
@@ -536,8 +574,8 @@ int main(){
   }
 
   //offset false pos and false neg plot
-  TGraph *grPoff[7];
-  TGraph *grNoff[7];
+  TGraph *grPoff[n_mmiss_cut];
+  TGraph *grNoff[n_mmiss_cut];
   TMultiGraph *mgPoff = new TMultiGraph();
   TMultiGraph *mgNoff = new TMultiGraph();
   TLegend* legendPoff = new TLegend(0.7,0.6,0.8,0.8);
@@ -548,14 +586,14 @@ int main(){
   legendNoff->SetBorderSize(0);
   mgPoff->SetTitle("False Positive, offset;P_{miss} lower bound;False Positive [%]");
   mgNoff->SetTitle("False Negative, offset;P_{miss} lower bound;False Negative [%]");
-  for (int ii=0; ii<7; ii++){
-    grPoff[ii] = new TGraph(30,pmiss_cut,falsePosOff[ii]);
+  for (int ii=0; ii<n_mmiss_cut; ii++){
+    grPoff[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falsePosOff[ii]);
     grPoff[ii]->SetMarkerStyle(20+ii);
     grPoff[ii]->SetMarkerColor(1+ii);
     mgPoff->Add(grPoff[ii],"p");
     legendPoff->AddEntry(grPoff[ii],Form("%.3f",mmiss_val[ii]),"p");
   
-    grNoff[ii] = new TGraph(30,pmiss_cut,falseNegOff[ii]);
+    grNoff[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falseNegOff[ii]);
     grNoff[ii]->SetMarkerStyle(20+ii);
     grNoff[ii]->SetMarkerColor(1+ii);
     mgNoff->Add(grNoff[ii],"p");
@@ -564,8 +602,8 @@ int main(){
 
 
   //corrected false pos and false neg plot
-  TGraph *grPsub[7];
-  TGraph *grNsub[7];
+  TGraph *grPsub[n_mmiss_cut];
+  TGraph *grNsub[n_mmiss_cut];
   TMultiGraph *mgPsub = new TMultiGraph();
   TMultiGraph *mgNsub = new TMultiGraph();
   TLegend* legendPsub = new TLegend(0.7,0.6,0.8,0.8);
@@ -576,14 +614,14 @@ int main(){
   legendNsub->SetBorderSize(0);
   mgPsub->SetTitle("False Positive, offset subtracted;P_{miss} lower bound;False Positive [%]");
   mgNsub->SetTitle("False Negative, offset subtracted;P_{miss} lower bound;False Negative [%]");
-  for (int ii=0; ii<7; ii++){
-    grPsub[ii] = new TGraph(30,pmiss_cut,falsePosSub[ii]);
+  for (int ii=0; ii<n_mmiss_cut; ii++){
+    grPsub[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falsePosSub[ii]);
     grPsub[ii]->SetMarkerStyle(20+ii);
     grPsub[ii]->SetMarkerColor(1+ii);
     mgPsub->Add(grPsub[ii],"p");
     legendPsub->AddEntry(grPsub[ii],Form("%.3f",mmiss_val[ii]),"p");
   
-    grNsub[ii] = new TGraph(30,pmiss_cut,falseNegSub[ii]);
+    grNsub[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falseNegSub[ii]);
     grNsub[ii]->SetMarkerStyle(20+ii);
     grNsub[ii]->SetMarkerColor(1+ii);
     mgNsub->Add(grNsub[ii],"p");
@@ -593,9 +631,6 @@ int main(){
   //f->Close();
   double totEvents;
   canvas->Update();
-
-
-	 
 
 
   mgP->Draw("a");

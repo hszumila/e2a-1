@@ -101,9 +101,9 @@ int main(){
 
   //read in the data and make output file  
   TFile *f = new TFile("../../../data/nina/skim_C12_n.root");
-  TFile *fout = new TFile("output/out_c12_n.root","RECREATE");
+  TFile *fout = new TFile("output/out_c12_p.root","RECREATE");
 
-  TCanvas *canvas = new TCanvas("canvas","output c12 n plots", 700, 700);
+  TCanvas *canvas = new TCanvas("canvas","output c12 p plots", 700, 700);
   canvas->SetFillColor(0);
   canvas->SetBorderMode(0);
   canvas->SetBorderSize(0);
@@ -165,11 +165,11 @@ int main(){
       //cut on xB
       if (xB<1.1){continue;}
 
-      // Loop over particles looking for a proton that will pass leading cuts
+      // Loop over particles looking for a neutron that will pass leading cuts
       int leadingID = -1;
       for (int part=1 ; part < nParticles ; part++)
 	{   
-	  // Only look at protons
+	  // Only look at neutrons
 	  if (type[part] != 2212)
 	    continue;
 	  
@@ -184,19 +184,19 @@ int main(){
 	  //if ((p_over_q < 0.62)||(p_over_q > 0.96)) {continue;}
 	  //if ((p_over_q < 0.62)||(p_over_q > 1.1)) {continue;}
 	  // This proton passes the cuts, it is the leading proton for this event
-	  if (leadingID==-1){p_over_q_prev = p_over_q;}
+	  if (leadingID==-1){p_over_q_prev = p_over_q; leadingID=part;}
 
 	  //if (leadingID>0) {cout<<"Already have lead p!!!"<<endl;
 	    //cout<<"     p/q current: "<<p_over_q<<endl;
 	    //cout<<"     p/q previous: "<<p_over_q_prev<<endl;
 
 	  if (p_over_q>p_over_q_prev){leadingID=part;}
-	  else{continue;}
+	  //else{continue;}
 	  
-	  }
+	  //}
 
 	  
-	  leadingID = part;
+	  //leadingID = part;
 	}
 
       // If we have a proton passing the leading cuts, then fill the histogram
@@ -304,16 +304,16 @@ int main(){
       
       for (int kk=0;kk<counter; kk++){
 	//count smeared events that pass total
-	if (pmissSmear[kk]>pmiss_cut[jj] && mmissSmear[kk]<mmiss_val[ii] && p_over_q_sm[kk] >= 0.62 && p_over_q_sm[kk] <= 0.96){
+	if (pmissSmear[kk]>pmiss_cut[jj] && pmissSmear[kk]<1.0 && mmissSmear[kk]<mmiss_val[ii] && p_over_q_sm[kk] >= 0.62 && p_over_q_sm[kk] <= 1.1){
 	  den++;
 	  //false positive: non-smeared fails, smeared passes
-	  if(pmissO[kk]<0.3 || mmissO[kk]>1.1 || p_over_q_O[kk] < 0.62|| p_over_q_O[kk] > 0.96){
+	  if(pmissO[kk]<0.3 || pmissO[kk]>1.0 || mmissO[kk]>1.1 || p_over_q_O[kk] < 0.62|| p_over_q_O[kk] > 1.1){
 	    fpos++;
 	  }
 	  
 	}
 	//false negative: smeared fails, non-smeared passes
-	  if((pmissO[kk]>0.3 && mmissO[kk]<1.1 && p_over_q_O[kk] >= 0.62 && p_over_q_O[kk] <= 0.96) &&  (pmissSmear[kk]<pmiss_cut[jj] || mmissSmear[kk]>mmiss_val[ii])){
+	if((pmissO[kk]>0.3 && mmissO[kk]<1.1 && p_over_q_O[kk] >= 0.62 && p_over_q_O[kk] <= 1.1) &&  (pmissSmear[kk]<pmiss_cut[jj] || mmissSmear[kk]>mmiss_val[ii])){//|| pmissSmear[kk]>1.0 || p_over_q_sm[kk] < 0.62 || p_over_q_sm[kk] > 1.1)){
 	  fneg++;
 	}		
       }//end kk 
@@ -339,7 +339,7 @@ int main(){
   TMultiGraph *mgP = new TMultiGraph();
   TMultiGraph *mgN = new TMultiGraph();
   TLegend* legendP = new TLegend(0.7,0.6,0.8,0.8);
-  TLegend* legendN = new TLegend(0.7,0.6,0.8,0.8);
+  TLegend* legendN = new TLegend(0.75,0.6,0.85,0.8);
   legendP->SetHeader("m_{miss}");
   legendP->SetBorderSize(0);
   legendN->SetHeader("m_{miss}");
@@ -365,10 +365,12 @@ int main(){
   canvas->Update();
 
   mgP->Draw("a");
+  mgP->GetYaxis()->SetRangeUser(0,100);
   legendP->Draw();
   canvas->Print( (pdf_file_name + "(").c_str());
 
   mgN->Draw("a");
+  mgN->GetYaxis()->SetRangeUser(0,100);
   legendN->Draw();
   canvas->Print( (pdf_file_name + "(").c_str());
 
