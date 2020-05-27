@@ -41,13 +41,17 @@ class target_Info
   double getLum();
   double getMass();
   double getRadCorr(double Theta, double XB);
+
   bool eVTXInRange(double eVTX);
   bool semiVTXInRange(double eVTX, double leadVTX, double eTheta, double pTheta);
   bool semiVTXInRange(const event_Info myEvent, int leadIndex);
+  bool semiFixedVTXInRange(double eVTX, double leadVTX, double eTheta, double pTheta);
+  bool semiFixedVTXInRange(const event_Info myEvent, int leadIndex);
   void change_vtxMin(double newMin);
   void change_vtxMax(double newMax);
   double returnInRangeVTX();
   
+  int getSecPhi(const double phi);
   
  private:
   double trans;
@@ -74,8 +78,6 @@ class target_Info
   void setLum();
   std::ifstream radFile;
   void fillRadArray();
-
-  int getSec(const double phi);
 
   double getVTXMinElectron(double Theta);
   double getVTXMaxElectron(double Theta);

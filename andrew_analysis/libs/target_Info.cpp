@@ -25,7 +25,7 @@ target_Info::target_Info(int A)
     vzMax = 1.5;
     vzMin = -2.4;
     density = 0.1370;
-    ltcc=6895323.02;
+    ltcc=6388866.74;
     thick=vzMax-vzMin;
     acc_Name = "He4";
     fid_Name = "4He";
@@ -35,8 +35,10 @@ target_Info::target_Info(int A)
   else if(A==12){
     massA = 11.1748632;
     trans = 0.53;
-    vzMax = 5.75;
-    vzMin = 4.25;
+    vzMax = 6;
+    vzMin = 4;
+    //    vzMax = 5.75;
+    //    vzMin = 4.25;
     density = 1.786;
     ltcc=17962592.69;
     thick=0.1;
@@ -84,7 +86,7 @@ double target_Info::semi_acc(const TVector3 ve,const TVector3 vLead)
   double sumAcc = 0;
   TRandom3 myRand(0);
 
-  for(int i = 0; i < 100; i++){
+  for(int i = 0; i < 1000; i++){
     double phiE = 2 * M_PI * myRand.Rndm();
     double phiP = 2 * M_PI * myRand.Rndm();
 
@@ -100,7 +102,7 @@ double target_Info::semi_acc(const TVector3 ve,const TVector3 vLead)
       sumAcc += (e_acc(vePrime) * p_acc(vLeadPrime));
     }
   }
-  return sumAcc/100;
+  return sumAcc/1000;
 
 }
 
@@ -219,6 +221,31 @@ bool target_Info::semiVTXInRange(const event_Info myEvent, int leadIndex)
   return semiVTXInRange(newEvent.getVTX(0),newEvent.getVTX(leadIndex),eTheta,pTheta);
 }
 
+bool target_Info::semiFixedVTXInRange(double eVTX, double leadVTX, double eTheta, double pTheta)
+{
+  bool inRange = true;
+  double diff = eVTX - leadVTX;
+ 
+  if(!eVTXInRange(eVTX)){
+    inRange=false;
+  }
+  if(diff < -1){
+    inRange = false;
+  }
+  if(diff > 1){
+    inRange = false;
+  }
+  return inRange;
+}
+
+bool target_Info::semiFixedVTXInRange(const event_Info myEvent, int leadIndex)
+{
+  event_Info newEvent = myEvent;
+  double eTheta = newEvent.getVector(0).Theta() * 180 / M_PI;
+  double pTheta = newEvent.getVector(leadIndex).Theta() * 180 / M_PI;
+  return semiFixedVTXInRange(newEvent.getVTX(0),newEvent.getVTX(leadIndex),eTheta,pTheta);
+}
+
 void target_Info::change_vtxMin(double newMin)
 {
   vzMin = newMin;
@@ -335,7 +362,7 @@ double target_Info::getVTXMaxProton(double Theta)
   return max;
 }
 
-int target_Info::getSec(const double phi){
+int target_Info::getSecPhi(const double phi){
   
   double nphi=phi;
   if(nphi<=-150) return 0;

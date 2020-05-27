@@ -64,7 +64,8 @@ void help_message()
 {
   cerr<< "Argumets: ./get_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
       <<"Optional flags:\n"
-      <<"-h: Help\n\n";
+      <<"-h: Help\n"
+      <<"-s: Input a sector\n\n";
 }
 
 
@@ -97,14 +98,19 @@ int main(int argc, char ** argv){
   //Get target info
   target_Info targInfo(A);  
   bool verbose = true;
-  
+  bool doOneSec = false;
+  int mySec = -1;
   int c;
-  while ((c=getopt (argc-4, &argv[4], "h")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "hs:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
 	help_message();
 	return -1;
+      case 's':
+	doOneSec=true;
+	mySec=atof(optarg);
+	break;
       case '?':
 	return -1;
       default:
@@ -117,6 +123,7 @@ int main(int argc, char ** argv){
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
   double binxB[] = {0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.58,1.77,2};
+  //double binxB[] = {0,0.3,0.5,0.7,0.9,1.1,1.3,1.58,2};
   int numbinxB = ( sizeof(binxB)/sizeof(binxB[0]) ) - 1;
   double finebinxB[] = {0.4,0.5,0.6,0.68,0.74,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.4,1.58,1.77,2};
   int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
@@ -257,7 +264,6 @@ int main(int argc, char ** argv){
   int counter = 0;
   //Loop over TTree
   for(int i = 0; i < inTree->GetEntries(); i++){
-    double weight = 1;
     inTree->GetEntry(i);
     event_Info myInfo(nPar,parID,xB,QSq,momx,momy,momz,vtxZCorr);
 
@@ -265,6 +271,7 @@ int main(int argc, char ** argv){
     TVector3 vq = vBeam - ve;
     double omega = vBeam.Mag() - ve.Mag();
     double phi = ve.Phi() * 180 / M_PI;
+    double eventSector = targInfo.getSecPhi(phi);
     double theta = ve.Theta() * 180 / M_PI;
     TVector3 vLead = myInfo.getVector(1);
     double pLead = vLead.Mag();
@@ -299,40 +306,62 @@ int main(int argc, char ** argv){
 
     
     //Only take particles that pass fiducials and acceptances for both targets
-    if(myInfo.isProton(1)){
-      if(targInfo.e_acc(ve) < accMin){continue;}
-      if(targInfo.p_acc(vLead) < accMin){continue;}
-      if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }
+    //    if(myInfo.isProton(1)){
+    if(targInfo.e_acc(ve) < accMin){continue;}
+    if(targInfo.p_acc(vLead) < accMin){continue;}
+    if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }
       
-      if(secondTargInfo.e_acc(ve) < accMin){continue;}
-      if(secondTargInfo.p_acc(vLead) < accMin){continue;}
-      if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
-    }
-
+    if(secondTargInfo.e_acc(ve) < accMin){continue;}
+    if(secondTargInfo.p_acc(vLead) < accMin){continue;}
+    if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
+    //    }
+    //if(doOneSec && (eventSector != mySec)){ continue; }
+      
     //Establish vertex Cuts
     hist_eVTX->Fill(vtxZCorr[0],1);
     hist_pVTX->Fill(vtxZCorr[1],1);
     hist_vtx->Fill(vtxZCorr[0],vtxZCorr[1],1);
-    if(!targInfo.semiVTXInRange(myInfo,1)){
+    //if(!targInfo.eVTXInRange(vtxZCorr[0])){
+    if(!targInfo.semiFixedVTXInRange(myInfo,1)){
       continue;
     }
+
 
     //Apply the corrections to the cross sections
     // Acceptance correction
     // Transparancy correcton
     // Radiative correction
     // Normalize with luminosity and A
+    double weight = 1;
     weight = weight / targInfo.semi_acc(ve,vLead);
     weight = weight / targInfo.getTrans();
     weight = weight / targInfo.getRadCorr(theta,xB);
     weight = weight / (targInfo.getLum() * A);
 
     counter++;
-
     //They all get these cuts
-    if(QSq<1.4){continue; }
+
+    /*    if(!((weight>0) && (weight <10000000))){
+      cout<<"xB = " << xB << "\n";
+      cout<<"weight = " << weight << "\n";
+      cout<<"acceptance = " << targInfo.semi_acc(ve,vLead) << "\n";
+      cout<<"transparency = " << targInfo.getTrans() << "\n";
+      cout<<"rad = " << targInfo.getRadCorr(theta,xB) << "\n";
+      cout<<"lum = " << (targInfo.getLum() * A) << "\n";
+      }*/
+
     if(vMiss.Mag() > 0.6){continue;}
 
+    if(vMiss.Mag()>0.3){
+      int QStart = getQCut(QSq);
+      if(QStart >-1){
+	for(int l = 0; l <= getQCut(QSq); l++){
+	hist_xB_qCut[l]->Fill(xB,weight);
+	}
+      }
+    }
+
+    if(QSq<1.4){continue; }
     //No pMiss cut
     hist_xB->Fill(xB,weight);	  	  
     xB_pMiss->Fill(xB,vMiss.Mag(),weight);
@@ -360,12 +389,6 @@ int main(int argc, char ** argv){
       xB_QSq->Fill(xB,QSq,weight);
       hist_Cross->Fill(1,weight);
 
-      int QStart = getQCut(QSq);
-      if(QStart >-1){
-	for(int l = 0; l <= getQCut(QSq); l++){
-	hist_xB_qCut[l]->Fill(xB,weight);
-	}
-      }
     }
 
     //Apply variable pMiss Cuts

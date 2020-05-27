@@ -153,9 +153,7 @@ void srcCut_Info::makeGausCut()
   setMaxPMissCut(myRand.Uniform(0.575,0.625));
   setMinMassCut(myRand.Uniform(0.85,0.95));
   setMaxMassCut(myRand.Uniform(1.05,1.15));
-
 }
-
 
 void srcCut_Info::makeLightCut()
 {
@@ -165,6 +163,17 @@ void srcCut_Info::makeLightCut()
   setMaxPMissCut(2);
 }
 
+void srcCut_Info::makeEG2Cut()
+{
+  setMinPMissCut(0.4);
+  setMaxPMissCut(0.6);
+  setMinXBCut(1.2);
+  setMaxXBCut(2);
+  setMaxThetaCut(25);
+  setMinPoQCut(0.62);
+  setMaxPoQCut(0.96);
+  setMaxMassCut(1.1);
+}
 
 bool srcCut_Info::passECut(event_Info myEvent)
 {
