@@ -28,7 +28,7 @@ class Fiducial
 		TVector3 FindUVW(TVector3 xyz);
 		double EC_in_cut();
 		double el_EC_cut();		  
-
+		
 	private:
 		int E1;
 		int torus_current;
@@ -49,7 +49,10 @@ class Fiducial
 		bool read_vz_cor_params    ();
 		bool read_n_pathlength_corr();
 
+		static int get_sector(const TVector3 &p);  //  This returns the 0-indexed sector! Not the one-indexed!
+
 		//Momentum Correction functions are beam energy dependent. Here are the three corrections functions.
+		// These specifically are for the original e2a momentum corrections, not Mariana's revised approach...
 		TVector3 eMomentumCorrection_1GeV(const TVector3 V3uncor) const;
 		TVector3 eMomentumCorrection_2GeV(const TVector3 V3uncor) const;
 		TVector3 eMomentumCorrection_4GeV(const TVector3 V3uncor) const;
@@ -129,6 +132,7 @@ class Fiducial
 		double fgPar_Phi  [6][3];
 		double fgPar_Theta[6][4];
 		double fgPar_1gev[6][6][4];
+		double el_mom_corr_params[6];
 
 		// Particle ID //////////////////////////////////
 

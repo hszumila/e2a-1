@@ -4,6 +4,7 @@ INSTALL (FILES
 	el_Epratio_mom_4461_sim.root
 	FCP_2261_2250.dat FCP_4461_2250.dat FCP_1161_1500.dat FCP_1161_750.dat
 	EMCP_2261_2250.dat EMCP_4461_2250.dat EMCP_1161_1500.dat EMCP_1161_750.dat
+	el_mom_corr_2250.dat el_mom_corr_1500.dat el_mom_corr_750.dat
 	protdeltat_mom_2261_2250.root protdeltat_mom_4461_2250.root protdeltat_mom_1161_1500.root protdeltat_mom_1161_750.root
 	pipdeltat_mom_2261_2250.root pipdeltat_mom_4461_2250.root pipdeltat_mom_1161_1500.root pipdeltat_mom_1161_750.root
 	pimdeltat_mom_2261_2250.root pimdeltat_mom_4461_2250.root pimdeltat_mom_1161_1500.root pimdeltat_mom_1161_750.root
