@@ -16,17 +16,17 @@
 #include "event_Info.h"
 
 using namespace std;
+double accMin = 0.4;
 double sq(double x){
   return x*x;
 }
 
 void help_message()
 {
-  cerr<< "Argumets: ./get_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
+  cerr<< "Argumets: ./get_mMiss_Hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [optional flags]\n\n"
       <<"Optional flags:\n"
       <<"-h: Help\n"
-      <<"-n: Set a custom minimum to the Z vertex [cm]\n"
-      <<"-x: Set a custom maximum to the Z vertex [cm]\n\n";
+      <<"-s: Input a sector\n\n";
 }
 
 
@@ -43,7 +43,7 @@ int main(int argc, char ** argv){
       help_message();
       return -1;
     }
-  if (argc < 5)
+  if (argc < 4)
     {
       cerr << "Wrong number of arguments. Insteady try\n\n";
       help_message();
@@ -55,23 +55,20 @@ int main(int argc, char ** argv){
   TFile * inputFile = new TFile(argv[1]);
   TFile * outputFile = new TFile(argv[2],"RECREATE");
   int A = atoi(argv[3]);
-  target_Info secondTargInfo(atoi(argv[4]));
-  //Get target info
   target_Info targInfo(A);  
   bool verbose = true;
-  
+  bool doOneSec = false;
+  int mySec = -1;
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hn:x:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "hs:")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
 	help_message();
 	return -1;
-      case 'n':
-	targInfo.change_vtxMin(atof(optarg));
-	break;
-      case 'x':
-	targInfo.change_vtxMax(atof(optarg));
+      case 's':
+	doOneSec=true;
+	mySec=atof(optarg);
 	break;
       case '?':
 	return -1;
@@ -84,24 +81,15 @@ int main(int argc, char ** argv){
 
   //Make Trees and histograms
   TTree * inTree = (TTree*)inputFile->Get("T");
-  double finebinxB[] = {0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95,1,1.05,1.1,1.15,1.2,1.26,1.32,1.38,1.58,1.79,2};
-  int finenumbinxB =  ( sizeof(finebinxB)/sizeof(finebinxB[0]) ) - 1;
 
-  //Make a histogram list to make things easier
-  vector<TH1*> hist_list;
-  TH1D * hist_Cross = new TH1D("totalCross","Cross;1;Value",1,0.5,1.5);
-  hist_list.push_back(hist_Cross);
-  TH1D * hist_xB =  new TH1D("hist_xB_Incl" ,"hist;xB;Counts",finenumbinxB,finebinxB);
-  hist_list.push_back(hist_xB);
-  TH1D * hist_QSq =  new TH1D("hist_QSq" ,"hist;QSq;Counts",40,0,5);
-  hist_list.push_back(hist_QSq);
-  TH1D * hist_pMiss =  new TH1D("hist_pMiss" ,"hist;pMiss;Counts",40,0,2);
-  hist_list.push_back(hist_QSq);
-
-
-  for(int i=0; i<hist_list.size(); i++){
-    hist_list[i]->Sumw2();
-  }
+  TH1D * h_mMiss = new TH1D("ep_mMiss","ep;mMiss [GeV];Counts",30,0.5,1.1);
+  h_mMiss->Sumw2();
+  TH2D * h_mMiss_Pm = new TH2D("ep_mMiss_Pm","ep;mMiss [GeV]; pmiss [GeV];Counts",30,0.5,1.1,24,0.4,1.0);
+  h_mMiss_Pm->Sumw2();
+  TH2D * h_mMiss_QSq = new TH2D("ep_mMiss_QSq","ep;mMiss [GeV]; QSq [GeV^2];Counts",30,0.5,1.1,32,1.0,5.0);
+  h_mMiss_QSq->Sumw2();
+  TH2D * h_mMiss_xB = new TH2D("ep_mMiss_xB","ep;mMiss [GeV]; xB;Counts",30,0.5,1.1,32,1.2,2.0);
+  h_mMiss_xB->Sumw2();
 
   
   cerr<<"Histograms and Trees successfully created\n";
@@ -127,22 +115,17 @@ int main(int argc, char ** argv){
   int counter = 0;
   //Loop over TTree
   for(int i = 0; i < inTree->GetEntries(); i++){
-    double weight = 1;
     inTree->GetEntry(i);
     event_Info myInfo(nPar,parID,xB,QSq,momx,momy,momz,vtxZCorr);
 
+
+    double mMiss = myInfo.getMassMiss(1);
     TVector3 ve = myInfo.getVector(0);
     TVector3 vq = vBeam - ve;
-    double omega = vBeam.Mag() - ve.Mag();
-    double phi = ve.Phi() * 180 / M_PI;
     TVector3 vLead = myInfo.getVector(1);
-    TVector3 vMiss = vLead - vq;
-    double mMiss = myInfo.getMassMiss(1);
-    double poq = myInfo.getPoQ(1);
-    double thetapq = myInfo.getThetaPQ(1);
-    double thetapMq = vq.Angle(vMiss) * (180/M_PI);
-    double eff = 1;
-    
+    TVector3 vMiss = vq - vLead;
+    double mA = targInfo.getMass();
+
     //Do some things for all events
     if(((i%5000) == 0) && verbose){
       cout << (i*100.)/(inTree->GetEntries()) <<"% complete \n";
@@ -152,33 +135,41 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0])){
+
+    
+    //Only take particles that pass fiducials and acceptances
+    if(targInfo.e_acc(ve) < accMin){continue;}
+    if(targInfo.p_acc(vLead) < accMin){continue;}
+    if(!targInfo.pass_semi_fid(ve,vLead)){ continue; }
+      
+    //Establish vertex Cuts
+    //You can look at these histograms if you want to see how your vertex cuts look
+    //hist_eVTX->Fill(vtxZCorr[0],1);
+    //hist_pVTX->Fill(vtxZCorr[1],1);
+    //hist_vtx->Fill(vtxZCorr[0],vtxZCorr[1],1);
+    if(!targInfo.semiFixedVTXInRange(myInfo,1)){
       continue;
     }
 
-    /*
-    //Get the correct efficiency for the specific particle
-    if(myInfo.isProton(1)){
-      if(targInfo.e_acc(ve)*targInfo.p_acc(vLead) < accMin){
-	continue;
-      }
-      if(secondTargInfo.e_acc(ve)*secondTargInfo.p_acc(vLead) < accMin){
-	continue;
-      }
-      eff = targInfo.semi_acc(ve,vLead);
-    }
 
-    weight = weight / eff;
-    weight = weight / targInfo.getTrans();
-    weight = weight/(targInfo.getLum() * A);
-    */
+    //Apply the corrections to the cross sections
+    // Acceptance correction
+    // Transparancy correcton
+    // Radiative correction
+    // Normalize with luminosity and A
+    double weight = 1;
+    //weight = weight / targInfo.semi_acc(ve,vLead);
+    //weight = weight / targInfo.getTrans();
+    //weight = weight / targInfo.getRadCorr(theta,xB);
+    //weight = weight / (targInfo.getLum() * A);
 
-    hist_Cross->Fill(1,1);
-    hist_xB->Fill(xB,weight);	  	  
-    hist_QSq->Fill(QSq,weight);
-    hist_pMiss->Fill(vMiss.Mag(),weight);
     counter++;
-    	
+
+    h_mMiss->Fill(mMiss,weight);
+    h_mMiss_Pm->Fill(mMiss,vMiss.Mag(),weight);
+    h_mMiss_QSq->Fill(mMiss,QSq,weight);
+    h_mMiss_xB->Fill(mMiss,xB,weight);    
+
   }
 
   cout<<"There were "<<counter<<" events written\n";
@@ -191,9 +182,10 @@ int main(int argc, char ** argv){
   
   //Now write out
   outputFile->cd();
-  for(int i=0; i<hist_list.size(); i++){
-    hist_list[i]->Write();
-  }
+  h_mMiss->Write();
+  h_mMiss_Pm->Write();
+  h_mMiss_QSq->Write();
+  h_mMiss_xB->Write();
   outputFile->Close();
   cerr<< argv[2]<<" has been completed. \n\n\n";
   

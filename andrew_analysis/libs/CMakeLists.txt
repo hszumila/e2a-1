@@ -4,7 +4,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${andrew_inc
 
 # Add library for target info
 add_library(target_Info target_Info.cpp)
-target_link_libraries(target_Info Acceptance e2aCuts ${ROOT_LIBRARIES})
+target_link_libraries(target_Info Acceptance e2aCuts event_Info ${ROOT_LIBRARIES})
 
 # Add library for particle info
 add_library(part_Info part_Info.cpp)

@@ -233,7 +233,7 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){
+    if(!targInfo.eVTXInRange(vtxZCorr[0])){
       continue;
     }
     if(oneSec && (secChoice != getSec(phi))){

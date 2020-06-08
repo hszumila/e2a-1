@@ -91,6 +91,15 @@ int main(int argc, char ** argv){
   TH1D * hist_QSq =  new TH1D("hist_QSq" ,"hist;QSq;Counts",40,0,5);
   hist_list.push_back(hist_QSq);
 
+
+  TH1D * hist_xB_sec[6];
+  char temp[100];
+  for(int i = 0; i<6; i++){
+    sprintf(temp,"hist_xB_sec_%d",i);
+    hist_xB_sec[i] = new TH1D(temp,"x_B Distribution;xB;counts",finenumbinxB,finebinxB);
+    hist_list.push_back(hist_xB_sec[i]);
+  }
+
   for(int i=0; i<hist_list.size(); i++){
     hist_list[i]->Sumw2();
   }
@@ -119,7 +128,6 @@ int main(int argc, char ** argv){
   int counter = 0;
   //Loop over TTree
   for(int i = 0; i < inTree->GetEntries(); i++){
-    double weight = 1;
     inTree->GetEntry(i);
     event_Info myInfo(nPar,parID,xB,QSq,momx,momy,momz,vtxZCorr);
 
@@ -138,20 +146,32 @@ int main(int argc, char ** argv){
       cerr<<"There are more than 19 particles in one event! \n Aborting..."<<endl;
       return -1;
     }    
-    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){continue;}
-    if(targInfo.e_acc(ve) < accMin){continue;}
-    if(secondTargInfo.e_acc(ve) < accMin){continue;}
-    if(QSq < 1){continue;}
+    //Physics cuts
+    if(QSq < 1.4){continue;}
     if(xB < 0.15){continue;}
     if(xB > 2){continue;}
 
+    //Fiducial Cuts
+    if(targInfo.e_acc(ve) < accMin){continue;}
+    if(!targInfo.pass_incl_fid(ve)){continue;}
+
+    if(secondTargInfo.e_acc(ve) < accMin){continue;}
+    if(!secondTargInfo.pass_incl_fid(ve)){continue;}
+
+    //Vertex Cuts
+    if(!targInfo.eVTXInRange(vtxZCorr[0])){continue;}
+
+    //Corrections
+    double weight = 1;
     weight = weight / targInfo.incl_acc(ve);
+
+    if(theta<1.65){continue;}
+
     weight = weight/(targInfo.getLum() * A);
-
     hist_xB_noRad->Fill(xB,weight);	  	  
-
     weight = weight / targInfo.getRadCorr(theta,xB);
 
+    hist_xB_sec[targInfo.getSecPhi(phi)]->Fill(xB,weight);
     hist_xB->Fill(xB,weight);	  	      
     hist_Cross->Fill(1,1);
     hist_QSq->Fill(QSq,weight);
