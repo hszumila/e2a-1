@@ -284,10 +284,8 @@ int main(int argc, char ** argv){
     double thetapq = myInfo.getThetaPQ(1);
     double thetapMq = vq.Angle(vMiss) * (180/M_PI);
     double pMiss_p = vMiss.Dot(vq.Unit());
-    TVector3 pLead_t_vec = vLead.Perp(vq);
-    TVector3 pMiss_t_vec = vMiss.Perp(vq);
-    double pMiss_t = pMiss_t_vec.Mag();
-    double pLead_t = pLead_t_vec.Mag();
+    double pLead_t = vLead.Perp(vq);
+    double pMiss_t = vMiss.Perp(vq);
 
     double mA = targInfo.getMass();
     TVector3 qUnit = vq.Unit();
