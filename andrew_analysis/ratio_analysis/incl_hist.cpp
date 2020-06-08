@@ -163,7 +163,10 @@ int main(int argc, char ** argv){
 
     //Corrections
     double weight = 1;
-    //weight = weight / targInfo.incl_acc(ve);
+    weight = weight / targInfo.incl_acc(ve);
+
+    if(theta<1.65){continue;}
+
     weight = weight/(targInfo.getLum() * A);
     hist_xB_noRad->Fill(xB,weight);	  	  
     weight = weight / targInfo.getRadCorr(theta,xB);

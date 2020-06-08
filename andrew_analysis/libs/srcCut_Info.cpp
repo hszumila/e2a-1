@@ -168,7 +168,6 @@ void srcCut_Info::makeEG2Cut()
   setMinPMissCut(0.4);
   setMaxPMissCut(0.6);
   setMinXBCut(1.2);
-  setMaxXBCut(2);
   setMaxThetaCut(25);
   setMinPoQCut(0.62);
   setMaxPoQCut(0.96);
