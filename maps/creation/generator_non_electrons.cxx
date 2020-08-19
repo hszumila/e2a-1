@@ -14,12 +14,12 @@ using namespace std;
 
 int main(int argc, char **argv){
 
-  if (argc != 3)
+  if (argc != 4)
     {
       cerr << "generator is a program that produces a file 'mctk_uniform.txt'\n"
            << " for use with gsim. You must supply a phi angle (1-360).\n\n"
            << " for particle. 2 = proton, 3 = pi+, 4 = pi-\n\n"
-           << "  generator [phi] [particle]\n\n";
+           << "  generator [phi] [particle] /path/to/outfile \n\n";
       return -1;
     }
   else
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
     }
 
   ofstream outfile;
-  outfile.open ("./mctk_uniform.txt");
+  outfile.open (argv[3]);
 
   Int_t run_number = atoi(argv[1]);
 
