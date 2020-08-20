@@ -14,3 +14,9 @@ target_link_libraries(plotter_3He ${ROOT_LIBRARIES} e2aCuts)
 
 add_executable(plotSRC plotSRC.cpp)
 target_link_libraries(plotSRC ${ROOT_LIBRARIES} e2aCuts)
+
+add_executable(compareSRC compareSRC.cpp)
+target_link_libraries(compareSRC ${ROOT_LIBRARIES} e2aCuts)
+
+add_executable(compareMF compareMF.cpp)
+target_link_libraries(compareMF ${ROOT_LIBRARIES} e2aCuts)
