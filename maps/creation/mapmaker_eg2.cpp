@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
     {
       cerr << "Wrong number of arguments. Instead try\n"
            << "\tmapmaker /path/to/inputs /path/to/output particle\n\n";
-      cerr << "For particle of interest, please use either e, p for electron, proton respectively.\n\n";
+      cerr << "For particle of interest, please use e, p, pip, or pim, for electron, proton, pi+, or pi- respectively.\n\n";
       return -1;
     }
   int numfiles = argc-3;
@@ -227,7 +227,10 @@ int main(int argc, char ** argv)
               if (pass)
                 accepted->Fill(mom_g[1],cost_g,phi_g[1]);
             }
-	  else if(particle_oi =="pip")
+	  // ************************************************************************
+	  // *********** PI+ ********************************************************
+	  // ************************************************************************
+	  else if(particle_oi =="pip") 
 	    {
 	      // Determine if the electron is good
 	      if (gPart < 1)
@@ -287,6 +290,9 @@ int main(int argc, char ** argv)
               if (pass)
                 accepted->Fill(mom_g[1],cost_g,phi_g[1]);
             }
+	  // ************************************************************************
+	  // *********** PI- ********************************************************
+	  // ************************************************************************
 	  else if(particle_oi =="pim")
 	    {
 	      // Determine if the electron is good
