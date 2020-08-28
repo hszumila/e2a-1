@@ -324,7 +324,7 @@ int main(int argc, char ** argv)
 
 	      // Do we have a pi- passing selection criteria?	      
               bool pass = false;
-              for (int part = 1; (part < gPart)&&(!pass); part++)
+              for (int part = 0; (part < gPart)&&(!pass); part++) // INCLUDES TESTING THE TRIGGER PARTICLE.
                 {
 		  //cerr << "Working on particle " << part << " out of " << gPart << "\n";
 
