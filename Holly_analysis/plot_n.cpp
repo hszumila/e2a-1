@@ -30,6 +30,8 @@
 
 #include "Fiducial.h"
 
+using namespace std;
+
 const double amu     = 0.931494;
 const double Me      = .000511;         	// Electron mass in GeV
 const double Mp      = 0.93827;         	// Proton   mass in GeV
