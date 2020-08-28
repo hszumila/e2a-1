@@ -29,6 +29,7 @@ add_subdirectory(Axel_analysis)
 add_subdirectory(Rey_neutrons)
 add_subdirectory(Sam_analysis)
 add_subdirectory(Holly_analysis)
+add_subdirectory(erin_analysis)
 
 # If on the farm, compile programs that require CLASTOOL
 option(Build_Farm "Builds programs that require ifarm libraries" OFF )
