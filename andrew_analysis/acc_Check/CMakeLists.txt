@@ -10,3 +10,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${andrew_inc
 #add_executable(queryLowAcc queryLowAcc.cpp)
 #target_link_libraries(queryLowAcc ${ROOT_LIBRARIES} target_Info)
 
+# Add executable for calculating values for acceptance
+add_executable(dead_check dead_check.cpp)
+target_link_libraries(dead_check ${ROOT_LIBRARIES} target_Info)
+

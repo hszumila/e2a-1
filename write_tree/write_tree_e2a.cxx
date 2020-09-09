@@ -10,29 +10,22 @@ int main(int argc, char **argv)
 {
   TClasTool *input = new TClasTool();  
   input->InitDSTReader("ROOTDSTR");
-    
-  if(argc == 1) {
-    char File[200];
-    system("ls -1 *.root > dataFiles.txt");
-    ifstream in("dataFiles.txt", ios::in);
-    if (!in) {
-      cerr << "File Not Opened!" << endl;
-      exit(1);
-    }
-    while (in >> File) {
-      input->Add(File);
-    }
-    in.close();
-    system("rm dataFiles.txt");
-  } 
-  else 
+
+  if (argc < 3)
     {
-      for(int kklk=1; kklk<argc; kklk++)
-	input->Add(argv[kklk]);
+      cerr << "Wrong number of arguments. Please specify an output file, and at least one input rootfile:\n"
+	   << "\twrite_tree_e2a /path/to/output/file /path/to/input1 [optional: /path/to/input2 ...]\n\n";
+      return -1;
+    }
+  
+  // Add the input dst root files
+  for (int i=2 ; i<argc ; i++)
+    {
+      input->Add(argv[i]);
     }
   
   TIdentificator *t = new TIdentificator(input);
-  TFile *output = new TFile("particle_data.root", "RECREATE", "Data of the Tree");
+  TFile *output = new TFile(argv[1], "RECREATE", "Data of the Tree");
   TTree *tree = new TTree("data", "Tree that holds the data");
 
   //Reconstructed Variables

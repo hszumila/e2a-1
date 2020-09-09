@@ -152,17 +152,18 @@ int main(int argc, char ** argv){
     //  continue;
     //}
 
-    hist_eVTX->Fill(eVTX  );
-    hist_eVTX_pVTX->      Fill(eVTX    ,pVTX  );
+    hist_eVTX->Fill(eVTX);
+    hist_eVTX_pVTX->Fill(eVTX,pVTX);
+    hist_eVTX_pVTX_sec[getSec(ePhi)]->Fill(eVTX,pVTX);
 
 
-    if(!targInfo.evtxInRange(eVTX,myInfo.getVector(0))){
+
+    if(!targInfo.semiVTXInRange(myInfo,1)){
       continue;
     }
 
     hist_diffVTX_eTheta_sec[getSec(ePhi)]-> Fill(diffVTX ,eTheta);
     hist_diffVTX_pTheta_sec[getSec(ePhi)]-> Fill(diffVTX ,pTheta);
-
 
     hist_eVTX_eTheta->    Fill(eVTX    ,eTheta);
     hist_pVTX_pTheta->    Fill(pVTX    ,pTheta);
@@ -197,7 +198,7 @@ int main(int argc, char ** argv){
     pGraphRight[k]->SetName(temp);
   }  
 
-
+  
   for(int k = 0; k < 164; k+=2){
     double eY1 = hist_diffVTX_eTheta->GetYaxis()->GetBinCenter(k);
     double eY2 = hist_diffVTX_eTheta->GetYaxis()->GetBinCenter(k+1);
@@ -232,7 +233,6 @@ int main(int argc, char ** argv){
   }
   */
 
-  /*
   int eN = hist_diffVTX_eTheta->GetYaxis()->GetNbins();
   TGraph * eGraphLeft = new TGraph();
   eGraphLeft->SetName("eGraph_Left");
@@ -267,7 +267,6 @@ int main(int argc, char ** argv){
     }
   }
 
-  double pMinValue = 200;
   int pN = hist_diffVTX_pTheta->GetYaxis()->GetNbins();
   TGraph * pGraphLeft = new TGraph();
   pGraphLeft->SetName("pGraph_Left");
@@ -301,7 +300,7 @@ int main(int argc, char ** argv){
       }
     }
   }
-*/
+
 
   cout<<"Finished filling tree for output"<<endl;
   cout<<"Number of Events with lead Nucleons: "<<nEvents<<endl;
@@ -311,10 +310,10 @@ int main(int argc, char ** argv){
     hist_list[i]->Write();
   }
   hist_eVTX->Write();
-  /*  eGraphLeft->Write();
+  eGraphLeft->Write();
   eGraphRight->Write();
   pGraphLeft->Write();
-  pGraphRight->Write();*/
+  pGraphRight->Write();
   inputFile->Close();
   outputFile->Close();
   electrontextFile.close();

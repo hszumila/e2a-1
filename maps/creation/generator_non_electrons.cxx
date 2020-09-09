@@ -14,12 +14,12 @@ using namespace std;
 
 int main(int argc, char **argv){
 
-  if (argc != 3)
+  if (argc != 4)
     {
       cerr << "generator is a program that produces a file 'mctk_uniform.txt'\n"
            << " for use with gsim. You must supply a phi angle (1-360).\n\n"
            << " for particle. 2 = proton, 3 = pi+, 4 = pi-\n\n"
-           << "  generator [phi] [particle]\n\n";
+           << "  generator [phi] [particle] /path/to/outfile \n\n";
       return -1;
     }
   else
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
     }
 
   ofstream outfile;
-  outfile.open ("./mctk_uniform.txt");
+  outfile.open (argv[3]);
 
   Int_t run_number = atoi(argv[1]);
 
@@ -90,15 +90,15 @@ int main(int argc, char **argv){
               //Get Info for the electron
               if (run_number <= 210 && run_number >= 150)
                 {
-                  cost = myRandom->Uniform(.68, .69);
+                  cost = myRandom->Uniform(.91, .92);
                   phi =  myRandom->Uniform((2*TMath::Pi()*1.)/360.,(2*TMath::Pi()*2.)/360.);
                 }
               else
                 {
-                  cost = myRandom->Uniform(.7, .71);
+                  cost = myRandom->Uniform(.90, .91);
                   phi =  myRandom->Uniform((2*TMath::Pi()*175.)/360.,(2*TMath::Pi()*176.)/360.);
                 }
-              mom_tot[0] = myRandom->Uniform(.95, 1.0);
+              mom_tot[0] = myRandom->Uniform(3.95, 4.0);
               //To generate uniformly, we should do the following: "cos(theta) = 1 - 2*Uniform[0,1]"
               //This is the same as "cos(theta) = Uniform[-1,1]
               //For electrons restrict to forward hemisphere (0-71 degrees), since no electron detectors in back

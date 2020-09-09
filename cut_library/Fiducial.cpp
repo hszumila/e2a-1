@@ -995,13 +995,25 @@ bool Fiducial::read_vz_cor_params()
 // ===================================================================================================================================
 bool Fiducial::read_e_pcor_params()
 {
-	char param_file_name[256];
-	sprintf(param_file_name,"%s/EMCP_%d_%d.dat",e2adir.c_str(),E1,torus_current);
-	std::ifstream param_file(param_file_name);
-
-	int param_type, sector;
-	double data[6];
-	int cj;
+  // This is the code for reading Mariana's momentum correction offset factors.
+  char param_file_name[256];
+  sprintf(param_file_name,"%s/el_mom_corr_%d.dat",e2adir.c_str(),torus_current);
+  std::ifstream par_file(param_file_name);
+  for (int s=0 ; s<6 ; s++)
+    {
+      par_file >> el_mom_corr_params[s];
+    }
+  par_file.close();
+  
+  // ****************************************
+  // This is the code for reading the original e2a electron momentum corrections. 
+  // ****************************************
+  sprintf(param_file_name,"%s/EMCP_%d_%d.dat",e2adir.c_str(),E1,torus_current);
+  std::ifstream param_file(param_file_name);
+  
+  int param_type, sector;
+  double data[6];
+  int cj;
   if (E1 > 2000 && E1 < 5000)
     {
       while (param_file >> param_type)
@@ -1036,10 +1048,10 @@ bool Fiducial::read_e_pcor_params()
             }
         }
     }
-    param_file.close();
-
-	// NOTE: corrections for electron momentum obtained with e1c 2.5Gev 2250A data set (Run 16719 and 16720)
-	return true;
+  param_file.close();
+  
+  // NOTE: corrections for electron momentum obtained with e1c 2.5Gev 2250A data set (Run 16719 and 16720)
+  return true;
 }
 // ===================================================================================================================================
 bool Fiducial::read_e_pid_params()
@@ -1159,6 +1171,16 @@ bool Fiducial::read_pim_pid_params()
         return true;
 }
 // ===================================================================================================================================
+int Fiducial::get_sector(const TVector3  &p)
+{
+  double phi = 180.*p.Phi()/M_PI;
+
+  // Sanitize phi between -30 and 330
+  if (phi<-30.) phi += 360;
+
+  return (phi+30.)/60.;
+}
+// ===================================================================================================================================
 bool Fiducial::in_p_deltaT(double delta_t, double mom, double cut_sigma)
 {
 	double prot_mom_lim;
@@ -1254,7 +1276,10 @@ bool Fiducial::in_e_EoverP(double EoverP, double mom, double cut_sigma)
 // ===================================================================================================================================
 TVector3 Fiducial::eMomentumCorrection(const TVector3 V3el) const
 {
-  // Electron Momentum correction, Pass the electron 3 vector, return corrected 3 vector pointer.
+  int sector = get_sector(V3el);
+  return V3el* el_mom_corr_params[sector]; 
+
+  // Electron Momentum correction, Pass the electron 3 vector, return corrected 3 vector.
   // Check out "http://nuclear.unh.edu/~maurik/Personal/E2Root/html/TE2AnaTool.html"
 
   if(E1 == 4461){
@@ -2017,18 +2042,17 @@ bool Fiducial::CutUVW_e(TVector3 ecxyz)
 // ===================================================================================================================================
 bool Fiducial::CutUVW(TVector3 ecuvw, double dist)
 {
-
         double angle, x_rot, y_rot, d_intercept, abs_y_rot;
         double X_EC = ecuvw.X();
         double Y_EC = ecuvw.Y();
-        double n_phi= atan2(Y_EC,X_EC)*180./3.14159;
+        double n_phi= atan2(Y_EC,X_EC)*180./M_PI;
 
         if (n_phi < -30.) n_phi += 360.;
         int sec = (int)(n_phi+30)/60;
         if (sec>5) sec = 5;
         if (sec<0) sec = 0;
 
-        angle = 3.14159/180.*60.*(sec);
+        angle = M_PI/180.*60.*(sec);
         d_intercept = dist/cos(atan(1.73));
 
         x_rot = X_EC*cos(angle) + Y_EC*sin(angle);

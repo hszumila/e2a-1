@@ -28,6 +28,7 @@ class srcCut_Info
   void makeNewSemiCutNoPMiss();
   void makeGausCut();
   void makeLightCut();
+  void makeEG2Cut();
   //Check what it passed
   bool passECut(event_Info myEvent);
   int passLeadCut(event_Info myEvent);

@@ -28,9 +28,7 @@ void help_message()
   cerr<< "Argumets: ./get_hist /path/to/input/skim/file /path/to/output/file [Nucleus A] [Nucleus A for Ratio] [optional flags]\n\n"
       <<"Optional flags:\n"
       <<"-h: Help\n"
-      <<"-v: Verbose\n"
-      <<"-t: Do not apply transparency factors for the lead proton\n"
-      <<"-m: Do not apply maps to weight\n\n";
+      <<"-v: Verbose\n\n";
 }
 
 
@@ -63,14 +61,9 @@ int main(int argc, char ** argv){
   target_Info targInfo(A);  
   target_Info secondTargInfo(atoi(argv[4]));
   bool verbose = false;
-  bool doMaps = true;
-  bool doTrans = true;
-  bool oneSec = false;
-  double minQSq = 1.4;
-  int secChoice = -1;
   
   int c;
-  while ((c=getopt (argc-4, &argv[4], "hvms:tQ:")) != -1) //First two arguments are not optional flags.
+  while ((c=getopt (argc-4, &argv[4], "hv")) != -1) //First two arguments are not optional flags.
     switch(c)
       {
       case 'h':
@@ -78,12 +71,6 @@ int main(int argc, char ** argv){
 	return -1;
       case 'v':
 	verbose = true;
-	break;
-      case 'm':
-	doMaps = false;
-	break;
-      case 't':
-	doTrans = false;
 	break;
       case '?':
 	return -1;
@@ -101,12 +88,14 @@ int main(int argc, char ** argv){
 
   //Make a histogram list to make things easier
   vector<TH1*> hist_list;
-  TH1D * hist_Cross = new TH1D("totalCross","Cross;1;Value",1,0.5,1.5);
-  hist_list.push_back(hist_Cross);
   TH1D * hist_xB =  new TH1D("hist_xB" ,"hist;xB;Counts",numbinxB,binxB);
   hist_list.push_back(hist_xB);
   TH1D * hist_QSq =  new TH1D("hist_QSq" ,"hist;QSq;Counts",20,0,5);
   hist_list.push_back(hist_QSq);
+  TH1D * hist_pp = new TH1D("hist_pp","hist;pp;Counts",40,-0.6,0.6);
+  hist_list.push_back(hist_pp);
+  TH1D * hist_pt = new TH1D("hist_pt","hist;pt;Counts",20,0,0.6);
+  hist_list.push_back(hist_pt);
 
   for(int i=0; i<hist_list.size(); i++){
     hist_list[i]->Sumw2();
@@ -154,16 +143,13 @@ int main(int argc, char ** argv){
     double omega = vBeam.Mag() - ve.Mag();
     double phi = ve.Phi() * 180 / M_PI;
     TVector3 vLead = myInfo.getVector(1);
-    double ThetaP = vLead.Theta() * 180 / M_PI;
     TVector3 vMiss = vLead - vq;
     double mMiss = myInfo.getMassMiss(1);
     double poq = myInfo.getPoQ(1);
     double thetapq = myInfo.getThetaPQ(1);
     double thetapMq = vq.Angle(vMiss) * (180/M_PI);
-
-    if(!targInfo.evtxInRange(vtxZCorr[0],ve)){
-      continue;
-    }
+    double pMiss_p = vMiss.Dot(vq.Unit());
+    double  pMiss_t = vMiss.Perp(vq);
 
     double weight = 1;
     
@@ -175,21 +161,27 @@ int main(int argc, char ** argv){
     if(secondTargInfo.p_acc(vLead) < accMin){continue;}
     if(!secondTargInfo.pass_semi_fid(ve,vLead)){ continue; }
 
-    //Now vertex cut
-    //if(!targInfo.vtxInRange(vtxZCorr[0],vtxZCorr[1],ThetaE,ThetaP)){
-    //  continue;
-    //}
+    //Establish vertex Cuts
+    if(!targInfo.semiVTXInRange(myInfo,1)){
+      continue;
+    }
 
-    //This is to get the cross section and a2
-    weight = weight / (targInfo.getLum() * A);
-    //These are the corrections
+
+    //Apply the corrections to the cross sections
+    // Acceptance correction
+    // Transparancy correcton
+    // Radiative correction
+    // Normalize with luminosity and A
     weight = weight / targInfo.semi_acc(ve,vLead);
     weight = weight / targInfo.getTrans();
     weight = weight / targInfo.getRadCorr(ThetaE,xB);
+    weight = weight / (targInfo.getLum() * A);
+
 
     hist_xB->Fill(xB,weight);	  	        
-    hist_Cross->Fill(1,weight);
     hist_QSq->Fill(QSq,weight);
+    hist_pp->Fill(pMiss_p,weight);
+    hist_pt->Fill(pMiss_t,weight);
 
     counter++;
   }

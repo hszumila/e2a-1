@@ -4,6 +4,7 @@ INSTALL (FILES
 	el_Epratio_mom_4461_sim.root
 	FCP_2261_2250.dat FCP_4461_2250.dat FCP_1161_1500.dat FCP_1161_750.dat
 	EMCP_2261_2250.dat EMCP_4461_2250.dat EMCP_1161_1500.dat EMCP_1161_750.dat
+	el_mom_corr_2250.dat el_mom_corr_1500.dat el_mom_corr_750.dat
 	protdeltat_mom_2261_2250.root protdeltat_mom_4461_2250.root protdeltat_mom_1161_1500.root protdeltat_mom_1161_750.root
 	pipdeltat_mom_2261_2250.root pipdeltat_mom_4461_2250.root pipdeltat_mom_1161_1500.root pipdeltat_mom_1161_750.root
 	pimdeltat_mom_2261_2250.root pimdeltat_mom_4461_2250.root pimdeltat_mom_1161_1500.root pimdeltat_mom_1161_750.root
@@ -15,7 +16,8 @@ INSTALL (FILES
 	vz_2261_4He.dat vz_2261_12C.dat vz_2261_3He.dat vz_2261_56Fe.dat
 	n_pathlength_corr_4461.dat
 	12C_rad_corr.dat 4He_rad_corr.dat
-	12C_VTX_cut.txt	4He_VTX_cut.txt	3He_VTX_cut.txt
+	12C_et_VTX_cut.txt 4He_et_VTX_cut.txt 3He_et_VTX_cut.txt
+	12C_pt_VTX_cut.txt 4He_pt_VTX_cut.txt 3He_pt_VTX_cut.txt
         DESTINATION "$ENV{E2A_INSTALL}")
 
 

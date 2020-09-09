@@ -1,6 +1,6 @@
 # CMakeLists for write_tree_e2a and other programs
 #   that require CLASTOOL
-include("FindROOT.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake_modules/FindROOT.cmake")
 
 include_directories(${ROOT_INCLUDE_DIRS})
 

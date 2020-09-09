@@ -30,6 +30,7 @@
 
 #include "Fiducial.h"
 
+using namespace std;
 
 //define some constants
 const double amu     = 0.931494;
