@@ -30,7 +30,7 @@
 
 #include "Fiducial.h"
 
-using namespace std;
+
 
 //define some constants
 const double amu     = 0.931494;
@@ -64,7 +64,7 @@ const double y_cut_max = 0.2;
 const double nu_min = 0.9;
 const double nu_max = 1.6;
 const double thetapq_cut = 7.0;//deg
-const double emiss_nomCut = 0.14;
+const double emiss_nomCut = 0.08;//0.14;
 const double pmiss_nomCut = 0.22;
 
 
@@ -86,8 +86,9 @@ double f_delta_p(double p){
 	// This function is used for neutron momentum resolution.
         // 0.392319c	-0.0967682	0.022168
 
-        double ec_extr_res = -0.09;//0967682;
-	double dt = 0.392319;//0.625                 //ec_time_res;
+  //4.4, 2.2 GeV 3He:
+  double ec_extr_res = 0.098159;//0.091479;//0.098159;//-0.09;//0967682;
+  double dt = 0.3532;//0.3292;//0.3532;//0.392319;//0.625                 //ec_time_res;
 	const double d      = 516.9152;       //cm, distance from interaction vtx to EC
 	const double Mn     = 0.939565378;    // Neutron mass in GeV
 	const double c_cm_s = 2.99792458E+10; // cm/s, speed of light
@@ -95,6 +96,53 @@ double f_delta_p(double p){
 
 	double val = p*p/(Mn*Mn)*sqrt(Mn*Mn+p*p)*dt/d*c_cm_s*ns_2_s;
 	return sqrt(val*val/p/p+ec_extr_res*ec_extr_res)*p;
+}
+
+double correctPn(double P, double eIn, double eOut){
+  double a,b,c;
+  
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.06;
+    b = -0.17;
+    c = 0.08;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.02;
+    b = -0.05;
+    c = 0.05;
+  }
+  //both
+  else {
+    a = 0.09;
+    b = -0.25;
+    c = 0.08;
+  }
+
+  P = P - P*(a+b*P+c*P*P);
+  return P;
+}
+
+double f_delta_p2(double P, double eIn, double eOut){
+  double a,b;
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.03;
+    b = 0.06;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.03;
+    b = 0.05;
+  }
+  //both
+  else {
+    a = 0.03;
+    b = 0.04;
+  }
+  
+  return P*(a+b*P); 
 }
 
 float Coulomb_Corr_MeV(int Z, int A){
@@ -185,7 +233,13 @@ int main(int argc, char ** argv){
   cout<<"target min: "<<tgt_min<<" target max: "<<tgt_max<<endl;
   //Change for fiducial cuts
   Fiducial fid_params(4461,2250,5996,"12C",true);
-  
+
+  //read in the data and make output file
+  //TFile *f = new TFile("../../../data/2261/skim_C12_p_2261.root");
+  TFile *f = new TFile("../../../data/19jun20/skim_C12_p_Jun20.root");
+  TFile *fout = new TFile("output/outMF_c12_p.root","RECREATE");
+ 
+  std::string pdf_file_name = "output/outMF_c12_p_Msm.pdf";
   
   gROOT->SetBatch(true);
   gStyle->SetOptStat(0);
@@ -255,16 +309,16 @@ int main(int argc, char ** argv){
   TH1F* h_pmMpm = new TH1F("h_pmMpm",";p_{measured}-p_{miss} [GeV]",100,-5,5);
   //plot y vs nu
   TH2F *h_yvnu_pre = new TH2F("h_yvnu_pre","before Em, Pm cuts;#nu;y",100,0,4.5,100,-1,1);
-  TH2F *h_yvnu_post = new TH2F("h_yvnu_post","Em<80 MeV, Pm<250 MeV cuts;#nu;y",100,0,4.5,100,-1,1);
+  TH2F *h_yvnu_post = new TH2F("h_yvnu_post","Em<140 MeV, Pm<220 MeV cuts;#nu;y",100,0,4.5,100,-1,1);
   //plot thetaPQ vs Q2
   TH2F *h_thetavq2_pre = new TH2F("h_thetavq2_pre","before Em, Pm cuts;Q^{2};#theta_{pq}",100,0,6,100,0,100);
-  TH2F *h_thetavq2_post = new TH2F("h_thetavq2_post","Em<80 MeV, Pm<250 MeV cuts;Q^{2};#theta_{pq}",100,0,6,100,0,100);
+  TH2F *h_thetavq2_post = new TH2F("h_thetavq2_post","Em<140 MeV, Pm<220 MeV cuts;Q^{2};#theta_{pq}",100,0,6,100,0,100);
   //plot x vs y
   TH2F *h_xvy_pre = new TH2F("h_xvy_pre","before Em, Pm cuts;x_{B};y",100,0,2,100,-1,1);
-  TH2F *h_xvy_post = new TH2F("h_xvy_post","Em<80 MeV, Pm<250 MeV cuts;x_{B};y",100,0,2,100,-1,1);
+  TH2F *h_xvy_post = new TH2F("h_xvy_post","Em<140 MeV, Pm<220 MeV cuts;x_{B};y",100,0,2,100,-1,1);
   //plot x vs nu
   TH2F *h_xvnu_pre = new TH2F("h_xvnu_pre","before Em, Pm cuts;#nu;x_{B}",100,0,3,100,0,2);
-  TH2F *h_xvnu_post = new TH2F("h_xvnu_post","Em<80 MeV, Pm<250 MeV cuts;#nu;x_{B}",100,0,3,100,0,2);
+  TH2F *h_xvnu_post = new TH2F("h_xvnu_post","Em<140 MeV, Pm<220 MeV cuts;#nu;x_{B}",100,0,3,100,0,2);
   //plot p vs psmear
   TH2F *pvps = new TH2F("h_pvps",";p_{miss} [GeV];p_{miss, from smeared}[GeV]",100,0,1,100,0,1);
   //plot nu vs Q2
@@ -274,13 +328,9 @@ int main(int argc, char ** argv){
   TH2F* h_emVpm_cuts =new TH2F("h_emVpm_cuts","found QE n cuts;pmiss;emiss",100,0,1,100,-0.8,0.8);
   TH2F* h_emVpm_sm_cuts =new TH2F("h_emVpm_sm_cuts","smeared,found QE n cuts;pmiss;emiss",100,0,1,100,-0.8,0.8);
 
-  
-  //read in the data and make output file  
-  TFile *f = new TFile("../../../data/19jun20/skim_C12_p_Jun20.root");
-  TFile *fout = new TFile("output/outMF_c12_p.root","RECREATE");
-
   //read in the Pmiss plots from eg2
   TFile *f2 = new TFile("../../../pmiss_eg2.root");
+
   TH1F *eg2_pmiss;
   TCanvas *c1 = (TCanvas*)f2->Get("Canvas_1");
   eg2_pmiss = (TH1F*)c1->GetPrimitive("h1");
@@ -292,12 +342,11 @@ int main(int argc, char ** argv){
   canvas->SetFrameFillColor(0);
   canvas->SetFrameBorderMode(0);
   //canvas->SetLogy();
-  std::string pdf_file_name = "output/outMF_c12_p.pdf";
 
   TTree * intree = (TTree*)f->Get("T");
   const int maxParticles=50;
   int nParticles, type[maxParticles];
-  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles];
+  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles], ec_in[nParticles], ec_out[nParticles];
   intree->SetBranchAddress("nParticles",&nParticles);
   intree->SetBranchAddress("Part_type",type);
   intree->SetBranchAddress("Q2",&QSq);
@@ -311,6 +360,8 @@ int main(int argc, char ** argv){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -390,7 +441,7 @@ int main(int argc, char ** argv){
 	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
-	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
+	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p2(mom_lead.Mag(),ec_in[leadingID],ec_out[leadingID]));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
 
@@ -474,7 +525,9 @@ int main(int argc, char ** argv){
 	    h_pmissSmear->Fill(mom_missSmear.Mag());
 	    h_emissSmear->Fill(emissSmear);
 	    h_emiss->Fill(emiss);
-	    h_emVpmSm->Fill(mom_missSmear.Mag(),emissSmear);
+	    if (emiss<emiss_nomCut &&mom_miss.Mag()<pmiss_nomCut){
+	      h_emVpmSm->Fill(mom_missSmear.Mag(),emissSmear);
+	    }
 	    h_emVpm->Fill(mom_miss.Mag(),emiss);
 	    h_pmMpm->Fill(mom_lead.Mag()-mom_miss.Mag());
 	    h_mmiss->Fill(mmiss);
@@ -509,8 +562,10 @@ int main(int argc, char ** argv){
     pmiss_cut[ii] = (double)ii*1.5/100.0+0.1;
   }
 
-  //make Emiss cuts:
-  double emiss_val[n_emiss_cut] = {0.18,0.22,0.24,0.26,0.28,0.3,0.32,0.34,0.36,0.38,0.4};//{0.07,0.1,0.13,0.16,0.17,0.18,0.19,0.20,0.22,0.24,0.26};
+  //make Emiss cuts: 0.14 emiss, 0.22 pmiss
+  //-used:double emiss_val[n_emiss_cut] = {0.18,0.22,0.24,0.26,0.28,0.3,0.32,0.34,0.36,0.38,0.4};//{0.07,0.1,0.13,0.16,0.17,0.18,0.19,0.20,0.22,0.24,0.26};
+  double emiss_val[n_emiss_cut] = {0.07,0.1,0.13,0.16,0.19,0.22,0.25,0.28,0.31,0.34,0.37};
+  //double emiss_val[n_emiss_cut] = {0.13,0.14,0.16,0.18,0.20,0.22,0.24,0.26,0.28,0.3,0.32};//{0.07,0.1,0.13,0.16,0.17,0.18,0.19,0.20,0.22,0.24,0.26};
   double falsePos[n_emiss_cut][n_pmiss_cut];
   double falseNeg[n_emiss_cut][n_pmiss_cut];  
   double minimum = 9999;
@@ -518,10 +573,11 @@ int main(int argc, char ** argv){
   int pmissCut = 0;
   double falsePosO[n_emiss_cut][n_pmiss_cut];
   double falseNegO[n_emiss_cut][n_pmiss_cut];
+  double falsePosErr[n_emiss_cut][n_pmiss_cut];
+  double falseNegErr[n_emiss_cut][n_pmiss_cut];
 
-
- cout<<"pmiss: "<<" emiss: "<<" false neg: "<<" false pos: "<<" false neg e2a: "<<" false pos e2a: "<<endl;
-  
+ cout<<"pmiss: "<<" emiss: "<<" false neg: "<<" false pos: "<<" false neg error: "<<" false pos error: "<<" fneg-fpos: "<<" err(fneg-fpos): "<<endl;
+ 
   //loop missing energy
   for (int ii=0;ii<n_emiss_cut; ii++){
     for (int jj=0; jj<n_pmiss_cut; jj++){
@@ -577,10 +633,15 @@ int main(int argc, char ** argv){
       
       falsePos[ii][jj] = fpos*100.0/(fpos+truNeg);
       falsePosO[ii][jj] = fposO*100.0/den;
+      falsePosErr[ii][jj] = sqrt(fposO+pow(falsePosO[ii][jj]/100.0,2.0)*den)/den;
+
       falseNeg[ii][jj] = fneg*100/(truPos+fneg);
       falseNegO[ii][jj] = fnegO*100/den;
+      falseNegErr[ii][jj] = sqrt(fnegO+pow(falseNegO[ii][jj]/100.0,2.0)*den)/den;
+      double diff = falseNegO[ii][jj] - falsePosO[ii][jj];
+      double errDiff = sqrt(pow(falsePosErr[ii][jj],2.0)+pow(falseNegErr[ii][jj],2.0))*100.0;
       
-      cout<<"  "<<pmiss_cut[jj]<<"  "<<emiss_val[ii]<<"  "<<falseNeg[ii][jj]<<"  "<<falsePos[ii][jj]<<"  "<<falseNegO[ii][jj]<<"  "<<falsePosO[ii][jj]<<"  "<<den<<endl;
+        cout<<pmiss_cut[jj]<<","<<emiss_val[ii]<<","<<falseNegO[ii][jj]<<","<<falsePosO[ii][jj]<<","<<falseNegErr[ii][jj]<<","<<falsePosErr[ii][jj]<<","<<diff<<","<<errDiff<<endl;
       
       if (abs(falsePosO[ii][jj]-falseNegO[ii][jj])<minimum){
 	minimum = abs(falsePosO[ii][jj]-falseNegO[ii][jj]);
@@ -631,7 +692,7 @@ int main(int argc, char ** argv){
   legendPO->SetBorderSize(0);
   legendNO->SetHeader("E_{miss}");
   legendNO->SetBorderSize(0);
-  mgPO->SetTitle("False Discovery Rate;P_{miss} upper cut;False Discovery Rate [%]");
+  mgPO->SetTitle("False Positive Rate;P_{miss} upper cut;False Positive Rate [%]");
   mgNO->SetTitle("False Negative per smeared passing;P_{miss} upper cut;False Negative per smeared passing [%]");
   for (int ii=0; ii<n_emiss_cut; ii++){
     grPO[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falsePosO[ii]);

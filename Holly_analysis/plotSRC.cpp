@@ -30,7 +30,6 @@
 
 #include "Fiducial.h"
 
-using namespace std;
 
 //define some constants
 const double amu     = 0.931494;
@@ -58,7 +57,7 @@ const double pq_max_n = 1.1;
 const double pq_max_p = 0.96;
 const double mmiss_nomCut = 1.1;
 const double pmiss_nomCut = 0.3;
-
+//check if using Q2 cut!!! As is the case for 2.2 GeV data
 
 double fn_Mmiss(double omega, double Mnuc, double Enuc, TVector3 q_vector, TVector3 p_vector){
   return sqrt(pow(omega+2*Mnuc-Enuc,2.0) - (q_vector - p_vector).Mag2());
@@ -73,19 +72,67 @@ double fn_Emiss(double Pmiss, double omega, double M_tar, double Enuc, double Mn
 }
 
 double f_delta_p(double p){
-	// Returns value of delta_p as a function of p.
-	// This function is used for neutron momentum resolution.
-        // 0.392319c	-0.0967682	0.022168
+  // Returns value of delta_p as a function of p.
+  // This function is used for neutron momentum resolution.
+  // 0.392319c	-0.0967682	0.022168
+  
+  //4.4, 2.2 GeV 3He:
+  double ec_extr_res = 0.098159;//0.091479;//-0.09;//0967682;
+  double dt = 0.3532;//0.3292;//0.392319;//0.625                 //ec_time_res;
+  const double d      = 516.9152;       //cm, distance from interaction vtx to EC
+  const double Mn     = 0.939565378;    // Neutron mass in GeV
+  const double c_cm_s = 2.99792458E+10; // cm/s, speed of light
+  const double ns_2_s = 1E-09;
+  
+  double val = p*p/(Mn*Mn)*sqrt(Mn*Mn+p*p)*dt/d*c_cm_s*ns_2_s;
+  return sqrt(val*val/p/p+ec_extr_res*ec_extr_res)*p;
+}
 
-        double ec_extr_res = -0.09;//0967682;
-	double dt = 0.392319;//0.625                 //ec_time_res;
-	const double d      = 516.9152;       //cm, distance from interaction vtx to EC
-	const double Mn     = 0.939565378;    // Neutron mass in GeV
-	const double c_cm_s = 2.99792458E+10; // cm/s, speed of light
-	const double ns_2_s = 1E-09;
+double correctPn(double P, double eIn, double eOut){
+  double a,b,c;
+  
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.06;
+    b = -0.17;
+    c = 0.08;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.02;
+    b = -0.05;
+    c = 0.05;
+  }
+  //both
+  else {
+    a = 0.09;
+    b = -0.25;
+    c = 0.08;
+  }
 
-	double val = p*p/(Mn*Mn)*sqrt(Mn*Mn+p*p)*dt/d*c_cm_s*ns_2_s;
-	return sqrt(val*val/p/p+ec_extr_res*ec_extr_res)*p;
+  P = P - P*(a+b*P+c*P*P);
+  return P;
+}
+
+double f_delta_p2(double P, double eIn, double eOut){
+  double a,b;
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.03;
+    b = 0.06;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.03;
+    b = 0.05;
+  }
+  //both
+  else {
+    a = 0.03;
+    b = 0.04;
+  }
+  
+  return P*(a+b*P); 
 }
 
 float Coulomb_Corr_MeV(int Z, int A){
@@ -164,6 +211,14 @@ int main(int argc, char ** argv){
   cout<<"target min: "<<tgt_min<<" target max: "<<tgt_max<<endl;
   //Change for fiducial cuts
   Fiducial fid_params(4461,2250,5996,"4He",true);
+
+  //read in the data and make output file  
+  //TFile *f = new TFile("../../../data/19jun20/skim_C12_p_Jun20.root");
+  TFile *f = new TFile("../../../data/19jun20/skim_He4_p_Jun20.root");
+  TFile *fout = new TFile("output/out_He4_p.root","RECREATE");
+
+  std::string pdf_file_name = "output/out_He4_p_Msm.pdf";
+
   
   gROOT->SetBatch(true);
   gStyle->SetOptStat(0);
@@ -233,12 +288,10 @@ int main(int argc, char ** argv){
   TH1F* h_pmMpm = new TH1F("h_pmMpm",";p_{measured}-p_{miss} [GeV]",100,-5,5);
   //plot p vs psmear
   TH2F *pvps = new TH2F("h_pvps",";p_{miss} [GeV];p_{miss, from smeared}[GeV]",100,0,1,100,0,1);
-  
 
-  //read in the data and make output file  
-  TFile *f = new TFile("../../../data/19jun20/skim_He4_p_Jun20.root");
-  //TFile *f = new TFile("../../../data/1apr20/skim_C12_p.root");
-  TFile *fout = new TFile("output/out_He4_p.root","RECREATE");
+  //plot the mmiss vs pmiss:
+  TH2F *h_mmvpm = new TH2F("h_mmvpm",";p_{miss} [GeV];m_{miss}[GeV]",100,0,1,100,0,1.6);
+  TH2F *h_mmvpmS = new TH2F("h_mmvpmS","smeared;p_{miss} [GeV];m_{miss}[GeV]",100,0,1,100,0,1.6);
 
   //read in the Pmiss plots from eg2
   TFile *f2 = new TFile("../../../pmiss_eg2.root");
@@ -253,12 +306,11 @@ int main(int argc, char ** argv){
   canvas->SetFrameFillColor(0);
   canvas->SetFrameBorderMode(0);
   //canvas->SetLogy();
-  std::string pdf_file_name = "output/out_he4_p.pdf";
 
   TTree * intree = (TTree*)f->Get("T");
   const int maxParticles=50;
   int nParticles, type[maxParticles];
-  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles];
+  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles],ec_in[nParticles], ec_out[nParticles];
   intree->SetBranchAddress("nParticles",&nParticles);
   intree->SetBranchAddress("Part_type",type);
   intree->SetBranchAddress("Q2",&QSq);
@@ -272,6 +324,8 @@ int main(int argc, char ** argv){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -306,6 +360,9 @@ int main(int argc, char ** argv){
       
       //cut on xB
       if (xB<xb_cut){continue;}
+
+      //for 2.2 gev data, cut on Q2:
+      //if (QSq<1.6){continue;}
 
       // Loop over particles looking for a proton most likely to pass lead cuts
       int leadingID = -1;
@@ -353,7 +410,7 @@ int main(int argc, char ** argv){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //calculate the nominal values
 	  TVector3 mom_miss = mom_lead - q;
@@ -364,7 +421,7 @@ int main(int argc, char ** argv){
 	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
-	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
+	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p2(mom_lead.Mag(),ec_in[leadingID],ec_out[leadingID]));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
 
@@ -418,6 +475,7 @@ int main(int argc, char ** argv){
 	      h_thetapqCut->Fill(mom_lead.Angle(q)*180./M_PI);
 	      h_emissCut->Fill(emiss);
 	      h_smearCut->Fill(mom_lead.Mag()-mom_smear.Mag());
+
 	    }
 	  }
 	  //plot the looser (e,e'p) events that we use to smear
@@ -451,7 +509,10 @@ int main(int argc, char ** argv){
 	  h_nmomSmear->Fill(mom_smear.Mag());
 	  h_emVpmSm->Fill(mom_missSmear.Mag(),emissSmear);
 	  pvps->Fill(mom_miss.Mag(),mom_missSmear.Mag());
-	  
+	  if (mom_miss.Mag()>0.3&&mmiss<1.1){
+	    h_mmvpmS->Fill(mom_missSmear.Mag(),mmissSmear);
+	    h_mmvpm->Fill(mom_miss.Mag(),mmiss);
+	  }
 	  counter++;	    
 	  
 	}//end leading
@@ -475,8 +536,10 @@ int main(int argc, char ** argv){
   int pmissCut = 0;
   double falsePosO[n_mmiss_cut][n_pmiss_cut];
   double falseNegO[n_mmiss_cut][n_pmiss_cut];
+  double falsePosErr[n_mmiss_cut][n_pmiss_cut];
+  double falseNegErr[n_mmiss_cut][n_pmiss_cut];
 
-  cout<<"pmiss: "<<" mmiss: "<<" false neg: "<<" false pos: "<<" false neg e2a: "<<" false pos e2a: "<<endl;
+  cout<<"pmiss: "<<" mmiss: "<<" false neg: "<<" false pos: "<<" false neg error: "<<" false pos error: "<<" fneg-fpos: "<<" err(fneg-fpos): "<<endl;
   
   //loop missing mass
   for (int ii=0;ii<n_mmiss_cut; ii++){
@@ -541,11 +604,15 @@ int main(int argc, char ** argv){
       //false +ive: events that should not pass do pass
       falsePos[ii][jj] = fpos*100.0/(fpos+truNeg);
       falsePosO[ii][jj] = fposO*100.0/den;
+      falsePosErr[ii][jj] = sqrt(fposO+pow(falsePosO[ii][jj]/100.0,2.0)*den)/den;
       //false -ive: events that should pass do not pass
       falseNeg[ii][jj] = fneg*100/(truPos+fneg);
       falseNegO[ii][jj] = fnegO*100/den;
-
-      cout<<pmiss_cut[jj]<<"  "<<mmiss_val[ii]<<"  "<<falseNeg[ii][jj]<<"  "<<falsePos[ii][jj]<<"  "<<falseNegO[ii][jj]<<"  "<<falsePosO[ii][jj]<<"  "<<den<<endl;
+      falseNegErr[ii][jj] = sqrt(fnegO+pow(falseNegO[ii][jj]/100.0,2.0)*den)/den;
+      double diff = falseNegO[ii][jj] - falsePosO[ii][jj];
+      double errDiff = sqrt(pow(falsePosErr[ii][jj],2.0)+pow(falseNegErr[ii][jj],2.0))*100.0;
+      
+      cout<<pmiss_cut[jj]<<","<<mmiss_val[ii]<<","<<falseNegO[ii][jj]<<","<<falsePosO[ii][jj]<<","<<falseNegErr[ii][jj]<<","<<falsePosErr[ii][jj]<<","<<diff<<","<<errDiff<<endl;
 
       if (abs(falsePosO[ii][jj]-falseNegO[ii][jj])<minimum){
 	minimum = abs(falsePosO[ii][jj]-falseNegO[ii][jj]);
@@ -556,7 +623,7 @@ int main(int argc, char ** argv){
     }//end jj
   }//end ii
   cout<<endl;
-  cout<<"optimal pmiss cut: "<<pmiss_cut[pmissCut]<<" optimal mmiss cut: "<<mmiss_val[mmissCut]<<" false Pos: "<<falsePosO[mmissCut][pmissCut]<<" false Neg: "<<falseNegO[mmissCut][pmissCut]<<endl;
+  //cout<<"optimal pmiss cut: "<<pmiss_cut[pmissCut]<<" optimal mmiss cut: "<<mmiss_val[mmissCut]<<" false Pos: "<<falsePosO[mmissCut][pmissCut]<<" false Neg: "<<falseNegO[mmissCut][pmissCut]<<endl;
 
   //false pos and false neg plots with different denominators
   TGraph *grP[n_mmiss_cut];
@@ -596,7 +663,7 @@ int main(int argc, char ** argv){
   legendPO->SetBorderSize(0);
   legendNO->SetHeader("m_{miss}");
   legendNO->SetBorderSize(0);
-  mgPO->SetTitle("False Discovery Rate;P_{miss} lower bound;False Discovery Rate [%]");
+  mgPO->SetTitle("False Positive Rate;P_{miss} lower bound;False Positive Rate [%]");
   mgNO->SetTitle("False Negative per smeared passing;P_{miss} lower bound;False Negative per smeared passing [%]");
   for (int ii=0; ii<n_mmiss_cut; ii++){
     grPO[ii] = new TGraph(n_pmiss_cut,pmiss_cut,falsePosO[ii]);
@@ -753,9 +820,13 @@ int main(int argc, char ** argv){
   canvas->Print( (pdf_file_name + "(").c_str());
 
   pvps->Draw("colz");
-  canvas->Print( (pdf_file_name + ")").c_str());
+  canvas->Print( (pdf_file_name + "(").c_str());
 
-  
+  h_mmvpm->Draw("colz");
+  canvas->Print( (pdf_file_name + "(").c_str());
+
+  h_mmvpmS->Draw("colz");
+  canvas->Print( (pdf_file_name + ")").c_str());
 
 
 

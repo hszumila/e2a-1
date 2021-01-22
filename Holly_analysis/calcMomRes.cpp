@@ -269,9 +269,9 @@ int main(){
   double momUncertErr[3] = {sigA*statErrA, sigB*statErrB, sigC*statErrC};//statistical
   
   TGraphErrors *tg =new TGraphErrors(3,mom,momUncert,mombin,momUncertErr);
-  tg->SetMarkerColor(kBlue);
+  tg->SetMarkerColor(kMagenta);
   tg->SetMarkerStyle(22);
-  tg->SetLineColor(kBlue);
+  tg->SetLineColor(kMagenta);
   tg->SetLineWidth(2);
   mg->Add(tg);
   mg->Draw("ap");
@@ -290,8 +290,29 @@ int main(){
   TF1 *ffit = new TF1("ffit",Form("sqrt(pow(x/pow(%f,2.0)*sqrt(pow(%f,2.0)+pow(x,2.0))*%f/%f*30.0,2.0)+pow([0],2.0))",Mn,Mn,delt,xcal),0,2.1);
   ffit->SetParameter(0,1);
   mg->Fit(ffit,"R");
-  ffit->SetLineColor(kBlue);
+  ffit->SetLineColor(kMagenta);
   ffit->Draw("lsame");
+
+  TF1 *fitIn = new TF1("fitIn","[0]+[1]*x",0,2.1);
+  fitIn->FixParameter(0,0.03);
+  fitIn->FixParameter(1,0.06);
+  mg->Fit(fitIn,"R");
+  fitIn->SetLineColor(kRed);
+  fitIn->Draw("lsame");
+
+  TF1 *fitOut = new TF1("fitOut","[0]+[1]*x",0,2.1);
+  fitOut->FixParameter(0,0.03);
+  fitOut->FixParameter(1,0.05);
+  mg->Fit(fitOut,"R");
+  fitOut->SetLineColor(kBlue);
+  fitOut->Draw("lsame");
+
+   TF1 *fitMid = new TF1("fitMid","[0]+[1]*x",0,2.1);
+  fitMid->FixParameter(0,0.03);
+  fitMid->FixParameter(1,0.04);
+  mg->Fit(fitMid,"R");
+  fitMid->SetLineColor(kBlack);
+  fitMid->Draw("lsame");
   
   mg->GetYaxis()->SetTitle("#Delta p/p");
   mg->GetYaxis()->SetTitleOffset(1.2);

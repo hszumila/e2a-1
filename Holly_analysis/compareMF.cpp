@@ -30,7 +30,6 @@
 
 #include "Fiducial.h"
 
-using namespace std;
 
 //define some constants
 const double amu     = 0.931494;
@@ -67,8 +66,8 @@ const double thetapqSRC_cut = 25.0;//deg
 const double pq_min = 0.62;
 const double pq_max_n = 1.1;
 const double pq_max_p = 0.96;
-const double mmiss_nomCut_n = 1.175;
-const double pmissSRC_nomCut_n = 0.38;
+const double mmiss_nomCut_n = 1.15;
+const double pmissSRC_nomCut_n = 0.36;
 const double mmiss_nomCut_p = 1.1;
 const double pmissSRC_nomCut_p = 0.3;
 
@@ -78,11 +77,12 @@ const double y_cut_max = 0.2;
 const double nu_min = 0.9;
 const double nu_max = 1.6;
 const double thetapqMF_cut = 7.0;//deg
-const double emiss_nomCut = 0.14;
+const double emiss_nomCut = 0.08;
 const double pmissMF_nomCut = 0.22;
-const double emiss_nomCut_n = 0.3;
-const double pmissMF_nomCut_n = 0.34;
+const double emiss_nomCut_n = 0.22;
+const double pmissMF_nomCut_n = 0.28;
 
+const double Q_min = 0.0;//1.75;
 
 double fn_Mmiss(double omega, double Mnuc, double Enuc, TVector3 q_vector, TVector3 p_vector){
   return sqrt(pow(omega+2*Mnuc-Enuc,2.0) - (q_vector - p_vector).Mag2());
@@ -101,8 +101,9 @@ double f_delta_p(double p){
 	// This function is used for neutron momentum resolution.
         // 0.392319c	-0.0967682	0.022168
 
-        double ec_extr_res = -0.09;//0967682;
-	double dt = 0.392319;//0.625                 //ec_time_res;
+  //2.2,4.4 GeV 3He:
+  double ec_extr_res = 0.091479;//0.098159;//0.098159;//-0.09;//0967682;
+  double dt = 0.3292;//0.3532;//0.3532;//0.392319;//0.625                 //ec_time_res;
 	const double d      = 516.9152;       //cm, distance from interaction vtx to EC
 	const double Mn     = 0.939565378;    // Neutron mass in GeV
 	const double c_cm_s = 2.99792458E+10; // cm/s, speed of light
@@ -111,6 +112,59 @@ double f_delta_p(double p){
 	double val = p*p/(Mn*Mn)*sqrt(Mn*Mn+p*p)*dt/d*c_cm_s*ns_2_s;
 	return sqrt(val*val/p/p+ec_extr_res*ec_extr_res)*p;
 }
+
+double f_delta_p2(double P, double eIn, double eOut){
+  double a,b;
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.03;
+    b = 0.06;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.03;
+    b = 0.05;
+  }
+  //both
+  else {
+    a = 0.03;
+    b = 0.04;
+  }
+  
+  return P*(a+b*P); 
+}
+
+TVector3 correctPn(TVector3 P, double eIn, double eOut){
+  double a,b,c;
+  
+  //inner EC
+  if (eIn>0.01 && eOut<0.01){
+    a = 0.06;
+    b = -0.17;
+    c = 0.08;
+  }
+  //outer EC
+  else if (eIn<0.01 && eOut>0.01){
+    a = 0.02;
+    b = -0.05;
+    c = 0.05;
+  }
+  //both
+  else {
+    a = 0.09;
+    b = -0.25;
+    c = 0.08;
+  }
+
+  double mom = P.Mag();
+  double newMom = mom - mom*(a+b*mom+c*mom*mom);
+  
+  TVector3 unit = P.Unit();
+  unit.SetMag(newMom);
+  
+  return unit;
+}
+
 
 float Coulomb_Corr_MeV(int Z, int A){
 	// See Effective Momentum Approximation (EMA) formalism
@@ -193,7 +247,7 @@ int main(){
   canvas->SetFrameFillColor(0);
   canvas->SetFrameBorderMode(0);
   //canvas->SetLogy();
-  std::string pdf_file_name = "output/out_MF.pdf";
+  std::string pdf_file_name = "output/out_MF_Msm.pdf";
   gROOT->SetBatch(true);
   gStyle->SetOptStat(0);
   
@@ -251,7 +305,7 @@ int main(){
   TFile *f_3p = new TFile("../../../data/19jun20/skim_He3_p_Jun20.root");
   TTree * intree = (TTree*)f_3p->Get("T");
   int nParticles, type[maxParticles];
-  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles];
+  double QSq, xB, mom_x[maxParticles], mom_y[maxParticles], mom_z[maxParticles], Nu, ec_x[maxParticles], ec_y[maxParticles], vtxZ[maxParticles], ec_u[maxParticles], ec_v[maxParticles], ec_w[maxParticles], sc_time[maxParticles], ec_time[maxParticles], sc_path[maxParticles], ec_path[maxParticles],ec_in[maxParticles], ec_out[maxParticles];
   intree->SetBranchAddress("nParticles",&nParticles);
   intree->SetBranchAddress("Part_type",type);
   intree->SetBranchAddress("Q2",&QSq);
@@ -265,6 +319,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -281,6 +337,7 @@ int main(){
       	cout << "Working on event " << event <<endl;
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -323,7 +380,7 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //if (mom_lead.Mag()>2.34){continue;}
 	  
@@ -335,7 +392,7 @@ int main(){
 	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
-	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
+	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p2(mom_lead.Mag(),ec_in[leadingID],ec_out[leadingID]));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
 	  
@@ -418,6 +475,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -433,6 +492,7 @@ int main(){
       if (event%10000==0){cout << "Working on event " << event <<endl;}
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -475,7 +535,8 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = correctPn(mom_lead,ec_in[leadingID],ec_out[leadingID]);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //calculate the nominal values
 	  TVector3 mom_miss = mom_lead - q;
@@ -549,6 +610,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -562,6 +625,7 @@ int main(){
       	cout << "Working on event " << event <<endl;
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -604,7 +668,7 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //if (mom_lead.Mag()>2.34){continue;}
 	  
@@ -616,7 +680,7 @@ int main(){
 	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
-	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
+	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p2(mom_lead.Mag(),ec_in[leadingID],ec_out[leadingID]));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
 	  
@@ -699,6 +763,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -711,6 +777,7 @@ int main(){
       if (event%10000==0){cout << "Working on event " << event <<endl;}
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -753,7 +820,8 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = correctPn(mom_lead,ec_in[leadingID],ec_out[leadingID]);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //calculate the nominal values
 	  TVector3 mom_miss = mom_lead - q;
@@ -826,6 +894,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -839,6 +909,7 @@ int main(){
       	cout << "Working on event " << event <<endl;
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -881,7 +952,7 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //if (mom_lead.Mag()>2.34){continue;}
 	  
@@ -893,7 +964,7 @@ int main(){
 	  double mmiss = fn_Mmiss(Nu, Mp, ep, q, mom_lead);
 	  	  
 	  //smear the proton momentum resolution
-	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p(mom_lead.Mag()));
+	  double smearFactor = gRandom->Gaus(mom_lead.Mag(),f_delta_p2(mom_lead.Mag(),ec_in[leadingID],ec_out[leadingID]));
 	  TVector3 u1 = mom_lead.Unit();
 	  TVector3 mom_smear(smearFactor*u1.X(),smearFactor*u1.Y(),smearFactor*u1.Z());
 	  
@@ -976,6 +1047,8 @@ int main(){
   intree->SetBranchAddress("ec_u",ec_u);
   intree->SetBranchAddress("ec_v",ec_v);
   intree->SetBranchAddress("ec_w",ec_w);
+  intree->SetBranchAddress("ec_in",ec_in);
+  intree->SetBranchAddress("ec_out",ec_out);
   intree->SetBranchAddress("vtx_z_cor",vtxZ);
   intree->SetBranchAddress("sc_time",sc_time);
   intree->SetBranchAddress("ec_time",ec_time);
@@ -988,6 +1061,7 @@ int main(){
       if (event%10000==0){cout << "Working on event " << event <<endl;}
 
       intree->GetEvent(event);
+      if (QSq<Q_min){continue;}
 
        // Get the electron and q vectors
       TVector3 mom_e(mom_x[0],mom_y[0],mom_z[0]);
@@ -1030,7 +1104,8 @@ int main(){
       if (leadingID > 0)
 	{
 	  TVector3 mom_lead(mom_x[leadingID],mom_y[leadingID],mom_z[leadingID]);
-	  P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
+	  mom_lead = correctPn(mom_lead,ec_in[leadingID],ec_out[leadingID]);
+	  mom_lead = P_Coulomb_Corrected(mom_lead,tgt_Z,tgt_A);
 
 	  //calculate the nominal values
 	  TVector3 mom_miss = mom_lead - q;
