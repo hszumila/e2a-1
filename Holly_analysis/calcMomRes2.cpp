@@ -43,33 +43,58 @@ const double M_tar   = 2*Mp+Mn-He3_be;  // 3Helium  mass in GeV (target)
 
 double max_outta_three ( double A , double B, double C );
 
-
-double correctPn(double P, double eIn, double eOut){
+TLorentzVector correctPn(TLorentzVector mom_n, double eIn, double eOut){
   double a,b,c;
+
+  TVector3 mom = mom_n.Vect();
+  double P = mom.Mag();
   
   //inner EC
   if (eIn>0.01 && eOut<0.01){
-    a = 0.06;
+    /*a = 0.06;
     b = -0.17;
-    c = 0.08;
+    c = 0.08;*/
+    a = 0.122428;
+    b = -0.00330188;
+    c = 0.0451578;
   }
   //outer EC
   else if (eIn<0.01 && eOut>0.01){
-    a = 0.02;
+    /*a = 0.02;
     b = -0.05;
-    c = 0.05;
-  }
+    c = 0.05;*/
+    a = 0.173537;
+    b = -0.0527054;
+    c = 0.0785062;
+   }
   //both
   else {
     a = 0.09;
     b = -0.25;
     c = 0.08;
+    
   }
 
-  P = P - P*(a+b*P+c*P*P);
+  double newMag = P - P*(a+b*P+c*P*P);
+  TVector3 unit = mom.Unit();
+  unit.SetMag(newMag);
+
+  mom_n.SetVect(unit);
   
-  return P;
+  return mom_n;
 }
+
+TLorentzVector calculatePn(double beta, TLorentzVector mom){
+
+  TVector3 pn = mom.Vect();
+  TVector3 unit = pn.Unit();
+  double corrP = Mn*beta/sqrt(1.0-beta*beta);
+  unit.SetMag(corrP);
+  mom.SetVect(unit);
+  return mom;
+
+}
+
 
 
 int main(){
@@ -78,6 +103,7 @@ int main(){
   gStyle->SetOptStat(0);
 
    bool eppn, eppnpipi;
+   const double c_cm_ns = 29.9792458;
   
   //Define Branch variables and other variables needed to determine parameters
   int nEntries;
@@ -109,8 +135,8 @@ int main(){
   TH1F *h_mmiss = new TH1F("h_mmiss",";m_{miss}",100,0.,1.5);
 
   //read in the data and make output file  
-  TFile *f = new TFile("../../../data/n_eff/skim_He3_pp.root");
-  TFile *fout = new TFile("output/neff_He3.root","RECREATE");
+  TFile *f = new TFile("../../../data/n_eff/skim_He3_pp_2261.root");
+  TFile *fout = new TFile("output/neff_He3_2261.root","RECREATE");
   /*
   TCanvas *canvas = new TCanvas("canvas","output plots", 700, 700);
   canvas->SetFillColor(0);
@@ -122,12 +148,12 @@ int main(){
   std::string pdf_file_name = "output/neff_He3.pdf";
   */
   TTree * t = (TTree*)f->Get("T");
-  TString outputpdf = Form("out_neff/output_nMomentumRes");
+  TString outputpdf = Form("out_neff/output_nMomentumRes_2261_plc");
 
  // --------------------------------------------------------------------------
   int nParticles, nProtons, nNeutrons, nPiplus, nPiminus;
   int Part_type [20], stat_dc  [20], stat_sc[20], stat_ec[20];
-  double t0, QSq, xB, Nu;
+  double t0, QSq, xB, Nu, start_time;
   double mom_x  [20], mom_y    [20], mom_z  [20], Mass   [20], charge[20], beta[20], vtx_z_cor[20],
     ec_time[20], ec_path  [20], ec_in  [20], ec_out [20], ec_tot[20], ec_x[20], ec_y     [20], ec_z[20],
     ec_u   [20], ec_v     [20], ec_w   [20];
@@ -163,8 +189,9 @@ int main(){
   t->SetBranchAddress("Mass"      , Mass      );
   t->SetBranchAddress("beta"      , beta      );
   t->SetBranchAddress("vtx_z_cor" , vtx_z_cor );
+  t->SetBranchAddress("start_time" , &start_time );
 
-  Fiducial fid_params(4461,2250,5996,"3He",true);
+  Fiducial fid_params(2261,2250,5996,"3He",true);
 
   //-----------------------------
   //make histograms
@@ -243,35 +270,62 @@ int main(){
   
   //pmiss vs pn both (uncorrected)
   TH2D* h_pmVpn_both = new TH2D("h_pmVpn_both","all EC;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
-
+  TH2D* h_pdiffVpn_both = new TH2D("h_pdiffVpn_both","both EC;p_{n} [GeV/c];(p_{n}-p_{miss})/p_{n} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_both1 = new TH1F("h1_pmdiff_both1","0.5<p_{miss}<1.2 GeV (EC both, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_both2 = new TH1F("h1_pmdiff_both2","1.2<p_{miss}<2.2 GeV (EC both, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  
   //pmiss vs pn inner EC (uncorrected)
   TH2D* h_pmVpn_inner = new TH2D("h_pmVpn_inner","inner EC;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
-  TH1F *h1_pmdiff_inner1 = new TH1F("h1_pmdiff_inner1","0.5<p_{miss}<1 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
-  TH1F *h1_pmdiff_inner2 = new TH1F("h1_pmdiff_inner2","1<p_{miss}<1.5 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
-  TH1F *h1_pmdiff_inner3 = new TH1F("h1_pmdiff_inner3","1.5<p_{miss}<2.1 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH2D* h_pdiffVpn_inner = new TH2D("h_pdiffVpn_inner","inner EC;p_{n} [GeV/c];(p_{n}-p_{miss})/p_{n} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_inner1 = new TH1F("h1_pmdiff_inner1","0.5<p_{miss}<1.2 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_inner2 = new TH1F("h1_pmdiff_inner2","1.2<p_{miss}<2.2 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  //TH1F *h1_pmdiff_inner3 = new TH1F("h1_pmdiff_inner3","1.5<p_{miss}<2.1 GeV (EC in, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
 
   //pmiss vs pn outer EC (uncorrected)
   TH2D* h_pmVpn_outer = new TH2D("h_pmVpn_outer","outer EC;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
-  TH1F *h1_pmdiff_outer1 = new TH1F("h1_pmdiff_outer1","0.5<p_{miss}<1 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
-  TH1F *h1_pmdiff_outer2 = new TH1F("h1_pmdiff_outer2","1<p_{miss}<1.5 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
-  TH1F *h1_pmdiff_outer3 = new TH1F("h1_pmdiff_outer3","1.5<p_{miss}<2.1 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH2D* h_pdiffVpn_outer = new TH2D("h_pdiffVpn_outer","outer EC;p_{n} [GeV/c];(p_{n}-p_{miss})/p_{n} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_outer1 = new TH1F("h1_pmdiff_outer1","0.5<p_{miss}<1.2 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_outer2 = new TH1F("h1_pmdiff_outer2","1.2<p_{miss}<2.2 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  //TH1F *h1_pmdiff_outer3 = new TH1F("h1_pmdiff_outer3","1.5<p_{miss}<2.1 GeV (EC out, uncorr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
 
   //pmiss vs pn both (corrected)
   TH2D* h_pmVpn_bothC = new TH2D("h_pmVpn_bothC","all EC, corrected;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
-
+  TH2D* h_pdiffVpn_bothC = new TH2D("h_pdiffVpn_bothC","both EC;p_{n} [GeV/c];(p_{n}-p_{miss})/p_{n} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_both1C = new TH1F("h1_pmdiff_both1C","0.5<p_{miss}<1.2 GeV (EC both, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_both2C = new TH1F("h1_pmdiff_both2C","1.2<p_{miss}<2.2 GeV (EC both, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+ 
   //pmiss vs pn inner EC (corrected)
   TH2D* h_pmVpn_innerC = new TH2D("h_pmVpn_innerC","inner EC, corrected;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
-
+  TH2D* h_pdiffVpn_innerC = new TH2D("h_pdiffVpn_innerC","inner EC, corr;p_{n} [GeV/c];(p_{n,corr}-p_{miss})/p_{n,corr} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_inner1C = new TH1F("h1_pmdiff_inner1C","0.5<p_{miss}<1.2 GeV (EC in, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_inner2C = new TH1F("h1_pmdiff_inner2C","1.2<p_{miss}<2.2 GeV (EC in, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  //TH1F *h1_pmdiff_inner3C = new TH1F("h1_pmdiff_inner3C","1.5<p_{miss}<2.1 GeV (EC in, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  
   //pmiss vs pn outer EC (corrected)
   TH2D* h_pmVpn_outerC = new TH2D("h_pmVpn_outerC","outer EC, corrected;p_{n} [GeV/c];p_{miss} [GeV/c]",100,0,2.3,100,0,2.3);
+  TH2D* h_pdiffVpn_outerC = new TH2D("h_pdiffVpn_outerC","outer EC, corr;p_{n} [GeV/c];(p_{n,corr}-p_{miss})/p_{n,corr} [GeV/c]",100,0,2.3,100,-0.8,0.8);
+  TH1F *h1_pmdiff_outer1C = new TH1F("h1_pmdiff_outer1C","0.5<p_{miss}<1.2 GeV (EC out, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  TH1F *h1_pmdiff_outer2C = new TH1F("h1_pmdiff_outer2C","1.2<p_{miss}<2.2 GeV (EC out, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+  //TH1F *h1_pmdiff_outer3C = new TH1F("h1_pmdiff_outer3C","1.5<p_{miss}<2.1 GeV (EC out, corr);p_{miss}-p_{n} [GeV/c]",30,-1,1);
+
+  //path length studies:
+  TH1F *h1_Rec_measured = new TH1F("h_Rec_measured","R_{EC} using EC;R_{EC}",100,400,600);
+  TH1F *h1_Rec_skim = new TH1F("h_Rec_skim","R_{EC,skim plc} from skim #beta;R_{EC,skim plc}",100,400,600);
+  TH1F *h1_Rec_calc = new TH1F("h_Rec_calc","R_{EC,calc} using P_{miss};R_{EC,calc}",100,400,600);
+  TH2D *h_RmVRc = new TH2D("h_RmVRc",";R_{EC,calc} (using pmiss) [cm];R_{EC} (measured) [cm]",100,400,600,50,500,600);
+  TH2D *h_RmVRs = new TH2D("h_RmVRs",";R_{EC,skim} (using skim beta) [cm];R_{EC} (measured) [cm]",100,400,600,50,500,600);
+  TH1F *h_Rdiff_inner = new TH1F("h_Rdiff_inner","inner EC;R_{calculated}-R_{measured} [cm]",100,-100,50);
+  TH1F *h_Rdiff_outer = new TH1F("h_Rdiff_outer","outer EC;R_{calculated}-R_{measured} [cm]",100,-100,50);
+  TH1F *h_Rdiff_both = new TH1F("h_Rdiff_both","both EC layers;R_{calculated}-R_{measured} [cm]",100,-100,50);
+  TH1F *h_Rdiff_compared = new TH1F("h_Rdiff_compared","all EC, calc using skim #beta;R_{calculated}-R_{measured} [cm]",100,-100,50);
+  TH1F *h_RcorrPmissDiff = new TH1F("h_RcorrPmissDiff","p_{miss}-p_{n,Rcorr}",100,-1,1);
+  TH1F *h_noRcorrPmissDiff = new TH1F("h_noRcorrPmissDiff","p_{miss}-p_{n,noRcorr}",100,-1,1);
+  TH1F *h_checkRcorrPmissDiff = new TH1F("h_checkRcorrPmissDiff","p_{miss}-p_{n,Rcorr}",100,-5,5);
 
 
-  //make a tgraph to plot the corrections
   
-  
-
   //loop events a first time to get the vertex cuts
-  Ebeam = 4.4;
+  Ebeam = 2.2;
   E0.SetXYZT    (0.,0.,sqrt(Ebeam*Ebeam-Me*Me),Ebeam);
   V4_tar.SetXYZT(0.,0.,0.                     ,M_tar);
   
@@ -405,18 +459,91 @@ int main(){
 		    mom_n.SetXYZM(mom_x[n1],mom_y[n1],mom_z[n1],Mn); 
 		    h_pmVpn_both->Fill(mom_n.P(),P_miss_eppn.Mag());
 
-		    double Pcorr = correctPn(mom_n.P(),ec_in[n1],ec_out[n1]);
-		    h_pmVpn_bothC->Fill(Pcorr,P_miss_eppn.Mag());
+		    //cout<<"original mom: "<<mom_n.Vect().Mag()<<" ";
+		    //mom_n = calculatePn(beta[n1],mom_n);
+		    //cout<<"with plc mom: "<<mom_n.Vect().Mag()<<endl;
+
+		    TLorentzVector mom_nCorr = correctPn(mom_n,ec_in[n1],ec_out[n1]);
+		    h_pmVpn_bothC->Fill(mom_nCorr.P(),P_miss_eppn.Mag());
+
+		    h1_Rec_measured->Fill(sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		    h1_Rec_skim->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns));
+		    h1_Rec_calc->Fill(P_miss_eppn.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppn.Mag(),2.0)));		    
+		    h_RmVRc->Fill(P_miss_eppn.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppn.Mag(),2.0)),sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		    h_RmVRs->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns),sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		    h_Rdiff_compared->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+
+
+		    double dR = 0;
 		    
+		    
+		    //inner EC
 		    if (ec_in[n1]>0.01 && ec_out[n1]<0.01){
 		      h_pmVpn_inner->Fill(mom_n.P(),P_miss_eppn.Mag());
-		      h_pmVpn_innerC->Fill(Pcorr,P_miss_eppn.Mag());
+		      h_pmVpn_innerC->Fill(mom_nCorr.P(),P_miss_eppn.Mag());
+		      h_pdiffVpn_inner->Fill(mom_n.P(),(mom_n.P()-P_miss_eppn.Mag())/mom_n.P());
+		      h_pdiffVpn_innerC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppn.Mag())/mom_nCorr.P());
+		      h_Rdiff_inner->Fill(P_miss_eppn.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppn.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -44.3;
+		      if (P_miss_eppn.Mag()>0.5 && P_miss_eppn.Mag()<1.2){
+			h1_pmdiff_inner1->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_inner1C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppn.Mag()>=1.2 && P_miss_eppn.Mag()<2.2){
+			h1_pmdiff_inner2->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_inner2C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+		      /*else if (P_miss_eppn.Mag()>=1.5 && P_miss_eppn.Mag()<2.1){
+			h1_pmdiff_inner3->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_inner3C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+			}*/
 		    }
+		    //outer EC
 		    else if (ec_in[n1]<0.01 && ec_out[n1]>0.01){
 		      h_pmVpn_outer->Fill(mom_n.P(),P_miss_eppn.Mag());
-		      h_pmVpn_outerC->Fill(Pcorr,P_miss_eppn.Mag());
+		      h_pmVpn_outerC->Fill(mom_nCorr.P(),P_miss_eppn.Mag());
+		      h_pdiffVpn_outer->Fill(mom_n.P(),(mom_n.P()-P_miss_eppn.Mag())/mom_n.P());
+		      h_pdiffVpn_outerC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppn.Mag())/mom_nCorr.P());
+		      h_Rdiff_outer->Fill(P_miss_eppn.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppn.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -59.5;
+		      if (P_miss_eppn.Mag()>0.5 && P_miss_eppn.Mag()<1.2){
+			h1_pmdiff_outer1->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_outer1C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppn.Mag()>=1.2 && P_miss_eppn.Mag()<2.2){
+			h1_pmdiff_outer2->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_outer2C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+		      /* else if (P_miss_eppn.Mag()>=1.5 && P_miss_eppn.Mag()<2.1){
+			h1_pmdiff_outer3->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_outer3C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+			}*/
 		    }
-		    
+
+		    //both EC
+		    else if(ec_in[n1]>0.01 && ec_out[n1]>0.01){
+		      h_pmVpn_both->Fill(mom_n.P(),P_miss_eppn.Mag());
+		      h_pmVpn_bothC->Fill(mom_nCorr.P(),P_miss_eppn.Mag());
+		      h_pdiffVpn_both->Fill(mom_n.P(),(mom_n.P()-P_miss_eppn.Mag())/mom_n.P());
+		      h_pdiffVpn_bothC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppn.Mag())/mom_nCorr.P());
+		      h_Rdiff_both->Fill(P_miss_eppn.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppn.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -47.2;
+		      if (P_miss_eppn.Mag()>0.5 && P_miss_eppn.Mag()<1.2){
+			h1_pmdiff_both1->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_both1C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppn.Mag()>=1.2 && P_miss_eppn.Mag()<2.2){
+			h1_pmdiff_both2->Fill(P_miss_eppn.Mag()-mom_n.P());
+			h1_pmdiff_both2C->Fill(P_miss_eppn.Mag()-mom_nCorr.P());
+		      }
+
+		    }
+
+		    double betaNew = (sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)) + dR)/((ec_time[n1]-start_time)*c_cm_ns);
+		    double pnMag = Mn*betaNew/sqrt(1.-betaNew*betaNew);
+		    h_RcorrPmissDiff->Fill(P_miss_eppn.Mag()-pnMag);
+		    h_checkRcorrPmissDiff->Fill(P_miss_eppn.Mag()-pnMag);
+		    h_noRcorrPmissDiff->Fill(P_miss_eppn.Mag()-mom_n.P());
 		  }}}}}}}}}
   
 		    
@@ -493,45 +620,350 @@ int main(){
 		    mom_n.SetXYZM(mom_x[n1],mom_y[n1],mom_z[n1],Mn); 
 		    h_pmVpn_both->Fill(mom_n.P(),P_miss_eppnpipi.Mag());
 
-		    double Pcorr = correctPn(mom_n.P(),ec_in[n1],ec_out[n1]);
-		    h_pmVpn_bothC->Fill(Pcorr,P_miss_eppnpipi.Mag());
+		    //mom_n = calculatePn(beta[n1],mom_n);
 		    
+		    TLorentzVector mom_nCorr = correctPn(mom_n,ec_in[n1],ec_out[n1]);
+		    h_pmVpn_bothC->Fill(mom_nCorr.P(),P_miss_eppnpipi.Mag());
+
+		    h1_Rec_measured->Fill(sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		    h1_Rec_skim->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns));
+		    h1_Rec_calc->Fill(P_miss_eppnpipi.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppnpipi.Mag(),2.0)));
+		    
+		    h_RmVRc->Fill(P_miss_eppnpipi.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppnpipi.Mag(),2.0)),sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		    h_RmVRs->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns),sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));		   
+		   
+		    h_Rdiff_compared->Fill(beta[n1]*((ec_time[n1]-start_time)*c_cm_ns) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+
+		    double dR = 0;
+		    
+		    //inner EC
 		    if (ec_in[n1]>0.01 && ec_out[n1]<0.01){
 		      h_pmVpn_inner->Fill(mom_n.P(),P_miss_eppnpipi.Mag());
-		      h_pmVpn_innerC->Fill(Pcorr,P_miss_eppnpipi.Mag());
+		      h_pmVpn_innerC->Fill(mom_nCorr.P(),P_miss_eppnpipi.Mag());
+		      h_pdiffVpn_inner->Fill(mom_n.P(),(mom_n.P()-P_miss_eppnpipi.Mag())/mom_n.P());
+		      h_pdiffVpn_innerC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppnpipi.Mag())/mom_nCorr.P());
+		      h_Rdiff_inner->Fill(P_miss_eppnpipi.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppnpipi.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -44.3;
+		      if (P_miss_eppnpipi.Mag()>0.5 && P_miss_eppnpipi.Mag()<1.2){
+			h1_pmdiff_inner1->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_inner1C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppnpipi.Mag()>=1.2 && P_miss_eppnpipi.Mag()<2.2){
+			h1_pmdiff_inner2->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_inner2C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+		      /*else if (P_miss_eppnpipi.Mag()>=1.5 && P_miss_eppnpipi.Mag()<2.1){
+			h1_pmdiff_inner3->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_inner3C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+			}*/
 		    }
+		    //outer EC
 		    else if (ec_in[n1]<0.01 && ec_out[n1]>0.01){
 		      h_pmVpn_outer->Fill(mom_n.P(),P_miss_eppnpipi.Mag());
-		      h_pmVpn_outerC->Fill(Pcorr,P_miss_eppnpipi.Mag());
+		      h_pmVpn_outerC->Fill(mom_nCorr.P(),P_miss_eppnpipi.Mag());
+		      h_pdiffVpn_outer->Fill(mom_n.P(),(mom_n.P()-P_miss_eppnpipi.Mag())/mom_n.P());
+		      h_pdiffVpn_outerC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppnpipi.Mag())/mom_nCorr.P());
+		      h_Rdiff_outer->Fill(P_miss_eppnpipi.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppnpipi.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -59.5;
+
+		      if (P_miss_eppnpipi.Mag()>0.5 && P_miss_eppnpipi.Mag()<1.2){
+			h1_pmdiff_outer1->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_outer1C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppnpipi.Mag()>=1.2 && P_miss_eppnpipi.Mag()<2.2){
+			h1_pmdiff_outer2->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_outer2C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+		      /*else if (P_miss_eppnpipi.Mag()>=1.5 && P_miss_eppnpipi.Mag()<2.1){
+			h1_pmdiff_outer3->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_outer3C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+			}*/
 		    }
 
+		    //both EC
+		    else if(ec_in[n1]>0.01 && ec_out[n1]>0.01){
+		      h_pmVpn_both->Fill(mom_n.P(),P_miss_eppnpipi.Mag());
+		      h_pmVpn_bothC->Fill(mom_nCorr.P(),P_miss_eppnpipi.Mag());
+		      h_pdiffVpn_both->Fill(mom_n.P(),(mom_n.P()-P_miss_eppnpipi.Mag())/mom_n.P());
+		      h_pdiffVpn_bothC->Fill(mom_n.P(),(mom_nCorr.P()-P_miss_eppnpipi.Mag())/mom_nCorr.P());
+		      h_Rdiff_both->Fill(P_miss_eppnpipi.Mag()*c_cm_ns*(ec_time[n1]-start_time)/sqrt(pow(Mn,2.)+pow(P_miss_eppnpipi.Mag(),2.0)) - sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)));
+		      dR = -47.2;
+
+		      if (P_miss_eppnpipi.Mag()>0.5 && P_miss_eppnpipi.Mag()<1.2){
+			h1_pmdiff_both1->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_both1C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+		      else if (P_miss_eppnpipi.Mag()>=1.2 && P_miss_eppnpipi.Mag()<2.2){
+			h1_pmdiff_both2->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+			h1_pmdiff_both2C->Fill(P_miss_eppnpipi.Mag()-mom_nCorr.P());
+		      }
+
+		    }
+		    double betaNew = (sqrt(pow(ec_x[n1],2.)+pow(ec_y[n1],2.)+pow(ec_z[n1]-vtx_z_cor[0],2.0)) + dR)/((ec_time[n1]-start_time)*c_cm_ns);
+		    double pnMag = Mn*betaNew/sqrt(1.-betaNew*betaNew);
+		    h_RcorrPmissDiff->Fill(P_miss_eppnpipi.Mag()-pnMag);
+		    h_checkRcorrPmissDiff->Fill(P_miss_eppnpipi.Mag()-pnMag);
+		    h_noRcorrPmissDiff->Fill(P_miss_eppnpipi.Mag()-mom_n.P());
+
 		  }}}}}}}}}
+
+
+  //slice and dice
+  int nbins = 8;
+  TH1F *h_inslice[nbins];
+  TH1F *h_outslice[nbins];
+  double pnslice[nbins];
+  double err_pnslice[nbins];
+  double mean_inner[nbins];
+  double mean_outer[nbins];
+  TF1 *c_in[nbins];
+  TF1 *c_out[nbins];
+  double err_inner[nbins];
+  double err_outer[nbins];
+  for (int kk=0;kk<nbins;kk++){
+    pnslice[kk] = (double) 0.6 + 0.2*kk;
+    cout<<"pn slice: "<<kk<<" "<<pnslice[kk]<<endl;;
+    err_pnslice[kk] = 0.1;
+    h_inslice[kk] = new TH1F(Form("h_inslice_%d",kk),"",30,-1,1);
+    h_outslice[kk] = new TH1F(Form("h_outslice_%d",kk),"",30,-1,1);
+  }
+
+  for (int ii=0; ii<nbins; ii++){
+    int lowBin = h_pdiffVpn_inner->GetXaxis()->FindBin(pnslice[ii]-0.1);
+    int highBin = h_pdiffVpn_inner->GetXaxis()->FindBin(pnslice[ii]+0.1);
+    h_inslice[ii] = (TH1F*)h_pdiffVpn_inner->ProjectionY(Form("sliceIn_%d",ii),lowBin,highBin);
+    h_outslice[ii] = (TH1F*)h_pdiffVpn_outer->ProjectionY(Form("sliceOut_%d",ii),lowBin,highBin);
+    c_in[ii] = new TF1(Form("cin%d",ii),"gaus",-1,1);
+    c_out[ii] = new TF1(Form("cout%d",ii),"gaus",-1,1);
+    h_inslice[ii]->Fit(c_in[ii],"QS");
+    h_outslice[ii]->Fit(c_out[ii],"QS");
+    mean_inner[ii] = c_in[ii]->GetParameter(1);
+    mean_outer[ii] = c_out[ii]->GetParameter(1);
+    err_inner[ii] = 1./sqrt(h_inslice[ii]->GetEntries());
+    err_outer[ii] = 1./sqrt(h_outslice[ii]->GetEntries());
+    cout<<"means: "<<ii<<" "<<mean_inner[ii]<<" "<<mean_outer[ii]<<" "<<h_inslice[ii]->GetEntries()<<" "<<h_outslice[ii]->GetEntries()<<endl;;
+
+  }
+  
+ 
  
   TCanvas *c1 = new TCanvas("c1","",1200,900);
-  c1->Divide(3,1);
+  c1->Divide(2,1);
   c1->cd(1);
-  h_pmVpn_both->Draw("colz");
-
-  c1->cd(2);
   h_pmVpn_inner->Draw("colz");
 
-  c1->cd(3);
+  c1->cd(2);
   h_pmVpn_outer->Draw("colz");
   c1->Print(outputpdf+".pdf(");
 
   TCanvas *c2 = new TCanvas("c2","",1200,900);
-  c2->Divide(3,1);
-  c2->cd(1);
-  h_pmVpn_bothC->Draw("colz");
+  c2->Divide(2,1);
 
-  c2->cd(2);
+  c2->cd(1);
   h_pmVpn_innerC->Draw("colz");
 
-  c2->cd(3);
+  c2->cd(2);
   h_pmVpn_outerC->Draw("colz");
-  c2->Print(outputpdf+".pdf)");
+  c2->Print(outputpdf+".pdf(");
 
+  TCanvas *c22 = new TCanvas("c22","",1200,900);
+  c22->Divide(2,1);
+  c22->cd(1);
+  h_pmVpn_both->Draw("colz");
+  c22->cd(2);
+  h_pmVpn_bothC->Draw("colz");
+  c22->Print(outputpdf+".pdf(");
   
+  TCanvas *c3 = new TCanvas("c3","",1200,900);
+  c3->Divide(2,1);
+  c3->cd(1);
+  h1_pmdiff_inner1->Draw("");
+  c3->cd(2);
+  h1_pmdiff_inner1C->Draw("");
+  c3->Print(outputpdf+".pdf(");
+
+  TCanvas *c4 = new TCanvas("c4","",1200,900);
+  c4->Divide(2,1);
+  c4->cd(1);
+  h1_pmdiff_inner2->Draw("");
+  c4->cd(2);
+  h1_pmdiff_inner2C->Draw("");
+  c4->Print(outputpdf+".pdf(");
+  /*
+  TCanvas *c5 = new TCanvas("c5","",1200,900);
+  c5->Divide(2,1);
+  c5->cd(1);
+  h1_pmdiff_inner3->Draw("");
+  c5->cd(2);
+  h1_pmdiff_inner3C->Draw("");
+  c5->Print(outputpdf+".pdf(");
+  */
+  TCanvas *c6 = new TCanvas("c6","",1200,900);
+  c6->Divide(2,1);
+  c6->cd(1);
+  h1_pmdiff_outer1->Draw("");
+  c6->cd(2);
+  h1_pmdiff_outer1C->Draw("");
+  c6->Print(outputpdf+".pdf(");
+
+  TCanvas *c7 = new TCanvas("c7","",1200,900);
+  c7->Divide(2,1);
+  c7->cd(1);
+  h1_pmdiff_outer2->Draw("");
+  c7->cd(2);
+  h1_pmdiff_outer2C->Draw("");
+  c7->Print(outputpdf+".pdf(");
+
+   TCanvas *c66 = new TCanvas("c66","",1200,900);
+  c66->Divide(2,1);
+  c66->cd(1);
+  h1_pmdiff_both1->Draw("");
+  c66->cd(2);
+  h1_pmdiff_both1C->Draw("");
+  c66->Print(outputpdf+".pdf(");
+
+  TCanvas *c77 = new TCanvas("c77","",1200,900);
+  c77->Divide(2,1);
+  c77->cd(1);
+  h1_pmdiff_both2->Draw("");
+  c77->cd(2);
+  h1_pmdiff_both2C->Draw("");
+  c77->Print(outputpdf+".pdf(");
+  
+  /*
+  TCanvas *c8 = new TCanvas("c8","",1200,900);
+  c8->Divide(2,1);
+  c8->cd(1);
+  h1_pmdiff_outer3->Draw("");
+  c8->cd(2);
+  h1_pmdiff_outer3C->Draw("");
+  c8->Print(outputpdf+".pdf)");
+  */
+
+  TCanvas *c9 = new TCanvas("c9","",1200,900);
+  c9->Divide(2,1);
+  c9->cd(1);
+  h_pdiffVpn_inner->Draw("colz");
+  c9->cd(2);
+  h_pdiffVpn_innerC->Draw("colz");
+  c9->Print(outputpdf+".pdf(");
+
+  TCanvas *c10 = new TCanvas("c10","",1200,900);
+  c10->Divide(2,1);
+  c10->cd(1);
+  h_pdiffVpn_both->Draw("colz");
+  c10->cd(2);
+  h_pdiffVpn_bothC->Draw("colz");
+  c10->Print(outputpdf+".pdf(");
+
+  TCanvas *c11 = new TCanvas("c11","",1200,900);
+  c11->Divide(2,1);
+  c11->cd(1);
+  h_pdiffVpn_outer->Draw("colz");
+  c11->cd(2);
+  h_pdiffVpn_outerC->Draw("colz");
+  c11->Print(outputpdf+".pdf(");
+
+  TCanvas *cnew[nbins];
+  for (int ii=0;ii<nbins;ii++){
+    cnew[ii] = new TCanvas(Form("cnew_%d",ii),"",1200,900);
+    cnew[ii]->Divide(2,1);
+    cnew[ii]->cd(1);
+    h_inslice[ii]->Draw();
+
+    cnew[ii]->cd(2);
+    h_outslice[ii]->Draw();
+    cnew[ii]->Print(outputpdf+".pdf(");
+  }
+  //cnew[0]->Print(outputpdf+".pdf)");
+  
+  TGraphErrors *gin = new TGraphErrors(nbins,pnslice,mean_inner,err_pnslice,err_inner);
+  TGraphErrors *gout = new TGraphErrors(nbins,pnslice,mean_outer,err_pnslice,err_outer);
+
+  TCanvas *cc = new TCanvas("cc","",1200,900);
+  cc->cd();
+  gin->Draw("AP");
+  cc->Update();
+  TF1 *innerfit = new TF1("innerfit","[0]+[1]*x+[2]*x*x",0.65,2.1);
+  gin->Fit(innerfit,"R");
+  cc->SaveAs("gin.C");
+
+  TCanvas *cc1 = new TCanvas("cc1","",1200,900);
+  cc1->cd();
+  gout->Draw("AP");
+  cc1->Update();
+  TF1 *outerfit = new TF1("outerfit","[0]+[1]*x+[2]*x*x",0.65,2.1);
+  gout->Fit(outerfit,"R");
+  cc1->SaveAs("gout.C");
+
+  TCanvas *cr1 = new TCanvas("cr1","",1200,900);
+  cr1->cd();
+  h1_Rec_measured->Draw();
+  cr1->Print(outputpdf+".pdf(");
+
+  TCanvas *cr2 = new TCanvas("cr2","",1200,900);
+  cr2->cd();
+  h1_Rec_skim->Draw();
+  cr2->Print(outputpdf+".pdf(");
+
+  TCanvas *cr3 = new TCanvas("cr3","",1200,900);
+  cr3->cd();
+  h1_Rec_calc->Draw();
+  cr3->Print(outputpdf+".pdf(");
+
+  TCanvas *cr4 = new TCanvas("cr4","",1200,900);
+  cr4->cd();
+  h_RmVRc->Draw("colz");
+  cr4->Print(outputpdf+".pdf(");
+
+  TCanvas *cr5 = new TCanvas("cr5","",1200,900);
+  cr5->cd();
+  h_RmVRs->Draw("colz");
+  cr5->Print(outputpdf+".pdf(");
+
+  TCanvas *cr6 = new TCanvas("cr6","",1200,900);
+  cr6->cd();
+  TF1 *fr_inner = new  TF1("fr_inner","gaus",-80,0);
+  h_Rdiff_inner->Fit(fr_inner,"R");
+  h_Rdiff_inner->Draw();  
+  cr6->Print(outputpdf+".pdf(");
+
+
+  TCanvas *cr7 = new TCanvas("cr7","",1200,900);
+  cr7->cd();
+  TF1 *fr_outer = new  TF1("fr_outer","gaus",-90,-30);
+  h_Rdiff_outer->Fit(fr_outer,"R");
+  h_Rdiff_outer->Draw();
+  cr7->Print(outputpdf+".pdf(");
+
+  TCanvas *cr8 = new TCanvas("cr8","",1200,900);
+  cr8->cd();
+  TF1 *fr_both = new  TF1("fr_both","gaus",-80,0);
+  h_Rdiff_both->Fit(fr_both,"R");
+  h_Rdiff_both->Draw();
+  cr8->Print(outputpdf+".pdf(");
+
+  TCanvas *cr9 = new TCanvas("cr9","",1200,900);
+  cr9->cd();
+  h_Rdiff_compared->Draw();
+  cr9->Print(outputpdf+".pdf(");
+
+
+  TCanvas *cr10 = new TCanvas("cr10","",1200,900);
+  cr10->cd();
+  h_noRcorrPmissDiff->Draw();
+  cr10->Print(outputpdf+".pdf(");
+
+  TCanvas *cr11 = new TCanvas("cr11","",1200,900);
+  cr11->cd();
+  h_RcorrPmissDiff->Draw();
+  cr11->Print(outputpdf+".pdf(");
+
+  TCanvas *cr12 = new TCanvas("cr12","",1200,900);
+  cr12->cd();
+  h_checkRcorrPmissDiff->Draw();
+  cr12->Print(outputpdf+".pdf)");
+
 }
 double max_outta_three ( double A , double B, double C ){
   
